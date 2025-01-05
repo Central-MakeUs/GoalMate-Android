@@ -1,4 +1,4 @@
-package cmc.goalmate
+package cmc.goalmate.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import cmc.goalmate.ui.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.GoalMateTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

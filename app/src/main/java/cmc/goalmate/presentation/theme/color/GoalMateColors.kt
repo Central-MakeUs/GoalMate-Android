@@ -1,4 +1,4 @@
-package cmc.goalmate.ui.theme.color
+package cmc.goalmate.presentation.theme.color
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color

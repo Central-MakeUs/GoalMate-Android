@@ -1,4 +1,4 @@
-package cmc.goalmate.ui.theme
+package cmc.goalmate.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -7,8 +7,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import cmc.goalmate.ui.theme.color.ColorSet
-import cmc.goalmate.ui.theme.color.GoalMateColors
+import cmc.goalmate.presentation.theme.color.ColorSet
+import cmc.goalmate.presentation.theme.color.GoalMateColors
 
 private val LocalTypography = staticCompositionLocalOf { goalMateTypography }
 private val LocalColors = staticCompositionLocalOf { ColorSet.GoalMateColor.lightColors }
