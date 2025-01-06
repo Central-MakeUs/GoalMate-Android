@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">GoalMate</string>
+    <string name="home">홈</string>
+    <string name="my_goals">목표</string>
+    <string name="my_page">마이</string>
 </resources>
