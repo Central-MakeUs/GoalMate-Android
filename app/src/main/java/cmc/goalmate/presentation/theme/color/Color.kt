@@ -47,8 +47,18 @@ sealed class ColorSet {
             secondary02 = YellowBright500,
             secondary03 = GreenBright400,
             success = Blue,
+            selected = Grey800,
+            unSelected = Grey400,
         )
 
-        override var darkColors = GoalMateColors(material = darkColorScheme())
+        override var darkColors = GoalMateColors(
+            material = darkColorScheme(),
+            secondary01 = Purple500,
+            secondary02 = YellowBright500,
+            secondary03 = GreenBright400,
+            success = Blue,
+            selected = Grey800,
+            unSelected = Grey400,
+        )
     }
 }

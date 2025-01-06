@@ -5,11 +5,12 @@ import androidx.compose.ui.graphics.Color
 
 data class GoalMateColors(
     val material: ColorScheme,
-    val onPrimaryAlt: Color = material.onPrimary,
-    val secondary01: Color = material.secondary,
-    val secondary02: Color = material.secondary,
-    val secondary03: Color = material.secondary,
-    val success: Color = Color.Green,
+    val secondary01: Color,
+    val secondary02: Color,
+    val secondary03: Color,
+    val success: Color,
+    val selected: Color,
+    val unSelected: Color,
 ) {
     val primary: Color get() = material.primary
     val primaryVariant: Color get() = material.primaryContainer

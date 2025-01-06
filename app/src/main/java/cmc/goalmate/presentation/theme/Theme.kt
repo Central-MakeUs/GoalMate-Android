@@ -11,7 +11,7 @@ import cmc.goalmate.presentation.theme.color.ColorSet
 import cmc.goalmate.presentation.theme.color.GoalMateColors
 
 private val LocalTypography = staticCompositionLocalOf { goalMateTypography }
-private val LocalColors = staticCompositionLocalOf { ColorSet.GoalMateColor.lightColors }
+private val LocalColors = staticCompositionLocalOf<GoalMateColors> { error("No GoalMateColors provided") }
 
 @Composable
 fun GoalMateTheme(
