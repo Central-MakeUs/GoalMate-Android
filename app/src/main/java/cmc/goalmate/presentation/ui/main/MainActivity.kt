@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import cmc.goalmate.presentation.theme.GoalMateTheme
-import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,15 +17,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-sealed class Screen {
-    @Serializable
-    data object HomeScreen : Screen()
-
-    @Serializable
-    data object MyGoalsScreen : Screen()
-
-    @Serializable
-    data object MyPageScreen : Screen()
 }

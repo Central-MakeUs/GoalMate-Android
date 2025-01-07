@@ -3,6 +3,7 @@ package cmc.goalmate.presentation.ui.main
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -12,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -19,42 +21,35 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.home.HomeScreen
-import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
-import cmc.goalmate.presentation.ui.mypage.MyPageScreen
+import cmc.goalmate.presentation.ui.home.navigation.HOME_ROUTE
+import cmc.goalmate.presentation.ui.home.navigation.homeScreen
+import cmc.goalmate.presentation.ui.mygoals.navigation.MY_GOALS_ROUTE
+import cmc.goalmate.presentation.ui.mygoals.navigation.myGoalsScreen
+import cmc.goalmate.presentation.ui.mypage.navgation.MY_PAGE_ROUTE
+import cmc.goalmate.presentation.ui.mypage.navgation.myPageScreen
 
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
-
+fun MainScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { BottomNavigationBar(navController) },
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.HomeScreen,
+            startDestination = HOME_ROUTE,
+            modifier = Modifier.padding(innerPadding),
         ) {
-            composable<Screen.HomeScreen> {
-                HomeScreen()
-            }
-            composable<Screen.MyGoalsScreen> {
-                MyGoalsScreen()
-            }
-            composable<Screen.MyPageScreen> {
-                MyPageScreen()
-            }
+            homeScreen()
+            myGoalsScreen()
+            myPageScreen()
         }
     }
 }
@@ -62,21 +57,18 @@ fun MainScreen() {
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    val currentDestination = navBackStackEntry?.destination?.route
 
     NavigationBar(
         containerColor = MaterialTheme.goalMateColors.surface,
         tonalElevation = 0.dp,
     ) {
         BottomNavItem.entries.forEach { navItem ->
-            val isSelected =
-                currentDestination?.hierarchy?.any { it.hasRoute(navItem.route::class) } == true
-
             NavigationBarItem(
-                selected = isSelected,
+                selected = currentDestination == navItem.route,
                 onClick = {
                     navController.navigate(navItem.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
+                        popUpTo(navController.graph.startDestinationId) {
                             saveState = true
                         }
                         launchSingleTop = true
@@ -107,20 +99,20 @@ fun BottomNavigationBar(navController: NavController) {
     }
 }
 
-enum class BottomNavItem(
+private enum class BottomNavItem(
     @StringRes val title: Int,
     @DrawableRes val icon: Int,
-    val route: Screen,
+    val route: String,
 ) {
-    Home(title = R.string.home, icon = R.drawable.home, route = Screen.HomeScreen),
-    MY_GOALS(title = R.string.my_goals, icon = R.drawable.goal, route = Screen.MyGoalsScreen),
-    MY_PAGE(title = R.string.my_page, icon = R.drawable.my, route = Screen.MyPageScreen),
+    Home(title = R.string.home, icon = R.drawable.home, HOME_ROUTE),
+    MY_GOALS(title = R.string.my_goals, icon = R.drawable.goal, MY_GOALS_ROUTE),
+    MY_PAGE(title = R.string.my_page, icon = R.drawable.my, MY_PAGE_ROUTE),
 }
 
 @Composable
 @Preview
 fun MainScreenPreview() {
     GoalMateTheme {
-        MainScreen()
+        MainScreen(rememberNavController())
     }
 }
