@@ -18,6 +18,11 @@ private val pretendardRegular =
         Font(R.font.pretendard_regular, FontWeight.Normal, FontStyle.Normal),
     )
 
+private val pretendardSemiBold =
+    FontFamily(
+        Font(R.font.pretendard_semibold, FontWeight.Normal, FontStyle.Normal),
+    )
+
 data class GoalMateTypography(
     val h1: TextStyle,
     val h2: TextStyle,
@@ -90,14 +95,14 @@ private val BodySmall =
 
 private val ButtonLabelLarge =
     TextStyle(
-        fontFamily = pretendardBold,
+        fontFamily = pretendardSemiBold,
         fontSize = 16.sp,
         lineHeight = 25.6.sp,
     )
 
 private val ButtonLabelSmall =
     TextStyle(
-        fontFamily = pretendardRegular,
+        fontFamily = pretendardSemiBold,
         fontSize = 14.sp,
         lineHeight = 14.sp,
     )

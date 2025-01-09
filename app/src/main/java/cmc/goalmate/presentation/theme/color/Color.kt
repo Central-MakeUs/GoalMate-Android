@@ -11,7 +11,8 @@ val Green = Color(0xFF34C759)
 val Yellow = Color(0xFFFFCC00)
 val Blue = Color(0xFF007AFF)
 
-val LightGreen400 = Color(0xFFAEFF23)
+val Primary400 = Color(0xFFAEFF23)
+val Primary100 = Color(0xFFE5FFBE)
 val Purple500 = Color(0xFF7423FF)
 val YellowBright500 = Color(0xFFFFE223)
 val GreenBright400 = Color(0xFF40FF23)
@@ -34,7 +35,7 @@ sealed class ColorSet {
     data object GoalMateColor : ColorSet() {
         override var lightColors = GoalMateColors(
             material = lightColorScheme(
-                primary = LightGreen400,
+                primary = Primary400,
                 onPrimary = Black,
                 secondary = Purple500,
                 surface = White,
@@ -49,6 +50,8 @@ sealed class ColorSet {
             success = Blue,
             selected = Grey800,
             unSelected = Grey400,
+            pending = Grey200,
+            completed = Primary100,
         )
 
         override var darkColors = GoalMateColors(
@@ -59,6 +62,8 @@ sealed class ColorSet {
             success = Blue,
             selected = Grey800,
             unSelected = Grey400,
+            pending = Grey200,
+            completed = Primary100,
         )
     }
 }

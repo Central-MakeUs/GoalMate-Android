@@ -11,6 +11,8 @@ data class GoalMateColors(
     val success: Color,
     val selected: Color,
     val unSelected: Color,
+    val pending: Color,
+    val completed: Color,
 ) {
     val primary: Color get() = material.primary
     val primaryVariant: Color get() = material.primaryContainer
