@@ -3,4 +3,9 @@
     <string name="home">홈</string>
     <string name="my_goals">목표</string>
     <string name="my_page">마이</string>
+
+    <string name="login_nick_name_setting_title">앞으로 어떻게 불러드릴까요?</string>
+    <string name="login_nick_name">2~5 글자 닉네임을 입력해주세요.</string>
+    <string name="login_nick_name_duplicate_check">중복확인</string>
+
 </resources>

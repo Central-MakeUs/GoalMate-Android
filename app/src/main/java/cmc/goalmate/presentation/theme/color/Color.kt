@@ -52,6 +52,8 @@ sealed class ColorSet {
             unSelected = Grey400,
             pending = Grey200,
             completed = Primary100,
+            disabled = Grey300,
+            onDisabled = White,
         )
 
         override var darkColors = GoalMateColors(
@@ -64,6 +66,8 @@ sealed class ColorSet {
             unSelected = Grey400,
             pending = Grey200,
             completed = Primary100,
+            disabled = Grey300,
+            onDisabled = White,
         )
     }
 }

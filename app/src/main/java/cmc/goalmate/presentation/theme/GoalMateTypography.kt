@@ -74,7 +74,7 @@ private val Subtitle =
 
 private val SubtitleSmall =
     TextStyle(
-        fontFamily = pretendardRegular,
+        fontFamily = pretendardSemiBold,
         fontSize = 18.sp,
         lineHeight = 23.4.sp,
     )
