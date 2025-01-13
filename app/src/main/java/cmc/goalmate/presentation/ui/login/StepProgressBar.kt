@@ -26,18 +26,35 @@ import cmc.goalmate.presentation.theme.color.Grey600
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
+data class Step(val step: LoginStep, val status: StepStatus = StepStatus.PENDING)
+
 @Composable
-fun Step(
-    process: LoginSteps,
-    processStatus: ProcessStatus,
+fun StepProgressBar(
+    steps: List<Step>,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier = modifier) {
+        steps.forEach {
+            StepItem(
+                loginStep = it.step,
+                stepStatus = it.status,
+            )
+        }
+    }
+}
+
+@Composable
+fun StepItem(
+    loginStep: LoginStep,
+    stepStatus: StepStatus,
     modifier: Modifier = Modifier,
 ) {
     ConstraintLayout(modifier = modifier) {
         val (stepChip, startBar, endBar, label) = createRefs()
 
-        if (!process.isFirstStep()) {
+        if (!loginStep.isFirstStep()) {
             ProcessBar(
-                processStatus = processStatus.previous(),
+                processStatus = stepStatus.previous(),
                 modifier = Modifier.constrainAs(startBar) {
                     start.linkTo(parent.start)
                     top.linkTo(stepChip.top)
@@ -47,8 +64,8 @@ fun Step(
             )
         }
         StepChip(
-            step = process.step,
-            processStatus = processStatus,
+            step = loginStep.step,
+            processStatus = stepStatus,
             modifier = Modifier.constrainAs(stepChip) {
                 start.linkTo(label.start)
                 end.linkTo(label.end)
@@ -56,9 +73,9 @@ fun Step(
             },
         )
 
-        if (!process.isLastStep()) {
+        if (!loginStep.isLastStep()) {
             ProcessBar(
-                processStatus = processStatus,
+                processStatus = stepStatus,
                 modifier = Modifier.constrainAs(endBar) {
                     start.linkTo(stepChip.end)
                     top.linkTo(stepChip.top)
@@ -69,7 +86,7 @@ fun Step(
         }
 
         Label(
-            content = process.title,
+            content = loginStep.title,
             modifier = Modifier.constrainAs(label) {
                 top.linkTo(stepChip.bottom, margin = 8.dp)
             },
@@ -80,15 +97,15 @@ fun Step(
 @Composable
 private fun StepChip(
     step: String,
-    processStatus: ProcessStatus,
+    processStatus: StepStatus,
     modifier: Modifier = Modifier,
 ) {
     val chipColor = when (processStatus) {
-        ProcessStatus.CURRENT -> MaterialTheme.colorScheme.primary
-        ProcessStatus.PENDING -> MaterialTheme.colorScheme.background
-        ProcessStatus.COMPLETED -> MaterialTheme.goalMateColors.completed
+        StepStatus.CURRENT -> MaterialTheme.colorScheme.primary
+        StepStatus.PENDING -> MaterialTheme.colorScheme.background
+        StepStatus.COMPLETED -> MaterialTheme.goalMateColors.completed
     }
-    val borderModifier = if (processStatus == ProcessStatus.PENDING) {
+    val borderModifier = if (processStatus == StepStatus.PENDING) {
         modifier.border(width = 1.dp, color = Grey300, shape = CircleShape)
     } else {
         modifier
@@ -103,13 +120,13 @@ private fun StepChip(
                 shape = CircleShape,
             ),
     ) {
-        if (processStatus == ProcessStatus.COMPLETED) {
+        if (processStatus == StepStatus.COMPLETED) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_check),
                 contentDescription = null,
             )
         } else {
-            val textColor = if (processStatus == ProcessStatus.PENDING) {
+            val textColor = if (processStatus == StepStatus.PENDING) {
                 Grey400
             } else {
                 MaterialTheme.goalMateColors.onBackground
@@ -125,11 +142,11 @@ private fun StepChip(
 
 @Composable
 private fun ProcessBar(
-    processStatus: ProcessStatus,
+    processStatus: StepStatus,
     modifier: Modifier = Modifier,
 ) {
     val processBarColor = when (processStatus) {
-        ProcessStatus.COMPLETED -> MaterialTheme.goalMateColors.completed
+        StepStatus.COMPLETED -> MaterialTheme.goalMateColors.completed
         else -> MaterialTheme.goalMateColors.pending
     }
     Box(
@@ -157,37 +174,13 @@ private fun Label(
 
 @Composable
 @Preview
-fun StepProgressBarPreview() {
+private fun StepProgressBarPreview() {
+    val steps = listOf(
+        Step(LoginStep.SIGN_UP, StepStatus.COMPLETED),
+        Step(LoginStep.NICKNAME_SETTING, StepStatus.CURRENT),
+        Step(LoginStep.COMPLETED, StepStatus.PENDING),
+    )
     GoalMateTheme {
-        Row {
-            Step(process = LoginSteps.SIGN_UP, processStatus = ProcessStatus.COMPLETED)
-            Step(process = LoginSteps.NICKNAME_SETTING, processStatus = ProcessStatus.CURRENT)
-            Step(process = LoginSteps.COMPLETED, processStatus = ProcessStatus.PENDING)
-        }
+        StepProgressBar(steps = steps)
     }
-}
-
-enum class LoginSteps(val step: String, val title: String) {
-    SIGN_UP("1", "회원가입"),
-    NICKNAME_SETTING("2", "닉네임 설정"),
-    COMPLETED("3", "시작하기"),
-    ;
-
-    fun isFirstStep(): Boolean = this == SIGN_UP
-
-    fun isLastStep(): Boolean = this == COMPLETED
-}
-
-enum class ProcessStatus {
-    CURRENT,
-    PENDING,
-    COMPLETED,
-    ;
-
-    fun previous(): ProcessStatus =
-        when (this) {
-            CURRENT -> COMPLETED
-            PENDING -> PENDING
-            COMPLETED -> COMPLETED
-        }
 }
