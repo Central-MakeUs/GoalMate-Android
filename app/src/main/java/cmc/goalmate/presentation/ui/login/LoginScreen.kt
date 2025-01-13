@@ -98,7 +98,7 @@ fun LoginContent(
                 1 -> NickNameSettingScreen(
                     text = nickName,
                     onTextChanged = { onAction(LoginAction.SetNickName(it)) },
-                    textValidationState = state.nickNameValidationState,
+                    textValidationState = state.validationState,
                     helperText = state.helperText,
                     isDuplicationCheckEnabled = state.isDuplicationCheckEnabled,
                     isNextStepEnabled = state.isNextStepEnabled,

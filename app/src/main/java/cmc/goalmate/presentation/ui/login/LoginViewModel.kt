@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import cmc.goalmate.domain.ValidateNickName
 import cmc.goalmate.presentation.components.InputTextState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,38 +13,40 @@ import javax.inject.Inject
 
 data class LoginUiState(
     val loginSteps: List<Step>,
-    val nickNameValidationState: InputTextState,
+    val nickNameFormatValidationState: InputTextState,
+    val duplicationCheckState: InputTextState,
     val helperText: String,
-    val isDuplicationCheckEnabled: Boolean,
 ) {
+    val isDuplicationCheckEnabled: Boolean
+        get() = nickNameFormatValidationState == InputTextState.Success
+
     val isNextStepEnabled: Boolean
-        get() = nickNameValidationState == InputTextState.Success
+        get() = (nickNameFormatValidationState == InputTextState.Success) && (duplicationCheckState == InputTextState.Success)
+
+    val validationState: InputTextState
+        get() = when {
+            nickNameFormatValidationState == InputTextState.Success && duplicationCheckState == InputTextState.Success -> InputTextState.Success
+            nickNameFormatValidationState == InputTextState.Error || duplicationCheckState == InputTextState.Error -> InputTextState.Error
+            else -> InputTextState.None
+        }
 
     companion object {
         fun initialLoginUiState(): LoginUiState =
             LoginUiState(
                 loginSteps = createInitialLoginSteps(),
-                nickNameValidationState = InputTextState.None,
+                nickNameFormatValidationState = InputTextState.None,
+                duplicationCheckState = InputTextState.None,
                 helperText = "",
-                isDuplicationCheckEnabled = false,
             )
     }
-}
-
-sealed interface LoginAction {
-    data object KakaoLogin : LoginAction
-
-    data class SetNickName(val nickName: String) : LoginAction
-
-    data object CheckDuplication : LoginAction
-
-    data object CompleteNicknameSetup : LoginAction
 }
 
 @HiltViewModel
 class LoginViewModel
     @Inject
-    constructor() : ViewModel() {
+    constructor(
+        private val validateNickName: ValidateNickName,
+    ) : ViewModel() {
         private val _state = MutableStateFlow<LoginUiState>(LoginUiState.initialLoginUiState())
         val state: StateFlow<LoginUiState>
             get() = _state
@@ -65,15 +68,37 @@ class LoginViewModel
 
         private fun updateNickName(newNickName: String) {
             nickName = newNickName
-            // validation 검사
-            _state.value = _state.value.copy(isDuplicationCheckEnabled = true)
+
+            if (nickName.isBlank()) {
+                _state.value = _state.value.copy(
+                    nickNameFormatValidationState = InputTextState.None,
+                    duplicationCheckState = InputTextState.None,
+                )
+                return
+            }
+
+            val result = validateNickName(nickName = newNickName)
+            if (result.successful) {
+                _state.value = _state.value.copy(
+                    nickNameFormatValidationState = InputTextState.Success,
+                )
+            } else {
+                _state.value = _state.value.copy(
+                    nickNameFormatValidationState = InputTextState.Error,
+                )
+            }
+            _state.value = _state.value.copy(
+                helperText = result.errorMessage ?: "",
+                duplicationCheckState = InputTextState.None,
+            )
         }
 
         private fun checkNickNameDuplication() {
             // 검사 후, 중복된 닉네임이 없다면,
             _state.value = _state.value.copy(
-                nickNameValidationState = InputTextState.Success,
-                isDuplicationCheckEnabled = false,
+                nickNameFormatValidationState = InputTextState.Success,
+                duplicationCheckState = InputTextState.Success,
+                helperText = "사용 가능한 닉네임이에요 :)",
             )
         }
     }
