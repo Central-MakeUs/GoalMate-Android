@@ -72,8 +72,8 @@ fun GoalMateTextField(
                             shape = RoundedCornerShape(30.dp),
                         )
                         .padding(
-                            horizontal = 16.dp,
-                            vertical = 12.dp,
+                            horizontal = 14.dp,
+                            vertical = 10.dp,
                         ),
                 ) {
                     Box(

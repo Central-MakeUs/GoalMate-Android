@@ -1,5 +1,13 @@
 package cmc.goalmate.presentation.ui.login
 
+fun createInitialLoginSteps(): List<Step> =
+    LoginStep.entries.mapIndexed { index, step ->
+        Step(
+            step = step,
+            status = if (index == 0) StepStatus.CURRENT else StepStatus.PENDING,
+        )
+    }
+
 enum class LoginStep(val step: String, val title: String) {
     SIGN_UP("1", "회원가입"),
     NICKNAME_SETTING("2", "닉네임 설정"),

@@ -7,5 +7,7 @@
     <string name="login_nick_name_setting_title">앞으로 어떻게 불러드릴까요?</string>
     <string name="login_nick_name">2~5 글자 닉네임을 입력해주세요.</string>
     <string name="login_nick_name_duplicate_check">중복확인</string>
+    <string name="login_nick_name_btn">닉네임 입력완료</string>
+    <string name="login_greeting_message">축하해요\n%1$s님,\n바로 첫 목표를 시작해보세요!</string>
 
 </resources>
