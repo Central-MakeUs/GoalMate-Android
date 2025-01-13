@@ -2,11 +2,12 @@ package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,11 +17,19 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
+enum class ButtonSize {
+    LARGE,
+    MEDIUM,
+    SMALL,
+}
+
 @Composable
-fun GoalMateFilledButton(
+fun GoalMateButton(
     content: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    buttonSize: ButtonSize = ButtonSize.LARGE,
+    hasOutLine: Boolean = false,
     enabled: Boolean = true,
 ) {
     Button(
@@ -28,12 +37,9 @@ fun GoalMateFilledButton(
         modifier = modifier,
         enabled = enabled,
         shape = RoundedCornerShape(30.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.goalMateColors.primary,
-            contentColor = MaterialTheme.goalMateColors.onPrimary,
-            disabledContainerColor = MaterialTheme.goalMateColors.disabled,
-            disabledContentColor = MaterialTheme.goalMateColors.onDisabled,
-        ),
+        colors = getButtonColors(hasOutLine),
+        contentPadding = getButtonPadding(buttonSize),
+        border = if (hasOutLine) BorderStroke(width = 2.dp, color = MaterialTheme.goalMateColors.disabled) else null,
     ) {
         Text(
             text = content,
@@ -43,42 +49,35 @@ fun GoalMateFilledButton(
 }
 
 @Composable
-fun GoalMateOutLinedButton(
-    content: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(30.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.goalMateColors.background,
-            contentColor = MaterialTheme.goalMateColors.onBackground,
-            disabledContainerColor = MaterialTheme.goalMateColors.disabled,
-            disabledContentColor = MaterialTheme.goalMateColors.onDisabled,
-        ),
-        border = BorderStroke(width = 2.dp, color = MaterialTheme.goalMateColors.disabled),
-    ) {
-        Text(
-            text = content,
-            style = MaterialTheme.goalMateTypography.buttonLabelLarge,
-        )
+fun getButtonPadding(buttonSize: ButtonSize): PaddingValues =
+    when (buttonSize) {
+        ButtonSize.LARGE -> PaddingValues(horizontal = 56.dp, vertical = 17.5.dp)
+        ButtonSize.MEDIUM -> PaddingValues(horizontal = 56.dp, vertical = 14.5.dp)
+        ButtonSize.SMALL -> PaddingValues(horizontal = 56.dp, vertical = 12.5.dp)
     }
+
+@Composable
+fun getButtonColors(hasOutLine: Boolean): ButtonColors {
+    val containerColor = if (hasOutLine) MaterialTheme.goalMateColors.background else MaterialTheme.goalMateColors.primary
+    val contentColor = if (hasOutLine) MaterialTheme.goalMateColors.onBackground else MaterialTheme.goalMateColors.onPrimary
+
+    return ButtonDefaults.buttonColors(
+        containerColor = containerColor,
+        contentColor = contentColor,
+        disabledContainerColor = MaterialTheme.goalMateColors.disabled,
+        disabledContentColor = MaterialTheme.goalMateColors.onDisabled,
+    )
 }
 
 @Composable
 @Preview
-fun GoalMateButtonPreview() {
+private fun GoalMateButtonPreview() {
     GoalMateTheme {
         Column {
-            GoalMateFilledButton(
+            GoalMateButton(
                 content = "버튼",
                 onClick = {},
-            )
-            GoalMateOutLinedButton(
-                content = "버튼",
-                onClick = {},
+                buttonSize = ButtonSize.LARGE,
             )
         }
     }
