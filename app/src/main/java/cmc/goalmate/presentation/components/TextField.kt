@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,33 +50,33 @@ fun GoalMateTextField(
         onValueChange = onValueChange,
         singleLine = true,
         visualTransformation = VisualTransformation.None,
-        textStyle = MaterialTheme.goalMateTypography.body.copy(color = MaterialTheme.goalMateColors.success),
+        textStyle = MaterialTheme.goalMateTypography.body.copy(color = getTextColor(inputTextState)),
         modifier = modifier,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+        ),
         decorationBox = { innerTextField ->
             Column(
                 modifier = modifier,
             ) {
-                val textFieldColor = when (inputTextState) {
-                    InputTextState.Error -> MaterialTheme.goalMateColors.error
-                    InputTextState.Success -> MaterialTheme.goalMateColors.success
-                    InputTextState.None -> MaterialTheme.goalMateColors.disabled
-                }
+                val borderColor = getBorderColor(inputTextState)
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color.White, shape = RoundedCornerShape(30.dp))
-                        .border(
-                            width = 2.dp,
-                            color = textFieldColor,
-                            shape = RoundedCornerShape(30.dp),
-                        )
-                        .padding(
-                            horizontal = 14.dp,
-                            vertical = 10.dp,
-                        ),
+                    modifier = Modifier.run {
+                        fillMaxWidth()
+                            .background(color = Color.White, shape = RoundedCornerShape(30.dp))
+                            .border(
+                                width = 2.dp,
+                                color = borderColor,
+                                shape = RoundedCornerShape(30.dp),
+                            )
+                            .padding(
+                                horizontal = 14.dp,
+                                vertical = 11.dp,
+                            )
+                    },
                 ) {
                     Box(
                         contentAlignment = Alignment.CenterStart,
@@ -98,13 +100,29 @@ fun GoalMateTextField(
                     Text(
                         text = helperText,
                         style = MaterialTheme.goalMateTypography.bodySmall,
-                        color = textFieldColor,
+                        color = borderColor,
                     )
                 }
             }
         },
     )
 }
+
+@Composable
+private fun getTextColor(inputTextState: InputTextState): Color =
+    when (inputTextState) {
+        InputTextState.Error -> MaterialTheme.goalMateColors.error
+        InputTextState.Success -> MaterialTheme.goalMateColors.success
+        InputTextState.None -> MaterialTheme.goalMateColors.onBackground
+    }
+
+@Composable
+private fun getBorderColor(inputTextState: InputTextState): Color =
+    when (inputTextState) {
+        InputTextState.Error -> MaterialTheme.goalMateColors.error
+        InputTextState.Success -> MaterialTheme.goalMateColors.success
+        InputTextState.None -> MaterialTheme.goalMateColors.disabled
+    }
 
 @Composable
 private fun DuplicationCheckButton(
@@ -119,7 +137,7 @@ private fun DuplicationCheckButton(
     Text(
         text = stringResource(R.string.login_nick_name_duplicate_check),
         color = textColor,
-        style = MaterialTheme.goalMateTypography.caption,
+        style = MaterialTheme.goalMateTypography.caption, // TODO: 글씨스타일 조정
         modifier = modifier
             .background(color = backgroundColor, shape = RoundedCornerShape(10.dp))
             .padding(horizontal = 10.dp, vertical = 6.dp)

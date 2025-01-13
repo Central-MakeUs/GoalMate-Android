@@ -1,32 +1,38 @@
 package cmc.goalmate.presentation.ui.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cmc.goalmate.presentation.theme.GoalMateDimens
+import androidx.hilt.navigation.compose.hiltViewModel
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.goalMateColors
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(modifier: Modifier) {
-    var loginSteps by remember { mutableStateOf(createInitialLoginSteps()) }
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { loginSteps.size })
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = hiltViewModel(),
+) {
+    val state by viewModel.state.collectAsState()
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { LoginStep.entries.size })
     val coroutineScope = rememberCoroutineScope()
-    var text by remember { mutableStateOf("") }
 
     fun moveToNextPage() {
         val nextPage = pagerState.currentPage + 1
@@ -37,48 +43,81 @@ fun LoginScreen(modifier: Modifier) {
         }
     }
 
+    LoginContent(
+        state = state,
+        nickName = viewModel.nickName,
+        onAction = { action ->
+            when (action) {
+                LoginAction.KakaoLogin, LoginAction.CompleteNicknameSetup -> {
+                    moveToNextPage()
+                }
+
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        },
+        completeLogin = {
+            // TODO: 메인 화면 이동
+        },
+        pagerState = pagerState,
+        modifier = modifier
+            .background(color = MaterialTheme.goalMateColors.background)
+            .imePadding()
+            .systemBarsPadding(),
+    )
+}
+
+@Composable
+fun LoginContent(
+    state: LoginUiState,
+    nickName: String,
+    onAction: (LoginAction) -> Unit,
+    completeLogin: () -> Unit,
+    pagerState: PagerState,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.size(40.dp))
 
-        StepProgressBar(steps = loginSteps)
+        StepProgressBar(steps = state.loginSteps)
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier = Modifier.fillMaxWidth().weight(1f),
             userScrollEnabled = false,
         ) { page ->
             when (page) {
                 0 -> SingUpScreen(
-                    onLoginButtonClicked = { moveToNextPage() },
-                    modifier = Modifier.fillMaxSize(),
+                    onLoginButtonClicked = { onAction(LoginAction.KakaoLogin) },
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 1 -> NickNameSettingScreen(
-                    text = text,
-                    onTextChanged = { text = it },
-                    onDuplicationCheckButtonClicked = {},
-                    onCompletedButtonClicked = { moveToNextPage() },
-                    modifier = Modifier.fillMaxSize(),
+                    text = nickName,
+                    onTextChanged = { onAction(LoginAction.SetNickName(it)) },
+                    textValidationState = state.nickNameValidationState,
+                    helperText = state.helperText,
+                    isDuplicationCheckEnabled = state.isDuplicationCheckEnabled,
+                    isNextStepEnabled = state.isNextStepEnabled,
+                    onDuplicationCheckButtonClicked = { onAction(LoginAction.CheckDuplication) },
+                    onCompletedButtonClicked = { onAction(LoginAction.CompleteNicknameSetup) },
+                    modifier = Modifier,
                 )
 
                 2 -> CompletedScreen(
-                    nickName = "예니",
-                    onCompletedButtonClicked = { moveToNextPage() },
-                    modifier = Modifier.fillMaxSize(),
+                    nickName = nickName,
+                    onCompletedButtonClicked = completeLogin,
+                    modifier = Modifier,
                 )
             }
         }
-
-        Spacer(modifier = Modifier.size(GoalMateDimens.BottomMargin))
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LoginScreenPreview() {
     GoalMateTheme {
