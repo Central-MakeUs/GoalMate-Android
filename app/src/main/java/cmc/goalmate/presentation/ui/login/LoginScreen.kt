@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -56,9 +57,7 @@ fun LoginScreen(
             }
             viewModel.onAction(action)
         },
-        completeLogin = {
-            // TODO: 메인 화면 이동
-        },
+        completeLogin = navigateToHome,
         pagerState = pagerState,
         modifier = modifier
             .background(color = MaterialTheme.goalMateColors.background)
@@ -119,8 +118,11 @@ fun LoginContent(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     GoalMateTheme {
-        LoginScreen(modifier = Modifier.fillMaxSize())
+        LoginScreen(
+            navigateToHome = {},
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
