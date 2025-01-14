@@ -50,7 +50,7 @@ fun GoalMateTextField(
         onValueChange = onValueChange,
         singleLine = true,
         visualTransformation = VisualTransformation.None,
-        textStyle = MaterialTheme.goalMateTypography.body.copy(color = getTextColor(inputTextState)),
+        textStyle = MaterialTheme.goalMateTypography.body.copy(color = inputTextState.getTextColor()),
         modifier = modifier,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
@@ -59,7 +59,7 @@ fun GoalMateTextField(
             Column(
                 modifier = modifier,
             ) {
-                val borderColor = getBorderColor(inputTextState)
+                val borderColor = inputTextState.getBorderColor()
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -109,16 +109,16 @@ fun GoalMateTextField(
 }
 
 @Composable
-private fun getTextColor(inputTextState: InputTextState): Color =
-    when (inputTextState) {
+fun InputTextState.getTextColor(): Color =
+    when (this) {
         InputTextState.Error -> MaterialTheme.goalMateColors.error
         InputTextState.Success -> MaterialTheme.goalMateColors.success
         InputTextState.None -> MaterialTheme.goalMateColors.onBackground
     }
 
 @Composable
-private fun getBorderColor(inputTextState: InputTextState): Color =
-    when (inputTextState) {
+fun InputTextState.getBorderColor(): Color =
+    when (this) {
         InputTextState.Error -> MaterialTheme.goalMateColors.error
         InputTextState.Success -> MaterialTheme.goalMateColors.success
         InputTextState.None -> MaterialTheme.goalMateColors.disabled
@@ -137,7 +137,7 @@ private fun DuplicationCheckButton(
     Text(
         text = stringResource(R.string.login_nick_name_duplicate_check),
         color = textColor,
-        style = MaterialTheme.goalMateTypography.caption, // TODO: 글씨스타일 조정
+        style = MaterialTheme.goalMateTypography.buttonLabelMedium,
         modifier = modifier
             .background(color = backgroundColor, shape = RoundedCornerShape(10.dp))
             .padding(horizontal = 10.dp, vertical = 6.dp)

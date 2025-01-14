@@ -20,7 +20,12 @@ private val pretendardRegular =
 
 private val pretendardSemiBold =
     FontFamily(
-        Font(R.font.pretendard_semibold, FontWeight.Normal, FontStyle.Normal),
+        Font(R.font.pretendard_semibold, FontWeight.SemiBold, FontStyle.Normal),
+    )
+
+private val pretendardMedium =
+    FontFamily(
+        Font(R.font.pretendard_medium, FontWeight.Medium, FontStyle.Normal),
     )
 
 data class GoalMateTypography(
@@ -33,6 +38,7 @@ data class GoalMateTypography(
     val body: TextStyle,
     val bodySmall: TextStyle,
     val buttonLabelLarge: TextStyle,
+    val buttonLabelMedium: TextStyle,
     val buttonLabelSmall: TextStyle,
     val caption: TextStyle,
 )
@@ -100,6 +106,13 @@ private val ButtonLabelLarge =
         lineHeight = 25.6.sp,
     )
 
+private val ButtonLabelMedium =
+    TextStyle(
+        fontFamily = pretendardMedium,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
+    )
+
 private val ButtonLabelSmall =
     TextStyle(
         fontFamily = pretendardSemiBold,
@@ -125,6 +138,7 @@ val goalMateTypography =
         body = Body,
         bodySmall = BodySmall,
         buttonLabelLarge = ButtonLabelLarge,
+        buttonLabelMedium = ButtonLabelMedium,
         buttonLabelSmall = ButtonLabelSmall,
         caption = Caption,
     )
