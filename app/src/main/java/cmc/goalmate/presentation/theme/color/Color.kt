@@ -54,6 +54,9 @@ sealed class ColorSet {
             completed = Primary100,
             disabled = Grey300,
             onDisabled = White,
+            outline = Grey300,
+            checkboxBorder = Grey500,
+            checkboxBackground = White,
         )
 
         override var darkColors = GoalMateColors(
@@ -68,6 +71,9 @@ sealed class ColorSet {
             completed = Primary100,
             disabled = Grey300,
             onDisabled = White,
+            outline = Grey300,
+            checkboxBorder = Grey500,
+            checkboxBackground = White,
         )
     }
 }

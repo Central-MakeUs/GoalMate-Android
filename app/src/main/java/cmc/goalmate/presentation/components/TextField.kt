@@ -121,7 +121,7 @@ fun InputTextState.getBorderColor(): Color =
     when (this) {
         InputTextState.Error -> MaterialTheme.goalMateColors.error
         InputTextState.Success -> MaterialTheme.goalMateColors.success
-        InputTextState.None -> MaterialTheme.goalMateColors.disabled
+        InputTextState.None -> MaterialTheme.goalMateColors.outline
     }
 
 @Composable
