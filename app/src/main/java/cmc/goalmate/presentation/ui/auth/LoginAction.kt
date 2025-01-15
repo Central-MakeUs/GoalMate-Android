@@ -1,4 +1,4 @@
-package cmc.goalmate.presentation.ui.login
+package cmc.goalmate.presentation.ui.auth
 
 sealed interface LoginAction {
     data object KakaoLogin : LoginAction

@@ -1,4 +1,4 @@
-package cmc.goalmate.presentation.ui.login
+package cmc.goalmate.presentation.ui.auth
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import cmc.goalmate.domain.ValidateNickName
 import cmc.goalmate.presentation.components.InputTextState
+import cmc.goalmate.presentation.ui.auth.component.Step
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +19,7 @@ data class LoginUiState(
     val helperText: String,
 ) {
     val isDuplicationCheckEnabled: Boolean
-        get() = nickNameFormatValidationState == InputTextState.Success
+        get() = nickNameFormatValidationState == InputTextState.Success && duplicationCheckState != InputTextState.Success
 
     val isNextStepEnabled: Boolean
         get() = (nickNameFormatValidationState == InputTextState.Success) && (duplicationCheckState == InputTextState.Success)

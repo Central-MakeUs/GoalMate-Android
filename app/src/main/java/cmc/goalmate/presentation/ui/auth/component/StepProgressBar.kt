@@ -1,9 +1,12 @@
-package cmc.goalmate.presentation.ui.login
+package cmc.goalmate.presentation.ui.auth.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -25,6 +28,8 @@ import cmc.goalmate.presentation.theme.color.Grey400
 import cmc.goalmate.presentation.theme.color.Grey600
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.auth.LoginStep
+import cmc.goalmate.presentation.ui.auth.StepStatus
 
 data class Step(val step: LoginStep, val status: StepStatus = StepStatus.PENDING)
 
@@ -33,12 +38,18 @@ fun StepProgressBar(
     steps: List<Step>,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier) {
-        steps.forEach {
-            StepItem(
-                loginStep = it.step,
-                stepStatus = it.status,
-            )
+    Column {
+        Spacer(modifier = Modifier.size(86.dp))
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            steps.forEach {
+                StepItem(
+                    loginStep = it.step,
+                    stepStatus = it.status,
+                )
+            }
         }
     }
 }
@@ -51,6 +62,8 @@ fun StepItem(
 ) {
     ConstraintLayout(modifier = modifier) {
         val (stepChip, startBar, endBar, label) = createRefs()
+//        val startGuideline = createGuidelineFromStart(12.dp)
+        val endGuideline = createGuidelineFromEnd(0.dp)
 
         if (!loginStep.isFirstStep()) {
             ProcessBar(
@@ -67,8 +80,8 @@ fun StepItem(
             step = loginStep.step,
             processStatus = stepStatus,
             modifier = Modifier.constrainAs(stepChip) {
-                start.linkTo(label.start)
-                end.linkTo(label.end)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
                 top.linkTo(parent.top)
             },
         )
@@ -80,17 +93,20 @@ fun StepItem(
                     start.linkTo(stepChip.end)
                     top.linkTo(stepChip.top)
                     bottom.linkTo(stepChip.bottom)
-                    end.linkTo(parent.end)
+                    end.linkTo(endGuideline)
                 },
             )
         }
 
-        Label(
-            content = loginStep.title,
-            modifier = Modifier.constrainAs(label) {
-                top.linkTo(stepChip.bottom, margin = 8.dp)
-            },
-        )
+        if (stepStatus == StepStatus.CURRENT) {
+            Label(
+                content = loginStep.title,
+                modifier = Modifier.constrainAs(label) {
+                    top.linkTo(stepChip.bottom, margin = 8.dp)
+                    centerHorizontallyTo(parent)
+                },
+            )
+        }
     }
 }
 
@@ -173,7 +189,7 @@ private fun Label(
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 private fun StepProgressBarPreview() {
     val steps = listOf(
         Step(LoginStep.SIGN_UP, StepStatus.COMPLETED),

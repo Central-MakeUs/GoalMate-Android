@@ -7,8 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import cmc.goalmate.presentation.ui.auth.navigation.authNavGraph
 import cmc.goalmate.presentation.ui.home.HomeScreen
-import cmc.goalmate.presentation.ui.login.LoginScreen
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
 import cmc.goalmate.presentation.ui.mypage.MyPageScreen
 
@@ -20,24 +20,6 @@ fun GoalMateNavHost(navController: NavHostController) {
     ) {
         authNavGraph(navController)
         mainNavGraph(navController)
-    }
-}
-
-fun NavGraphBuilder.authNavGraph(navController: NavController) {
-    navigation<Screen.Auth>(
-        startDestination = Screen.Auth.Login,
-    ) {
-        composable<Screen.Auth.Login> {
-            LoginScreen(
-                navigateToHome = {
-                    navController.navigate(Screen.Main) {
-                        popUpTo(route = Screen.Auth.Login) {
-                            inclusive = true
-                        }
-                    }
-                },
-            )
-        }
     }
 }
 
