@@ -9,6 +9,11 @@
     <string name="login_nick_name">2~5 글자 닉네임을 입력해주세요.</string>
     <string name="login_nick_name_duplicate_check">중복확인</string>
     <string name="login_nick_name_btn">닉네임 입력완료</string>
+    <string name="login_term_of_service_title">골메이트를 시작하려면\n약관 동의가 필요해요</string>
+    <string name="login_term_of_service_option_1">만 14세 이상입니다. (필수)</string>
+    <string name="login_term_of_service_option_2">이용약관에 동의합니다. (필수)</string>
+    <string name="login_term_of_service_option_3">개인정보 처리 방침에 동의합니다. (필수)</string>
+    <string name="login_term_of_service_btn">목표 시작하기</string>
     <string name="login_greeting_message">환영해요 %1$s님,\n이제 첫 목표를 시작해보세요!</string>
 
     <string name="goal_available_members">무료 참여</string>

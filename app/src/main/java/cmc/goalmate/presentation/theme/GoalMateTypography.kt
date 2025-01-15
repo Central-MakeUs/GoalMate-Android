@@ -73,7 +73,7 @@ private val H4 =
 
 private val Subtitle =
     TextStyle(
-        fontFamily = pretendardRegular,
+        fontFamily = pretendardSemiBold,
         fontSize = 20.sp,
         lineHeight = 26.sp,
     )

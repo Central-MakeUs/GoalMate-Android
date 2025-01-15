@@ -57,26 +57,25 @@ fun GoalMateTextField(
         ),
         decorationBox = { innerTextField ->
             Column(
-                modifier = modifier,
+                modifier = Modifier,
             ) {
                 val borderColor = inputTextState.getBorderColor()
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.run {
-                        fillMaxWidth()
-                            .background(color = Color.White, shape = RoundedCornerShape(30.dp))
-                            .border(
-                                width = 2.dp,
-                                color = borderColor,
-                                shape = RoundedCornerShape(30.dp),
-                            )
-                            .padding(
-                                horizontal = 14.dp,
-                                vertical = 11.dp,
-                            )
-                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Color.White, shape = RoundedCornerShape(30.dp))
+                        .border(
+                            width = 2.dp,
+                            color = borderColor,
+                            shape = RoundedCornerShape(30.dp),
+                        )
+                        .padding(
+                            horizontal = 14.dp,
+                            vertical = 11.dp,
+                        ),
                 ) {
                     Box(
                         contentAlignment = Alignment.CenterStart,
@@ -95,14 +94,12 @@ fun GoalMateTextField(
                         onClick = onDuplicateCheck,
                     )
                 }
-                if (inputTextState != InputTextState.None) {
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Text(
-                        text = helperText,
-                        style = MaterialTheme.goalMateTypography.bodySmall,
-                        color = borderColor,
-                    )
-                }
+                Spacer(modifier = Modifier.size(10.dp))
+                Text(
+                    text = helperText,
+                    style = MaterialTheme.goalMateTypography.bodySmall,
+                    color = borderColor,
+                )
             }
         },
     )
