@@ -1,23 +1,52 @@
 package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBar
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
+import cmc.goalmate.presentation.theme.GoalMateDimens
+import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.goalMateColors
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogoAppBar() {
-    TopAppBar(
-        title = {
-            Image(
-                imageVector = ImageVector.vectorResource(R.drawable.icon_logo_sub),
-                contentDescription = stringResource(R.string.app_name),
-            )
-        },
-    )
+fun LogoAppBar(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .background(MaterialTheme.goalMateColors.background)
+            .padding(horizontal = GoalMateDimens.HorizontalPadding),
+    ) {
+        Image(
+            imageVector = ImageVector.vectorResource(R.drawable.icon_logo_sub),
+            contentDescription = stringResource(R.string.app_name),
+            modifier = Modifier.align(alignment = Alignment.CenterStart),
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun LogoAppBarPreview() {
+    GoalMateTheme {
+        Column {
+            LogoAppBar()
+        }
+    }
 }
