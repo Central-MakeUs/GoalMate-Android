@@ -1,7 +1,6 @@
 package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,15 +29,12 @@ fun GoalMateCheckBox(
     onCheckedChange: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val borderColor =
-        if (isChecked) MaterialTheme.goalMateColors.outline else MaterialTheme.goalMateColors.checkboxBorder
     val contentColor =
         if (isChecked) MaterialTheme.goalMateColors.primary else MaterialTheme.goalMateColors.checkboxBackground
 
     Box(
         modifier = modifier
             .size(18.dp)
-            .border(2.dp, borderColor, RoundedCornerShape(4.dp))
             .background(color = contentColor, RoundedCornerShape(4.dp))
             .clickable { onCheckedChange() },
     ) {
@@ -48,7 +44,7 @@ fun GoalMateCheckBox(
         ) {
             if (isChecked) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.icon_check),
+                    imageVector = ImageVector.vectorResource(R.drawable.icon_checkbox_check),
                     contentDescription = null,
                 )
             }

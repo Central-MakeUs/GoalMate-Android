@@ -16,7 +16,6 @@ data class GoalMateColors(
     val disabled: Color,
     val onDisabled: Color,
     val outline: Color,
-    val checkboxBorder: Color,
     val checkboxBackground: Color,
 ) {
     val primary: Color get() = material.primary
