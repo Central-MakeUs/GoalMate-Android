@@ -1,6 +1,7 @@
 package cmc.goalmate.presentation.ui.home
 
 data class GoalUiModel(
+    val id: Long,
     val title: String,
     val imageUrl: String,
     val price: String,
@@ -18,6 +19,7 @@ enum class GoalState {
 
 val dummyGoals = listOf(
     GoalUiModel(
+        id = 0L,
         title = "새로운 목표 1",
         imageUrl = "",
         price = "100,000원",
@@ -28,6 +30,7 @@ val dummyGoals = listOf(
         state = GoalState.AVAILABLE,
     ),
     GoalUiModel(
+        id = 1L,
         title = "새로운 목표 2",
         imageUrl = "",
         price = "200,000원",
@@ -38,6 +41,7 @@ val dummyGoals = listOf(
         state = GoalState.AVAILABLE,
     ),
     GoalUiModel(
+        id = 2L,
         title = "새로운 목표 3",
         imageUrl = "",
         price = "50,000원",
@@ -48,6 +52,7 @@ val dummyGoals = listOf(
         state = GoalState.AVAILABLE,
     ),
     GoalUiModel(
+        id = 3L,
         title = "새로운 목표 4",
         imageUrl = "",
         price = "300,000원",

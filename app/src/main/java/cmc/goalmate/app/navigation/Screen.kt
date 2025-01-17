@@ -27,4 +27,7 @@ sealed interface Screen {
         @Serializable
         data object MyPage : Screen
     }
+
+    @Serializable
+    data class Detail(val goalId: Long) : Screen
 }

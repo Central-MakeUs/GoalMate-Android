@@ -18,6 +18,7 @@ import cmc.goalmate.presentation.ui.home.components.GoalItem
 
 @Composable
 fun HomeScreen(
+    navigateToDetail: (id: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -30,7 +31,10 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(30.dp),
     ) {
         items(state.goals) { goal ->
-            GoalItem(goal = goal)
+            GoalItem(
+                goal = goal,
+                navigateToDetail = navigateToDetail,
+            )
         }
     }
 }
@@ -39,6 +43,8 @@ fun HomeScreen(
 @Preview(showBackground = true, showSystemUi = true)
 fun HomeScreenPreview() {
     GoalMateTheme {
-        HomeScreen()
+        HomeScreen(
+            navigateToDetail = {},
+        )
     }
 }

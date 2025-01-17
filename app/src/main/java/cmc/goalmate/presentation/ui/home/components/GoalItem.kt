@@ -1,6 +1,7 @@
 package cmc.goalmate.presentation.ui.home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,17 +36,18 @@ import cmc.goalmate.presentation.ui.home.GoalUiModel
 @Composable
 fun GoalItem(
     goal: GoalUiModel,
+    navigateToDetail: (id: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.width(GoalMateDimens.GoalItemWidth),
+        modifier = modifier.width(GoalMateDimens.GoalItemWidth).clickable { navigateToDetail(goal.id) },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         GoalThumbnail(goalState = goal.state)
         Spacer(modifier = Modifier.size(10.dp))
         Text(
             text = goal.title,
-            style = MaterialTheme.goalMateTypography.subtitleSmall,
+            style = MaterialTheme.goalMateTypography.subtitleMedium,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
@@ -117,6 +119,7 @@ private fun GoalThumbnail(
 private fun GoalItemPreview() {
     GoalMateTheme {
         val dummyGoal = GoalUiModel(
+            id = 12L,
             title = "(멘토명)과 함께하는 (목표명) 목표",
             imageUrl = "",
             price = "20,000원",
@@ -126,6 +129,10 @@ private fun GoalItemPreview() {
             maxMembers = 10,
             state = GoalState.SOLD_OUT,
         )
-        GoalItem(goal = dummyGoal, modifier = Modifier.background(Color.White))
+        GoalItem(
+            goal = dummyGoal,
+            navigateToDetail = {},
+            modifier = Modifier.background(Color.White),
+        )
     }
 }
