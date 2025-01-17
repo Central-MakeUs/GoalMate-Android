@@ -33,14 +33,19 @@ data class GoalMateTypography(
     val h2: TextStyle,
     val h3: TextStyle,
     val h4: TextStyle,
+    val h5: TextStyle,
     val subtitle: TextStyle,
+    val subtitleMedium: TextStyle,
     val subtitleSmall: TextStyle,
     val body: TextStyle,
     val bodySmall: TextStyle,
+    val bodySmallMedium: TextStyle,
     val buttonLabelLarge: TextStyle,
     val buttonLabelMedium: TextStyle,
     val buttonLabelSmall: TextStyle,
     val caption: TextStyle,
+    val captionSemiBold: TextStyle,
+    val captionRegular: TextStyle,
 )
 
 private val H1 =
@@ -71,6 +76,13 @@ private val H4 =
         lineHeight = 31.2.sp,
     )
 
+private val H5 =
+    TextStyle(
+        fontFamily = pretendardSemiBold,
+        fontSize = 22.sp,
+        lineHeight = 28.6.sp,
+    )
+
 private val Subtitle =
     TextStyle(
         fontFamily = pretendardSemiBold,
@@ -78,11 +90,18 @@ private val Subtitle =
         lineHeight = 26.sp,
     )
 
-private val SubtitleSmall =
+private val SubtitleMedium =
     TextStyle(
         fontFamily = pretendardSemiBold,
         fontSize = 18.sp,
         lineHeight = 23.4.sp,
+    )
+
+private val SubtitleSmall =
+    TextStyle(
+        fontFamily = pretendardSemiBold,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
     )
 
 private val Body =
@@ -99,11 +118,18 @@ private val BodySmall =
         lineHeight = 21.sp,
     )
 
+private val BodySmallMedium =
+    TextStyle(
+        fontFamily = pretendardMedium,
+        fontSize = 14.sp,
+        lineHeight = 21.sp,
+    )
+
 private val ButtonLabelLarge =
     TextStyle(
-        fontFamily = pretendardSemiBold,
+        fontFamily = pretendardMedium,
         fontSize = 16.sp,
-        lineHeight = 25.6.sp,
+        lineHeight = 19.09.sp,
     )
 
 private val ButtonLabelMedium =
@@ -120,6 +146,20 @@ private val ButtonLabelSmall =
         lineHeight = 14.sp,
     )
 
+private val CaptionSemibold =
+    TextStyle(
+        fontFamily = pretendardSemiBold,
+        fontSize = 13.sp,
+        lineHeight = 19.5.sp,
+    )
+
+private val CaptionRegular =
+    TextStyle(
+        fontFamily = pretendardRegular,
+        fontSize = 13.sp,
+        lineHeight = 19.5.sp,
+    )
+
 private val Caption =
     TextStyle(
         fontFamily = pretendardRegular,
@@ -133,12 +173,17 @@ val goalMateTypography =
         h2 = H2,
         h3 = H3,
         h4 = H4,
+        h5 = H5,
         subtitle = Subtitle,
+        subtitleMedium = SubtitleMedium,
         subtitleSmall = SubtitleSmall,
         body = Body,
         bodySmall = BodySmall,
+        bodySmallMedium = BodySmallMedium,
         buttonLabelLarge = ButtonLabelLarge,
         buttonLabelMedium = ButtonLabelMedium,
         buttonLabelSmall = ButtonLabelSmall,
         caption = Caption,
+        captionSemiBold = CaptionSemibold,
+        captionRegular = CaptionRegular,
     )

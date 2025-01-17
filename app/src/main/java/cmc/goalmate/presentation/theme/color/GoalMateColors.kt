@@ -17,11 +17,16 @@ data class GoalMateColors(
     val onDisabled: Color,
     val outline: Color,
     val checkboxBackground: Color,
+    val labelTitle: Color,
+    val primaryVariant: Color,
+    val onPrimaryVariant: Color,
+    val secondaryVariant: Color,
+    val onSecondaryVariant: Color,
+    val thinDivider: Color,
+    val thickDivider: Color,
 ) {
     val primary: Color get() = material.primary
-    val primaryVariant: Color get() = material.primaryContainer
     val secondary: Color get() = material.secondary
-    val secondaryVariant: Color get() = material.secondaryContainer
     val background: Color get() = material.background
     val surface: Color get() = material.surface
     val error: Color get() = material.error
@@ -30,4 +35,6 @@ data class GoalMateColors(
     val onBackground: Color get() = material.onBackground
     val onSurface: Color get() = material.onSurface
     val onError: Color get() = material.onError
+    val surfaceVariant: Color get() = material.surfaceVariant
+    val onSurfaceVariant: Color get() = material.onSurfaceVariant
 }

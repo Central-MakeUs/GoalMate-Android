@@ -12,10 +12,14 @@ val Yellow = Color(0xFFFFCC00)
 val Blue = Color(0xFF007AFF)
 
 val Primary400 = Color(0xFFAEFF23)
+val Primary900 = Color(0xFF709100)
+val Primary50 = Color(0xFFF4FFE5)
 val Primary100 = Color(0xFFE5FFBE)
 val Purple500 = Color(0xFF7423FF)
 val YellowBright500 = Color(0xFFFFE223)
 val GreenBright400 = Color(0xFF40FF23)
+val Secondary50 = Color(0xFFFFFCE5)
+val Secondary800 = Color(0xFFF99E13)
 
 val Grey50 = Color(0xFFFAFAFA)
 val Grey100 = Color(0xFFF5F5F5)
@@ -43,6 +47,8 @@ sealed class ColorSet {
                 background = White,
                 onBackground = Grey900,
                 error = Red,
+                surfaceVariant = Grey50,
+                onSurfaceVariant = Grey600,
             ),
             secondary01 = Purple500,
             secondary02 = YellowBright500,
@@ -56,6 +62,13 @@ sealed class ColorSet {
             onDisabled = White,
             outline = Grey300,
             checkboxBackground = Grey200,
+            labelTitle = Grey500,
+            primaryVariant = Primary50,
+            onPrimaryVariant = Primary900,
+            secondaryVariant = Secondary50,
+            onSecondaryVariant = Secondary800,
+            thinDivider = Grey100,
+            thickDivider = Grey50,
         )
 
         override var darkColors = GoalMateColors(
@@ -72,6 +85,13 @@ sealed class ColorSet {
             onDisabled = White,
             outline = Grey300,
             checkboxBackground = Grey200,
+            labelTitle = Grey500,
+            primaryVariant = Primary50,
+            onPrimaryVariant = Primary900,
+            secondaryVariant = Secondary50,
+            onSecondaryVariant = Secondary800,
+            thinDivider = Grey100,
+            thickDivider = Grey50,
         )
     }
 }
