@@ -50,7 +50,7 @@ fun WelcomeScreen(
 
             Text(
                 text = stringResource(R.string.login_greeting_message, nickName),
-                style = MaterialTheme.goalMateTypography.subtitleSmall,
+                style = MaterialTheme.goalMateTypography.subtitleMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.TopCenter).padding(top = 40.5.dp),
             )

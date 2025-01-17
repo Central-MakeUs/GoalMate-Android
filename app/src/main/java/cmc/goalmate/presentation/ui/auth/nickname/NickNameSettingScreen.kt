@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalMateButton
@@ -54,7 +54,7 @@ fun NickNameSettingScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     NickNameSettingContent(
         text = viewModel.nickName,
@@ -104,7 +104,7 @@ fun NickNameSettingContent(
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = stringResource(R.string.login_nick_name_setting_title),
-            style = MaterialTheme.goalMateTypography.subtitleSmall,
+            style = MaterialTheme.goalMateTypography.subtitleMedium,
             color = MaterialTheme.goalMateColors.onBackground,
         )
 

@@ -2,6 +2,7 @@ package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,8 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,13 +25,14 @@ import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
+import cmc.goalmate.presentation.theme.goalMateTypography
 
 @Composable
 fun LogoAppBar(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(GoalMateDimens.TopBarHeight)
             .background(MaterialTheme.goalMateColors.background)
             .padding(horizontal = GoalMateDimens.HorizontalPadding),
     ) {
@@ -42,11 +45,43 @@ fun LogoAppBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun AppBarWithBackButton(
+    onBackButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(GoalMateDimens.TopBarHeight)
+            .background(MaterialTheme.goalMateColors.background)
+            .padding(horizontal = 4.dp),
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.icon_back),
+            contentDescription = null,
+            modifier = Modifier
+                .align(alignment = Alignment.CenterStart)
+                .padding(12.dp)
+                .clickable {
+                    onBackButtonClicked()
+                },
+        )
+        Text(
+            text = "목표",
+            style = MaterialTheme.goalMateTypography.subtitle,
+            modifier = Modifier.align(alignment = Alignment.Center),
+        )
+    }
+}
+
+@Composable
 @Preview
 private fun LogoAppBarPreview() {
     GoalMateTheme {
         Column {
             LogoAppBar()
+            Spacer(Modifier.size(12.dp))
+            AppBarWithBackButton(onBackButtonClicked = {})
         }
     }
 }

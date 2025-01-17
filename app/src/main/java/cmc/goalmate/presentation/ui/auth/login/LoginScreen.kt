@@ -46,7 +46,7 @@ fun LoginScreen(
             )
             Text(
                 text = stringResource(R.string.login_onboarding_message),
-                style = MaterialTheme.goalMateTypography.subtitleSmall,
+                style = MaterialTheme.goalMateTypography.subtitleMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.TopCenter).padding(top = 17.dp),
             )
