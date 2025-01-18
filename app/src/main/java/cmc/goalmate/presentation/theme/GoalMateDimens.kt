@@ -12,4 +12,7 @@ object GoalMateDimens {
     val ItemVerticalPaddingLarge = 30.dp
     val ItemVerticalPaddingMedium = 20.dp
     val ItemVerticalPaddingSmall = 16.dp
+
+    val ContentImageWidth = 320.dp
+    val ContentImageHeight = 300.dp
 }
