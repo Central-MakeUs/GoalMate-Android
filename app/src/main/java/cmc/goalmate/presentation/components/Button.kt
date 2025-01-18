@@ -53,7 +53,7 @@ fun getButtonPadding(buttonSize: ButtonSize): PaddingValues =
     when (buttonSize) {
         ButtonSize.LARGE -> PaddingValues(horizontal = 56.dp, vertical = 17.5.dp)
         ButtonSize.MEDIUM -> PaddingValues(horizontal = 56.dp, vertical = 14.5.dp)
-        ButtonSize.SMALL -> PaddingValues(horizontal = 56.dp, vertical = 12.5.dp)
+        ButtonSize.SMALL -> PaddingValues(horizontal = 32.dp, vertical = 12.5.dp)
     }
 
 @Composable

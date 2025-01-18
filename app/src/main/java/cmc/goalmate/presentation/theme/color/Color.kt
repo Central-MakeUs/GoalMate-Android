@@ -42,6 +42,7 @@ sealed class ColorSet {
                 primary = Primary400,
                 onPrimary = Black,
                 secondary = Purple500,
+                onSecondary = White,
                 surface = White,
                 onSurface = Grey800,
                 background = White,
@@ -52,6 +53,7 @@ sealed class ColorSet {
             ),
             secondary01 = Purple500,
             secondary02 = YellowBright500,
+            onSecondary02 = Grey800,
             secondary03 = GreenBright400,
             success = Blue,
             selected = Grey800,
@@ -69,12 +71,18 @@ sealed class ColorSet {
             onSecondaryVariant = Secondary800,
             thinDivider = Grey100,
             thickDivider = Grey50,
+            finished = Grey500,
+            activeProgressBar = Primary400,
+            activeProgressBackground = Primary50,
+            completedProgressBar = Grey400,
+            completedProgressBackground = Grey100,
         )
 
         override var darkColors = GoalMateColors(
             material = darkColorScheme(),
             secondary01 = Purple500,
             secondary02 = YellowBright500,
+            onSecondary02 = Grey800,
             secondary03 = GreenBright400,
             success = Blue,
             selected = Grey800,
@@ -92,6 +100,11 @@ sealed class ColorSet {
             onSecondaryVariant = Secondary800,
             thinDivider = Grey100,
             thickDivider = Grey50,
+            finished = Grey500,
+            activeProgressBar = Primary400,
+            activeProgressBackground = Primary50,
+            completedProgressBar = Grey400,
+            completedProgressBackground = Grey100,
         )
     }
 }

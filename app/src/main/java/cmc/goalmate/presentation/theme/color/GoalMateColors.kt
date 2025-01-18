@@ -7,6 +7,7 @@ data class GoalMateColors(
     val material: ColorScheme,
     val secondary01: Color,
     val secondary02: Color,
+    val onSecondary02: Color,
     val secondary03: Color,
     val success: Color,
     val selected: Color,
@@ -24,6 +25,11 @@ data class GoalMateColors(
     val onSecondaryVariant: Color,
     val thinDivider: Color,
     val thickDivider: Color,
+    val finished: Color,
+    val activeProgressBar: Color,
+    val activeProgressBackground: Color,
+    val completedProgressBar: Color,
+    val completedProgressBackground: Color,
 ) {
     val primary: Color get() = material.primary
     val secondary: Color get() = material.secondary
