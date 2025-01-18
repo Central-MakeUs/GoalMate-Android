@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import cmc.goalmate.presentation.ui.auth.navigation.authNavGraph
 import cmc.goalmate.presentation.ui.detail.GoalDetailScreen
+import cmc.goalmate.presentation.ui.detail.finish.navigation.navigateToPaymentCompleted
+import cmc.goalmate.presentation.ui.detail.finish.navigation.paymentCompleted
 import cmc.goalmate.presentation.ui.home.HomeScreen
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
 import cmc.goalmate.presentation.ui.mypage.MyPageScreen
@@ -22,8 +24,9 @@ fun GoalMateNavHost(navController: NavHostController) {
         authNavGraph(navController)
         mainNavGraph(navController)
         composable<Screen.Detail> {
-            GoalDetailScreen()
+            GoalDetailScreen(navigateToCompleted = { navController.navigateToPaymentCompleted(it) })
         }
+        paymentCompleted { }
     }
 }
 

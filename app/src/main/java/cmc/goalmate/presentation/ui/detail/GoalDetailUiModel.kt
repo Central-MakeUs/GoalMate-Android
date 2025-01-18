@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.detail
 
+import cmc.goalmate.presentation.ui.detail.finish.navigation.GoalSummary
 import cmc.goalmate.presentation.ui.home.GoalState
 
 // + 이미 참여중일 경우?
@@ -22,3 +23,11 @@ data class GoalDetailUiModel(
     val milestone: List<String>,
     val detailImageUrl: String,
 )
+
+fun GoalDetailUiModel.toSummary(): GoalSummary =
+    GoalSummary(
+        title = title,
+        mentor = mentorName,
+        price = price,
+        totalPrice = totalPrice,
+    )

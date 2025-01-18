@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +42,7 @@ fun InfoRow(
     title: String,
     content: String,
     modifier: Modifier = Modifier,
+    annotatedContent: AnnotatedString? = null,
     extraContent: (@Composable () -> Unit)? = null,
 ) {
     Row(
@@ -50,13 +53,13 @@ fun InfoRow(
             text = title,
             modifier = Modifier.defaultMinSize(minWidth = 60.dp),
         )
-        Spacer(Modifier.size(30.dp))
+        Spacer(Modifier.width(30.dp))
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier.weight(1f),
         ) {
             Text(
-                text = content,
+                text = annotatedContent ?: AnnotatedString(content),
                 style = MaterialTheme.goalMateTypography.subtitleSmall,
                 color = MaterialTheme.goalMateColors.onBackground,
             )
@@ -65,6 +68,18 @@ fun InfoRow(
                 extraContent.invoke()
             }
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun InfoRowPreview() {
+    GoalMateTheme {
+        InfoRow(
+            title = "목표",
+            content = "목표명",
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 

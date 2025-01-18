@@ -48,6 +48,7 @@ fun LogoAppBar(modifier: Modifier = Modifier) {
 fun AppBarWithBackButton(
     onBackButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    title: String? = null,
 ) {
     Box(
         modifier = modifier
@@ -66,11 +67,14 @@ fun AppBarWithBackButton(
                     onBackButtonClicked()
                 },
         )
-        Text(
-            text = "목표",
-            style = MaterialTheme.goalMateTypography.subtitle,
-            modifier = Modifier.align(alignment = Alignment.Center),
-        )
+        if (title != null) {
+            Text(
+                text = title,
+                style = MaterialTheme.goalMateTypography.subtitle,
+                color = MaterialTheme.goalMateColors.onBackground,
+                modifier = Modifier.align(alignment = Alignment.Center),
+            )
+        }
     }
 }
 

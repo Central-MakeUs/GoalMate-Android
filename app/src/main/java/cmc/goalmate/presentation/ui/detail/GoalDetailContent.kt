@@ -3,34 +3,31 @@ package cmc.goalmate.presentation.ui.detail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.AppBarWithBackButton
-import cmc.goalmate.presentation.components.GoalMateImage
+import cmc.goalmate.presentation.components.GoalDateRange
+import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.PriceContent
 import cmc.goalmate.presentation.components.PriceContentStyle
 import cmc.goalmate.presentation.components.ThickDivider
 import cmc.goalmate.presentation.components.ThinDivider
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
-import cmc.goalmate.presentation.theme.color.Grey600
 import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
@@ -41,76 +38,88 @@ import cmc.goalmate.presentation.ui.detail.components.WeeklyRowItem
 import cmc.goalmate.presentation.ui.home.GoalState
 
 @Composable
-private fun GoalDetailContent(
+fun GoalDetailContent(
     goal: GoalDetailUiModel,
     showBottomSheet: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        AppBarWithBackButton(onBackButtonClicked = {})
-        ImageSlider(
-            imageUrls = goal.imageUrls,
-            modifier = Modifier.size(width = 360.dp, height = 270.dp),
-        )
+    Box {
         Column(
-            modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+            modifier = modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            GoalHeader(
-                goal = goal,
-                modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingSmall),
+            AppBarWithBackButton(
+                onBackButtonClicked = {},
+                title = stringResource(R.string.goal_detail_title),
             )
-
-            ThinDivider()
-
-            GoalInfo(
-                goal = goal,
-                modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingMedium),
+            ImageSlider(
+                imageUrls = goal.imageUrls,
+                modifier = Modifier.size(width = 360.dp, height = 270.dp),
             )
-
-            ThinDivider()
-
-            GoalDescription(
-                description = goal.description,
-                modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
-            )
-
-            ThickDivider()
-
-            GoalList(
-                title = stringResource(R.string.goal_detail_weekly_goals_title),
-                goals = goal.weeklyGoal,
-                modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
-            ) { goal, modifier ->
-                WeeklyRowItem(
-                    label = "1주",
-                    content = goal,
-                    modifier = modifier,
+            Column(
+                modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+            ) {
+                GoalHeader(
+                    goal = goal,
+                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingSmall),
                 )
-            }
 
-            ThickDivider()
+                ThinDivider()
 
-            GoalList(
-                title = stringResource(R.string.goal_detail_milestone_title),
-                goals = goal.weeklyGoal,
-                modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
-            ) { goal, modifier ->
-                MilestoneRowItem(
-                    label = "1",
-                    content = goal,
-                    modifier = modifier,
+                GoalInfo(
+                    goal = goal,
+                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingMedium),
                 )
+
+                ThinDivider()
+
+                GoalDescription(
+                    description = goal.description,
+                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
+                )
+
+                ThickDivider()
+
+                GoalList(
+                    title = stringResource(R.string.goal_detail_weekly_goals_title),
+                    goals = goal.weeklyGoal,
+                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
+                ) { goal, modifier ->
+                    WeeklyRowItem(
+                        label = "1주",
+                        content = goal,
+                        modifier = modifier,
+                    )
+                }
+
+                ThickDivider()
+
+                GoalList(
+                    title = stringResource(R.string.goal_detail_milestone_title),
+                    goals = goal.weeklyGoal,
+                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
+                ) { goal, modifier ->
+                    MilestoneRowItem(
+                        label = "1",
+                        content = goal,
+                        modifier = modifier,
+                    )
+                }
+
+                // TODO: 상세이미지 위치
             }
         }
+
+        GoalMateButton(
+            content = stringResource(R.string.goal_detail_start_button),
+            onClick = showBottomSheet,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = GoalMateDimens.HorizontalPadding)
+                .padding(bottom = GoalMateDimens.BottomMargin),
+        )
     }
-//    GoalMateButton(
-//        content = stringResource(R.string.goal_detail_start_button),
-//        onClick = showBottomSheet,
-//        modifier = Modifier.fillMaxWidth(),
-//    )
 }
 
 @Composable
@@ -152,37 +161,22 @@ private fun GoalInfo(
         InfoRow(
             title = stringResource(R.string.goal_detail_subject_title),
             content = goal.category,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         InfoRow(
             title = stringResource(R.string.goal_detail_mentor_title),
             content = goal.mentorName,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         InfoRow(
             title = stringResource(R.string.goal_detail_date_title),
             content = goal.totalDates,
         ) {
-            Row(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.goalMateColors.thickDivider,
-                        shape = RoundedCornerShape(12.dp),
-                    ).padding(12.dp),
-            ) {
-                GoalMateImage(image = R.drawable.icon_calendar, modifier = Modifier.size(24.dp))
-                Spacer(Modifier.size(10.dp))
-                Column {
-                    Text(
-                        text = goal.startDate,
-                        style = MaterialTheme.goalMateTypography.bodySmallMedium,
-                        color = Grey600,
-                    )
-                    Text(
-                        text = goal.endDate,
-                        style = MaterialTheme.goalMateTypography.bodySmallMedium,
-                        color = Grey600,
-                    )
-                }
-            }
+            GoalDateRange(
+                startDate = goal.startDate,
+                endDate = goal.endDate,
+                icon = R.drawable.icon_calendar,
+            )
         }
     }
 }

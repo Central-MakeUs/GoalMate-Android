@@ -24,13 +24,11 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.detail.components.GoalOverviewCard
+import cmc.goalmate.presentation.ui.detail.finish.navigation.GoalSummary
 
 @Composable
 fun PaymentCompletedScreen(
-    title: String,
-    mentorName: String,
-    price: String,
-    totalPrice: String,
+    goal: GoalSummary,
     navigateToAchievingGoal: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -42,10 +40,10 @@ fun PaymentCompletedScreen(
         )
 
         PaymentCompletedContent(
-            title = title,
-            mentorName = mentorName,
-            price = price,
-            totalPrice = totalPrice,
+            title = goal.title,
+            mentorName = goal.mentor,
+            price = goal.price,
+            totalPrice = goal.totalPrice,
             onStartButtonClicked = navigateToAchievingGoal,
             modifier = Modifier.weight(1f),
         )
@@ -109,13 +107,10 @@ private fun PaymentCompletedContent(
 
 @Composable
 @Preview(showBackground = true)
-fun PaymentCompletedScreenPreview() {
+private fun PaymentCompletedScreenPreview() {
     GoalMateTheme {
         PaymentCompletedScreen(
-            title = "",
-            mentorName = "",
-            price = "",
-            totalPrice = "",
+            goal = GoalSummary("", "", "", ""),
             navigateToAchievingGoal = {},
         )
     }

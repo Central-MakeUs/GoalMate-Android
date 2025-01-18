@@ -26,20 +26,22 @@ import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.detail.components.GoalOverviewCard
-import cmc.goalmate.presentation.ui.home.GoalState
+import cmc.goalmate.presentation.ui.detail.finish.navigation.GoalSummary
 
 @Composable
 fun GoalStartScreen(
-    title: String,
-    mentorName: String,
-    price: String,
-    totalPrice: String,
+    goal: GoalSummary,
     onStartButtonClicked: () -> Unit,
-    goalState: GoalState,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        GoalOverviewCard(title, mentorName, price, totalPrice)
+    Column(
+        modifier = modifier
+            .padding(
+                horizontal = GoalMateDimens.HorizontalPadding,
+                vertical = GoalMateDimens.BottomMargin,
+            ),
+    ) {
+        GoalOverviewCard(goal.title, goal.mentor, goal.price, goal.totalPrice)
         Spacer(Modifier.size(16.dp))
         InfoMessage(modifier = Modifier.fillMaxWidth())
         Spacer(Modifier.size(25.dp))
@@ -89,12 +91,13 @@ private fun InfoMessage(modifier: Modifier = Modifier) {
 private fun GoalStartScreenPreview() {
     GoalMateTheme {
         GoalStartScreen(
-            title = "목표명",
-            mentorName = "멘토명",
-            price = "10,000원",
-            totalPrice = "0원",
+            goal = GoalSummary(
+                title = "목표명",
+                mentor = "멘토명",
+                price = "10,000원",
+                totalPrice = "0원",
+            ),
             onStartButtonClicked = {},
-            goalState = GoalState.AVAILABLE,
             modifier = Modifier.background(White),
         )
     }
