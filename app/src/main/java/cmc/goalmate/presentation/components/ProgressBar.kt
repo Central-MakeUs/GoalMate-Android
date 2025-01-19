@@ -2,6 +2,7 @@ package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
@@ -25,13 +27,14 @@ import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.progressIndica
 fun GoalMateProgressBar(
     currentProgress: Float,
     myGoalState: MyGoalState,
+    thickness: Dp,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         LinearProgressIndicator(
             progress = { currentProgress },
             color = myGoalState.progressIndicatorColor(),
-            modifier = Modifier.height(14.dp).clip(RoundedCornerShape(14.dp)),
+            modifier = Modifier.fillMaxWidth().height(thickness).clip(RoundedCornerShape(14.dp)),
             trackColor = myGoalState.progressBackgroundColor(),
         )
         Spacer(Modifier.size(8.dp))
@@ -51,6 +54,7 @@ private fun GoalMateProgressBarPreview() {
         GoalMateProgressBar(
             currentProgress = 0.7f,
             myGoalState = MyGoalState.IN_PROGRESS,
+            thickness = 14.dp
         )
     }
 }

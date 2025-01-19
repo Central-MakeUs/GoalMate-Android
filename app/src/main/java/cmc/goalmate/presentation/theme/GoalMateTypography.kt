@@ -44,6 +44,7 @@ data class GoalMateTypography(
     val buttonLabelMedium: TextStyle,
     val buttonLabelSmall: TextStyle,
     val caption: TextStyle,
+    val captionMedium: TextStyle,
     val captionSemiBold: TextStyle,
     val captionRegular: TextStyle,
 )
@@ -146,6 +147,13 @@ private val ButtonLabelSmall =
         lineHeight = 14.sp,
     )
 
+private val CaptionMedium =
+    TextStyle(
+        fontFamily = pretendardMedium,
+        fontSize = 13.sp,
+        lineHeight = 19.5.sp,
+    )
+
 private val CaptionSemibold =
     TextStyle(
         fontFamily = pretendardSemiBold,
@@ -184,6 +192,7 @@ val goalMateTypography =
         buttonLabelMedium = ButtonLabelMedium,
         buttonLabelSmall = ButtonLabelSmall,
         caption = Caption,
+        captionMedium = CaptionMedium,
         captionSemiBold = CaptionSemibold,
         captionRegular = CaptionRegular,
     )

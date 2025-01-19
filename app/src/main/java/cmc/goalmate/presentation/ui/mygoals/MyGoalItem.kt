@@ -163,10 +163,11 @@ private fun ProgressBar(
             modifier = Modifier.padding(end = 2.dp),
         )
         GoalMateImage(image = myGoalState.progressIcon, modifier = Modifier.size(16.dp))
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.size(8.dp))
         GoalMateProgressBar(
             currentProgress = currentProgress,
             myGoalState = myGoalState,
+            thickness = 14.dp,
         )
     }
 }

@@ -76,6 +76,7 @@ sealed class ColorSet {
             activeProgressBackground = Primary50,
             completedProgressBar = Grey400,
             completedProgressBackground = Grey100,
+            textButton = Grey700,
         )
 
         override var darkColors = GoalMateColors(
@@ -105,6 +106,7 @@ sealed class ColorSet {
             activeProgressBackground = Primary50,
             completedProgressBar = Grey400,
             completedProgressBackground = Grey100,
+            textButton = Grey700,
         )
     }
 }

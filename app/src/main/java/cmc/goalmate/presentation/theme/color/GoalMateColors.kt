@@ -30,6 +30,7 @@ data class GoalMateColors(
     val activeProgressBackground: Color,
     val completedProgressBar: Color,
     val completedProgressBackground: Color,
+    val textButton: Color,
 ) {
     val primary: Color get() = material.primary
     val secondary: Color get() = material.secondary
