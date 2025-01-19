@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +23,7 @@ import cmc.goalmate.presentation.components.GoalDateRange
 import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.GoalMateImage
 import cmc.goalmate.presentation.components.GoalMateProgressBar
+import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
@@ -135,14 +135,11 @@ private fun Label(
             color = goalState.textColor(),
         )
         Spacer(Modifier.size(4.dp))
-        Text(
+        TextTag(
             text = tagText,
-            style = MaterialTheme.goalMateTypography.captionSemiBold,
-            color = goalState.onTagColor(),
-            modifier = Modifier.background(
-                color = goalState.tagColor(),
-                shape = RoundedCornerShape(4.dp),
-            ).padding(vertical = 2.dp, horizontal = 4.dp),
+            textColor = goalState.onTagColor(),
+            backgroundColor = goalState.tagColor(),
+            textStyle = MaterialTheme.goalMateTypography.captionSemiBold,
         )
     }
 }
