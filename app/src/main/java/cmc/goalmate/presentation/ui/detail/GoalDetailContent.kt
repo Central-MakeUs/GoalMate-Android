@@ -31,6 +31,7 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.detail.components.ImageSlider
 import cmc.goalmate.presentation.ui.detail.components.InfoRow
 import cmc.goalmate.presentation.ui.detail.components.MilestoneRowItem
 import cmc.goalmate.presentation.ui.detail.components.SubTitleText
@@ -123,16 +124,6 @@ fun GoalDetailContent(
 }
 
 @Composable
-private fun ImageSlider(
-    imageUrls: List<String>,
-    modifier: Modifier = Modifier,
-) {
-    Box(modifier = modifier) {
-        Text("이미지 부분", modifier = Modifier.align(Alignment.Center))
-    }
-}
-
-@Composable
 private fun GoalHeader(
     goal: GoalDetailUiModel,
     modifier: Modifier = Modifier,
@@ -161,12 +152,12 @@ private fun GoalInfo(
         InfoRow(
             title = stringResource(R.string.goal_detail_subject_title),
             content = goal.category,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
         )
         InfoRow(
             title = stringResource(R.string.goal_detail_mentor_title),
             content = goal.mentorName,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
         )
         InfoRow(
             title = stringResource(R.string.goal_detail_date_title),
@@ -239,7 +230,7 @@ private fun GoalDetailScreenPreview() {
             goal = GoalDetailUiModel(
                 title = "다온과 함께하는 영어 완전 정복 30일 목표",
                 mentorName = "다온",
-                imageUrls = listOf(),
+                imageUrls = listOf("이미지1", "이미지2", "이미지3"),
                 category = "영어",
                 totalDates = "30일",
                 startDate = "2025년 01월 01일",
