@@ -2,6 +2,7 @@ package cmc.goalmate.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +38,9 @@ fun GoalDateRange(
     ) {
         GoalMateImage(image = icon, modifier = Modifier.size(24.dp))
         Spacer(Modifier.size(10.dp))
-        Column {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             Text(
                 text = startDate,
                 style = MaterialTheme.goalMateTypography.bodySmallMedium,

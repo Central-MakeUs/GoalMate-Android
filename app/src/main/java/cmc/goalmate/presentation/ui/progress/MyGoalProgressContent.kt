@@ -30,6 +30,7 @@ import cmc.goalmate.presentation.ui.progress.components.CommentPreview
 import cmc.goalmate.presentation.ui.progress.components.CommentUiModel
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
 import cmc.goalmate.presentation.ui.progress.components.TodayProgress
+import cmc.goalmate.presentation.ui.progress.model.CalendarUiModel
 
 data class TodoGoalUiModel(val content: String, val isCompleted: Boolean)
 
@@ -53,7 +54,7 @@ fun MyGoalProgressContent(modifier: Modifier = Modifier) {
             modifier = modifier
                 .padding(horizontal = GoalMateDimens.HorizontalPadding),
         ) {
-            GoalMateCalendar()
+            GoalMateCalendar(calendarUiModel = CalendarUiModel.DUMMY)
 
             Spacer(Modifier.size(45.dp))
 

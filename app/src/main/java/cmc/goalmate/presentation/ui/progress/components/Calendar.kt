@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
@@ -27,6 +31,8 @@ import cmc.goalmate.presentation.theme.color.Grey200
 import cmc.goalmate.presentation.theme.color.Grey400
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.progress.model.CalendarUiModel
+import cmc.goalmate.presentation.ui.progress.model.DailyProgressUiModel
 
 enum class DayOfWeek(val label: String) {
     SUNDAY("일"),
@@ -39,33 +45,47 @@ enum class DayOfWeek(val label: String) {
 }
 
 @Composable
-fun GoalMateCalendar(modifier: Modifier = Modifier) {
+fun GoalMateCalendar(
+    calendarUiModel: CalendarUiModel,
+    modifier: Modifier = Modifier,
+) {
+    val pagerState = rememberPagerState(pageCount = { 1 })
+
     Column(
         modifier = modifier,
     ) {
         YearMonthHeader(
-            label = "2025년 1월",
-            hasNext = true,
-            hasPrevious = false,
+            label = calendarUiModel.yearMonth,
+            hasNext = calendarUiModel.hasNext,
+            hasPrevious = calendarUiModel.hasPrevious,
             onNextClicked = {},
             onPreviousClicked = {},
             modifier = Modifier.align(Alignment.Start),
         )
         Spacer(Modifier.size(20.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
+        WeekRow(modifier = Modifier.fillMaxWidth()) {
             DayOfWeek.entries.forEach { day ->
                 Text(
                     text = day.label,
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.goalMateTypography.captionMedium,
                     color = MaterialTheme.goalMateColors.labelTitle,
+                    modifier = Modifier.size(CIRCLE_SIZE.dp),
                 )
             }
         }
-        // TODO: 날짜별 달성율
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth(),
+        ) { page ->
+            WeeklyProgressItem(
+                progressByDate = calendarUiModel.progressByDate,
+                onDateClicked = {
+                    // TODO: 날짜 클릭시
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
         Spacer(Modifier.size(16.dp))
     }
 }
@@ -121,17 +141,45 @@ private fun YearMonthHeader(
 }
 
 @Composable
-private fun getButtonTint(isEnabled: Boolean): Color =
-    if (isEnabled) {
-        Grey400
-    } else {
-        Grey200
+private fun getButtonTint(isEnabled: Boolean): Color = if (isEnabled) Grey400 else Grey200
+
+@Composable
+fun WeekRow(
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        content()
     }
+}
+
+@Composable
+private fun WeeklyProgressItem(
+    progressByDate: List<DailyProgressUiModel>,
+    onDateClicked: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    WeekRow(modifier = modifier) {
+        progressByDate.forEach {
+            CircleProgressBar(
+                date = it.date,
+                status = it.status,
+                onClick = onDateClicked,
+            )
+        }
+    }
+}
 
 @Composable
 @Preview(showBackground = true)
 private fun GoalStartScreenPreview() {
     GoalMateTheme {
-        GoalMateCalendar()
+        GoalMateCalendar(
+            calendarUiModel = CalendarUiModel.DUMMY,
+        )
     }
 }
