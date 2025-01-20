@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.color.Primary700
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
@@ -82,19 +83,20 @@ fun CommentItem(
                 TextTag(
                     text = "D+20",
                     textColor = MaterialTheme.goalMateColors.primaryVariant,
-                    backgroundColor = MaterialTheme.goalMateColors.primary,
+                    textStyle = MaterialTheme.goalMateTypography.captionSemiBold,
+                    backgroundColor = Primary700,
                 )
                 Text(
                     text = comment.date,
-                    style = MaterialTheme.goalMateTypography.body,
-                    color = MaterialTheme.goalMateColors.onSurface,
+                    style = MaterialTheme.goalMateTypography.subtitleSmall,
+                    color = MaterialTheme.goalMateColors.onPrimaryVariant,
                 )
             }
             Spacer(Modifier.size(8.dp))
             Text(
                 text = comment.content,
-                style = MaterialTheme.goalMateTypography.caption,
-                color = MaterialTheme.goalMateColors.onSurface,
+                style = MaterialTheme.goalMateTypography.bodySmallMedium,
+                color = MaterialTheme.goalMateColors.textButton,
             )
             Spacer(Modifier.size(14.dp))
             Text(
@@ -102,7 +104,7 @@ fun CommentItem(
                 textAlign = TextAlign.End,
                 modifier = Modifier.align(Alignment.End),
                 style = MaterialTheme.goalMateTypography.caption,
-                color = MaterialTheme.goalMateColors.onSurface,
+                color = MaterialTheme.goalMateColors.onPrimaryVariant,
             )
         }
     }

@@ -34,7 +34,7 @@ fun ArcProgressBar(
     modifier: Modifier = Modifier,
 ) {
     val barColor = MaterialTheme.goalMateColors.secondary02
-    val backgroundColor = MaterialTheme.goalMateColors.secondaryVariant
+    val backgroundColor = MaterialTheme.goalMateColors.secondary02Variant
 
     val adjustedPercent = MIN_SWIPE_ANGLE + (percent / 100f) * (MAX_SWIPE_ANGLE - MIN_SWIPE_ANGLE)
 

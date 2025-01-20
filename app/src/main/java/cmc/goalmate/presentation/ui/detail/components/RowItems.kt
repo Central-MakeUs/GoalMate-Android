@@ -148,8 +148,8 @@ fun MilestoneRowItem(
         contentText = content,
         labelStyle = MaterialTheme.goalMateTypography.captionRegular,
         contentStyle = MaterialTheme.goalMateTypography.subtitleSmall,
-        labelBackgroundColor = MaterialTheme.goalMateColors.secondaryVariant,
-        labelTextColor = MaterialTheme.goalMateColors.onSecondaryVariant,
+        labelBackgroundColor = MaterialTheme.goalMateColors.secondary02Variant,
+        labelTextColor = MaterialTheme.goalMateColors.onSecondary02Variant,
         contentTextColor = MaterialTheme.goalMateColors.onBackground,
         modifier = modifier,
     )

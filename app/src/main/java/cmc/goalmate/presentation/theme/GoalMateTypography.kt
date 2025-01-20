@@ -47,6 +47,9 @@ data class GoalMateTypography(
     val captionMedium: TextStyle,
     val captionSemiBold: TextStyle,
     val captionRegular: TextStyle,
+    val tagLarge: TextStyle,
+    val tagSmall: TextStyle,
+    val labelSmall: TextStyle,
 )
 
 private val H1 =
@@ -103,6 +106,20 @@ private val SubtitleSmall =
         fontFamily = pretendardSemiBold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
+    )
+
+private val TagLarge =
+    TextStyle(
+        fontFamily = pretendardMedium,
+        fontSize = 17.sp,
+        lineHeight = 25.5.sp,
+    )
+
+private val TagSmall =
+    TextStyle(
+        fontFamily = pretendardMedium,
+        fontSize = 14.sp,
+        lineHeight = 21.sp,
     )
 
 private val Body =
@@ -175,6 +192,12 @@ private val Caption =
         lineHeight = 12.sp,
     )
 
+private val SmallLabel = TextStyle(
+    fontFamily = pretendardMedium,
+    fontSize = 11.sp,
+    lineHeight = 12.sp,
+)
+
 val goalMateTypography =
     GoalMateTypography(
         h1 = H1,
@@ -195,4 +218,7 @@ val goalMateTypography =
         captionMedium = CaptionMedium,
         captionSemiBold = CaptionSemibold,
         captionRegular = CaptionRegular,
+        tagLarge = TagLarge,
+        tagSmall = TagSmall,
+        labelSmall = SmallLabel,
     )

@@ -17,10 +17,11 @@ val Primary900 = Color(0xFF709100)
 val Primary50 = Color(0xFFF4FFE5)
 val Primary100 = Color(0xFFE5FFBE)
 val Purple500 = Color(0xFF7423FF)
+val Secondary01_50 = Color(0xFFF1E7FF)
 val YellowBright500 = Color(0xFFFFE223)
 val GreenBright400 = Color(0xFF40FF23)
-val Secondary50 = Color(0xFFFFFCE5)
-val Secondary800 = Color(0xFFF99E13)
+val Secondary02_50 = Color(0xFFFFFCE5)
+val Secondary02_800 = Color(0xFFF99E13)
 
 val Grey50 = Color(0xFFFAFAFA)
 val Grey100 = Color(0xFFF5F5F5)
@@ -68,8 +69,9 @@ sealed class ColorSet {
             labelTitle = Grey500,
             primaryVariant = Primary50,
             onPrimaryVariant = Primary900,
-            secondaryVariant = Secondary50,
-            onSecondaryVariant = Secondary800,
+            secondary02Variant = Secondary02_50,
+            onSecondary02Variant = Secondary02_800,
+            secondary01Variant = Secondary01_50,
             thinDivider = Grey100,
             thickDivider = Grey50,
             finished = Grey500,
@@ -98,8 +100,9 @@ sealed class ColorSet {
             labelTitle = Grey500,
             primaryVariant = Primary50,
             onPrimaryVariant = Primary900,
-            secondaryVariant = Secondary50,
-            onSecondaryVariant = Secondary800,
+            secondary02Variant = Secondary02_50,
+            onSecondary02Variant = Secondary02_800,
+            secondary01Variant = Secondary01_50,
             thinDivider = Grey100,
             thickDivider = Grey50,
             finished = Grey500,

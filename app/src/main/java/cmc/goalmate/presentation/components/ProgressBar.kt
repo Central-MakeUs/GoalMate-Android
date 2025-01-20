@@ -32,14 +32,14 @@ fun GoalMateProgressBar(
 ) {
     Column(modifier = modifier) {
         LinearProgressIndicator(
-            progress = { currentProgress },
+            progress = { currentProgress / 100 },
             color = myGoalState.progressIndicatorColor(),
             modifier = Modifier.fillMaxWidth().height(thickness).clip(RoundedCornerShape(14.dp)),
             trackColor = myGoalState.progressBackgroundColor(),
         )
         Spacer(Modifier.size(8.dp))
         Text(
-            text = "${(currentProgress * 100).toInt()}%",
+            text = "${(currentProgress).toInt()}%",
             style = MaterialTheme.goalMateTypography.bodySmallMedium,
             color = MaterialTheme.goalMateColors.onSurfaceVariant,
             modifier = Modifier.align(alignment = Alignment.End),
@@ -52,7 +52,7 @@ fun GoalMateProgressBar(
 private fun GoalMateProgressBarPreview() {
     GoalMateTheme {
         GoalMateProgressBar(
-            currentProgress = 0.7f,
+            currentProgress = 70f,
             myGoalState = MyGoalState.IN_PROGRESS,
             thickness = 14.dp
         )

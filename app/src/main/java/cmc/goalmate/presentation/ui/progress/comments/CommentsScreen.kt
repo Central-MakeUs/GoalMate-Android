@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.progress.comments
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.components.AppBarWithBackButton
@@ -25,6 +27,7 @@ import cmc.goalmate.presentation.ui.progress.components.CommentUiModel
 @Composable
 fun CommentsScreen(
     comments: List<CommentUiModel>,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -35,12 +38,15 @@ fun CommentsScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = GoalMateDimens.HorizontalPadding),
+                .padding(
+                    horizontal = GoalMateDimens.HorizontalPadding,
+                    vertical = GoalMateDimens.BottomMargin,
+                ),
         ) {
             if (comments.isEmpty()) {
                 Text(
                     text = "아직 멘토의 코멘트가 없어요 :)",
-                    style = MaterialTheme.goalMateTypography.bodySmallMedium,
+                    style = MaterialTheme.goalMateTypography.body,
                     color = MaterialTheme.goalMateColors.onBackground,
                     modifier = Modifier.align(Alignment.Center),
                 )
@@ -65,6 +71,8 @@ fun CommentsScreenPreview() {
     GoalMateTheme {
         CommentsScreen(
             comments = listOf(CommentUiModel.DUMMY, CommentUiModel.DUMMY),
+            navigateBack = {},
+            modifier = Modifier.background(Color.White),
         )
     }
 }
