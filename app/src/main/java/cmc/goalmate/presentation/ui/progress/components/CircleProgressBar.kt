@@ -52,6 +52,7 @@ fun CircleProgressBar(
 private fun ProgressStatus.textColor(isSelected: Boolean): Color =
     when (this) {
         ProgressStatus.InProgress -> MaterialTheme.goalMateColors.onBackground
+        ProgressStatus.NotInProgress -> MaterialTheme.goalMateColors.disabled
         else -> {
             if (isSelected) {
                 MaterialTheme.goalMateColors.onSecondary
@@ -85,6 +86,7 @@ private fun ProgressStatus.backgroundColor(isSelected: Boolean): Color =
                 MaterialTheme.goalMateColors.primaryVariant
             }
         }
+        ProgressStatus.NotInProgress -> Color.Transparent
     }
 
 @Composable
@@ -115,6 +117,12 @@ private fun ProgressStatus.centerContent(
                 } else {
                     TextContent(text = "${this.actualProgress}", color = this.textColor(isSelected))
                 }
+            }
+        }
+
+        ProgressStatus.NotInProgress -> {
+            {
+                TextContent(text = "$date", color = this.textColor(isSelected))
             }
         }
     }

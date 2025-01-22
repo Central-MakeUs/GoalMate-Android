@@ -27,7 +27,7 @@ data class DailyProgressUiModel(val date: Int, val status: ProgressStatus) {
             DailyProgressUiModel(date = 24, status = ProgressStatus.InProgress),
             DailyProgressUiModel(date = 25, status = ProgressStatus.NotStart),
             DailyProgressUiModel(date = 26, status = ProgressStatus.NotStart),
-            DailyProgressUiModel(date = 27, status = ProgressStatus.NotStart),
+            DailyProgressUiModel(date = 27, status = ProgressStatus.NotInProgress),
         )
     }
 }
@@ -41,7 +41,7 @@ sealed interface ProgressStatus {
 
     data object NotStart : ProgressStatus
 
-    // TODO :진행중인 기간이 아닌 경우 추가
+    data object NotInProgress : ProgressStatus
 }
 
 enum class DailyProgress(val range: IntRange, val displayProgress: Float) {
