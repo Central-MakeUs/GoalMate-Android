@@ -13,6 +13,7 @@ import cmc.goalmate.presentation.ui.detail.finish.navigation.navigateToPaymentCo
 import cmc.goalmate.presentation.ui.detail.finish.navigation.paymentCompleted
 import cmc.goalmate.presentation.ui.home.navigation.mainNavGraph
 import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
+import cmc.goalmate.presentation.ui.progress.comments.CommentsScreen
 import cmc.goalmate.presentation.ui.progress.completed.CompletedScreen
 import cmc.goalmate.presentation.ui.progress.inprogress.InProgressScreen
 
@@ -28,12 +29,11 @@ fun GoalMateNavHost(navController: NavHostController) {
             GoalDetailScreen(navigateToCompleted = { navController.navigateToPaymentCompleted(it) })
         }
         paymentCompleted { }
-        composable<Screen.CompletedGoal> {
-        }
+
         composable<Screen.InProgressGoal> {
             InProgressScreen(
                 navigateToGoalDetail = { navController.navigateToDetail(it) },
-                navigateToComments = {},
+                navigateToComments = { navController.navigateToComments(it) },
                 navigateBack = {},
             )
         }
@@ -41,8 +41,14 @@ fun GoalMateNavHost(navController: NavHostController) {
         composable<Screen.CompletedGoal> { navBackStackEntry ->
             CompletedScreen(
                 navigateToGoalDetail = { navController.navigateToDetail(it) },
-                navigateToComments = {},
+                navigateToComments = { navController.navigateToComments(it) },
                 navigateToHome = { navController.navigateToHome(navBackStackEntry.toRoute<Screen.CompletedGoal>()) },
+                navigateBack = {},
+            )
+        }
+
+        composable<Screen.Comments> {
+            CommentsScreen(
                 navigateBack = {},
             )
         }
@@ -59,4 +65,8 @@ fun NavController.navigateToInProgress(goalId: Long) {
 
 fun NavController.navigateToCompleted(goalId: Long) {
     navigate(Screen.CompletedGoal(goalId = goalId))
+}
+
+fun NavController.navigateToComments(goalId: Long) {
+    navigate(Screen.Comments(goalId = goalId))
 }

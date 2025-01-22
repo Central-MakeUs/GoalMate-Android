@@ -42,4 +42,7 @@ sealed interface Screen {
 
     @Serializable
     data class InProgressGoal(val goalId: Long) : Screen
+
+    @Serializable
+    data class Comments(val goalId: Long) : Screen
 }
