@@ -31,8 +31,9 @@ import cmc.goalmate.presentation.theme.color.Grey200
 import cmc.goalmate.presentation.theme.color.Grey400
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.progress.model.CalendarUiModel
-import cmc.goalmate.presentation.ui.progress.model.DailyProgressUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiModel
+import java.time.format.DateTimeFormatter
 
 enum class DayOfWeek(val label: String) {
     SUNDAY("일"),
@@ -47,6 +48,7 @@ enum class DayOfWeek(val label: String) {
 @Composable
 fun GoalMateCalendar(
     calendarUiModel: CalendarUiModel,
+    selectedDate: Int,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState(pageCount = { 1 })
@@ -55,14 +57,16 @@ fun GoalMateCalendar(
         modifier = modifier,
     ) {
         YearMonthHeader(
-            label = calendarUiModel.yearMonth,
+            label = (calendarUiModel.yearMonth).format(DateTimeFormatter.ofPattern("yy년 M월")),
             hasNext = calendarUiModel.hasNext,
             hasPrevious = calendarUiModel.hasPrevious,
             onNextClicked = {},
             onPreviousClicked = {},
             modifier = Modifier.align(Alignment.Start),
         )
+
         Spacer(Modifier.size(20.dp))
+
         WeekRow(modifier = Modifier.fillMaxWidth()) {
             DayOfWeek.entries.forEach { day ->
                 Text(
@@ -74,18 +78,21 @@ fun GoalMateCalendar(
                 )
             }
         }
+
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxWidth(),
         ) { page ->
             WeeklyProgressItem(
                 progressByDate = calendarUiModel.progressByDate,
+                selectedDate = selectedDate,
                 onDateClicked = {
                     // TODO: 날짜 클릭시
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+
         Spacer(Modifier.size(16.dp))
     }
 }
@@ -160,6 +167,7 @@ fun WeekRow(
 @Composable
 private fun WeeklyProgressItem(
     progressByDate: List<DailyProgressUiModel>,
+    selectedDate: Int,
     onDateClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -169,6 +177,7 @@ private fun WeeklyProgressItem(
                 date = it.date,
                 status = it.status,
                 onClick = onDateClicked,
+                isSelected = it.date == selectedDate,
             )
         }
     }
@@ -180,6 +189,7 @@ private fun GoalStartScreenPreview() {
     GoalMateTheme {
         GoalMateCalendar(
             calendarUiModel = CalendarUiModel.DUMMY,
+            selectedDate = 25,
         )
     }
 }

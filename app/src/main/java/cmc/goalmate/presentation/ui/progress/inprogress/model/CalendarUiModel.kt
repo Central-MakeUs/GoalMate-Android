@@ -1,14 +1,16 @@
-package cmc.goalmate.presentation.ui.progress.model
+package cmc.goalmate.presentation.ui.progress.inprogress.model
+
+import java.time.YearMonth
 
 data class CalendarUiModel(
-    val yearMonth: String,
+    val yearMonth: YearMonth,
     val hasNext: Boolean,
     val hasPrevious: Boolean,
     val progressByDate: List<DailyProgressUiModel>,
 ) {
     companion object {
         val DUMMY = CalendarUiModel(
-            yearMonth = "2025년 1월",
+            yearMonth = YearMonth.of(2025, 1),
             hasNext = true,
             hasPrevious = false,
             progressByDate = DailyProgressUiModel.DUMMY_LIST,
@@ -38,6 +40,8 @@ sealed interface ProgressStatus {
     data object InProgress : ProgressStatus
 
     data object NotStart : ProgressStatus
+
+    // TODO :진행중인 기간이 아닌 경우 추가
 }
 
 enum class DailyProgress(val range: IntRange, val displayProgress: Float) {

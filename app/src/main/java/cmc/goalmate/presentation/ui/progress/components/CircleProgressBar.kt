@@ -22,7 +22,7 @@ import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.progress.model.ProgressStatus
+import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressStatus
 
 private const val START_ANGLE = 270f
 const val CIRCLE_SIZE = 30
@@ -40,41 +40,68 @@ fun CircleProgressBar(
             .size(CIRCLE_SIZE.dp)
             .clip(CircleShape)
             .clickable { onClick(date) }
-            .background(status.backgroundColor())
-            .then(status.progress()),
+            .background(status.backgroundColor(isSelected))
+            .then(status.progress(isSelected)),
         contentAlignment = Alignment.Center,
     ) {
-        status.centerContent(date = date).invoke()
+        status.centerContent(date = date, isSelected).invoke()
     }
 }
 
 @Composable
-private fun ProgressStatus.textColor(): Color =
+private fun ProgressStatus.textColor(isSelected: Boolean): Color =
     when (this) {
         ProgressStatus.InProgress -> MaterialTheme.goalMateColors.onBackground
-        else -> MaterialTheme.goalMateColors.textButton
+        else -> {
+            if (isSelected) {
+                MaterialTheme.goalMateColors.onSecondary
+            } else {
+                MaterialTheme.goalMateColors.textButton
+            }
+        }
     }
 
 @Composable
-private fun ProgressStatus.backgroundColor(): Color =
+private fun ProgressStatus.backgroundColor(isSelected: Boolean): Color =
     when (this) {
-        ProgressStatus.InProgress -> MaterialTheme.goalMateColors.secondary02
-        ProgressStatus.NotStart -> Color.Transparent
-        is ProgressStatus.Completed -> MaterialTheme.goalMateColors.primaryVariant
+        ProgressStatus.InProgress -> {
+            if (isSelected) {
+                MaterialTheme.goalMateColors.secondary02
+            } else {
+                MaterialTheme.goalMateColors.pending
+            }
+        }
+        ProgressStatus.NotStart -> {
+            if (isSelected) {
+                MaterialTheme.goalMateColors.secondary01
+            } else {
+                Color.Transparent
+            }
+        }
+        is ProgressStatus.Completed -> {
+            if (isSelected) {
+                MaterialTheme.goalMateColors.secondary01
+            } else {
+                MaterialTheme.goalMateColors.primaryVariant
+            }
+        }
     }
 
 @Composable
-private fun ProgressStatus.centerContent(date: Int): @Composable () -> Unit =
+private fun ProgressStatus.centerContent(
+    date: Int,
+    isSelected: Boolean,
+): @Composable () -> Unit =
     when (this) {
         ProgressStatus.InProgress -> {
             {
-                TextContent(text = "$date", color = this.textColor())
+                TextContent(text = "$date", color = this.textColor(isSelected))
             }
         }
 
         ProgressStatus.NotStart -> {
             {
-                TextContent(text = "$date", color = this.textColor())
+                TextContent(text = "$date", color = this.textColor(isSelected))
             }
         }
 
@@ -86,7 +113,7 @@ private fun ProgressStatus.centerContent(date: Int): @Composable () -> Unit =
                         contentDescription = null,
                     )
                 } else {
-                    TextContent(text = "${this.actualProgress}", color = this.textColor())
+                    TextContent(text = "${this.actualProgress}", color = this.textColor(isSelected))
                 }
             }
         }
@@ -106,8 +133,8 @@ private fun TextContent(
 }
 
 @Composable
-private fun ProgressStatus.progress(): Modifier =
-    if (this is ProgressStatus.Completed) {
+private fun ProgressStatus.progress(isSelected: Boolean): Modifier =
+    if (this is ProgressStatus.Completed && !isSelected) {
         val progressColor = MaterialTheme.goalMateColors.primary
         val sweepAngle = this.displayProgress
 
@@ -129,8 +156,9 @@ private fun CircleProgressBarPreview() {
     GoalMateTheme {
         CircleProgressBar(
             date = 10,
-            status = ProgressStatus.Completed(80),
-            onClick = {}
+            status = ProgressStatus.InProgress,
+            onClick = {},
+            isSelected = false,
         )
     }
 }
