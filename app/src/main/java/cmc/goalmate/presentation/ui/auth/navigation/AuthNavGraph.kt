@@ -11,6 +11,7 @@ import cmc.goalmate.presentation.ui.auth.LoginViewModel
 import cmc.goalmate.presentation.ui.auth.login.LoginScreen
 import cmc.goalmate.presentation.ui.auth.nickname.NickNameSettingScreen
 import cmc.goalmate.presentation.ui.auth.welcome.WelcomeScreen
+import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
 
 fun NavGraphBuilder.authNavGraph(navController: NavController) {
     navigation<Screen.Auth>(
@@ -43,13 +44,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
             )
             WelcomeScreen(
                 nickName = viewModel.nickName,
-                navigateToNextPage = {
-                    navController.navigate(Screen.Main) {
-                        popUpTo(route = Screen.Auth.Login) {
-                            inclusive = true
-                        }
-                    }
-                },
+                navigateToNextPage = { navController.navigateToHome(Screen.Auth.Login) },
                 modifier = Modifier,
             )
         }

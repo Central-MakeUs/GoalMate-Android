@@ -12,13 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.ui.home.components.GoalItem
 
 @Composable
 fun HomeScreen(
-    navigateToDetail: (id: Long) -> Unit,
+    navigateToDetail: NavigateToGoal,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {

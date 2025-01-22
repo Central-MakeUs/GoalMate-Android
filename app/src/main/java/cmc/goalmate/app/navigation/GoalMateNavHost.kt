@@ -2,7 +2,6 @@ package cmc.goalmate.app.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,9 +10,8 @@ import cmc.goalmate.presentation.ui.auth.navigation.authNavGraph
 import cmc.goalmate.presentation.ui.detail.GoalDetailScreen
 import cmc.goalmate.presentation.ui.detail.finish.navigation.navigateToPaymentCompleted
 import cmc.goalmate.presentation.ui.detail.finish.navigation.paymentCompleted
-import cmc.goalmate.presentation.ui.home.HomeScreen
-import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
-import cmc.goalmate.presentation.ui.mypage.MyPageScreen
+import cmc.goalmate.presentation.ui.home.navigation.mainNavGraph
+import cmc.goalmate.presentation.ui.progress.inprogress.InProgressScreen
 
 @Composable
 fun GoalMateNavHost(navController: NavHostController) {
@@ -27,25 +25,22 @@ fun GoalMateNavHost(navController: NavHostController) {
             GoalDetailScreen(navigateToCompleted = { navController.navigateToPaymentCompleted(it) })
         }
         paymentCompleted { }
+        composable<Screen.CompletedGoal> {
+        }
+        composable<Screen.InProgressGoal> {
+            InProgressScreen(
+                navigateToGoalDetail = { navController.navigateToDetail(it) },
+                navigateToComments = {},
+                navigateBack = {},
+            )
+        }
     }
 }
 
-fun NavGraphBuilder.mainNavGraph(navController: NavController) {
-    navigation<Screen.Main>(
-        startDestination = Screen.Main.Home,
-    ) {
-        composable<Screen.Main.Home> {
-            HomeScreen(
-                navigateToDetail = { id -> navController.navigate(Screen.Detail(goalId = id)) },
-            )
-        }
+fun NavController.navigateToDetail(goalId: Long) {
+    navigate(Screen.Detail(goalId = goalId))
+}
 
-        composable<Screen.Main.MyGoal> {
-            MyGoalsScreen()
-        }
-
-        composable<Screen.Main.MyPage> {
-            MyPageScreen()
-        }
-    }
+fun NavController.navigateToInProgress(goalId: Long) {
+    navigate(Screen.InProgressGoal(goalId = goalId))
 }

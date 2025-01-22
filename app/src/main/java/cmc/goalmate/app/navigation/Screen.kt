@@ -36,4 +36,10 @@ sealed interface Screen {
     data class PaymentCompleted(
         val goalSummary: GoalSummary,
     ) : Screen
+
+    @Serializable
+    data class CompletedGoal(val goalId: Long) : Screen
+
+    @Serializable
+    data class InProgressGoal(val goalId: Long) : Screen
 }
