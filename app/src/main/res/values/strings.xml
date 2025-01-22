@@ -45,4 +45,10 @@
     <string name="goal_detail_unavailable">무료 참여 기회를 이미 사용했어요.\n곧 결제 기능이 추가될 예정이에요.</string>
     <string name="goal_detail_complete">반가워요,\n함께 목표까지 완주해요!</string>
     <string name="goal_detail_success_payment">결제 완료</string>
+
+    <string name="goal_comment_mentee">to. %s</string>
+    <string name="goal_comment_mentor">from. %s</string>
+
+    <string name="goal_more_detail_button">목표 상세보기</string>
+    <string name="goal_progress_comment_title">멘토 코멘트</string>
 </resources>
