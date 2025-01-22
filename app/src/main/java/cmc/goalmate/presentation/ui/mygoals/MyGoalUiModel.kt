@@ -28,6 +28,16 @@ data class MyGoalUiModel(
             goalProgress = 0.2f,
             goalState = MyGoalState.IN_PROGRESS,
         )
+        val DUMMY2 = MyGoalUiModel(
+            goalId = 0,
+            title = "마루와 함께하는 백앤드 서버 찐천재 목표",
+            mentorName = "마루",
+            startDate = "2025년 01월 01일 부터",
+            endDate = "2025년 01월 30일까지",
+            daysFromStart = 2,
+            goalProgress = 0.2f,
+            goalState = MyGoalState.COMPLETED,
+        )
     }
 }
 

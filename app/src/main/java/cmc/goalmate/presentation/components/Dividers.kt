@@ -42,7 +42,7 @@ fun ThickDivider(
 
 @Composable
 @Preview
-fun ThickDividerPreview() {
+private fun ThickDividerPreview() {
     GoalMateTheme {
         ThickDivider(
             modifier = Modifier.fillMaxWidth().background(White),

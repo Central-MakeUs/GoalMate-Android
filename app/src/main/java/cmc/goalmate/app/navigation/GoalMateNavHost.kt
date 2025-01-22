@@ -6,11 +6,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import cmc.goalmate.presentation.ui.auth.navigation.authNavGraph
 import cmc.goalmate.presentation.ui.detail.GoalDetailScreen
 import cmc.goalmate.presentation.ui.detail.finish.navigation.navigateToPaymentCompleted
 import cmc.goalmate.presentation.ui.detail.finish.navigation.paymentCompleted
 import cmc.goalmate.presentation.ui.home.navigation.mainNavGraph
+import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
+import cmc.goalmate.presentation.ui.progress.completed.CompletedScreen
 import cmc.goalmate.presentation.ui.progress.inprogress.InProgressScreen
 
 @Composable
@@ -34,6 +37,15 @@ fun GoalMateNavHost(navController: NavHostController) {
                 navigateBack = {},
             )
         }
+
+        composable<Screen.CompletedGoal> { navBackStackEntry ->
+            CompletedScreen(
+                navigateToGoalDetail = { navController.navigateToDetail(it) },
+                navigateToComments = {},
+                navigateToHome = { navController.navigateToHome(navBackStackEntry.toRoute<Screen.CompletedGoal>()) },
+                navigateBack = {},
+            )
+        }
     }
 }
 
@@ -43,4 +55,8 @@ fun NavController.navigateToDetail(goalId: Long) {
 
 fun NavController.navigateToInProgress(goalId: Long) {
     navigate(Screen.InProgressGoal(goalId = goalId))
+}
+
+fun NavController.navigateToCompleted(goalId: Long) {
+    navigate(Screen.CompletedGoal(goalId = goalId))
 }

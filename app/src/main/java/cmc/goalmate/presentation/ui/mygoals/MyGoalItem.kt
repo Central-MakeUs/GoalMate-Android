@@ -193,7 +193,7 @@ fun CompletedGoalItem(
             ) {
                 GoalMateButton(
                     content = stringResource(R.string.my_goals_completed_restart_button),
-                    onClick = { navigateToCompletedGoalPage(myGoal.goalId) },
+                    onClick = { navigateToGoalDetail(myGoal.goalId) },
                     hasOutLine = true,
                     modifier = Modifier.weight(1f),
                     buttonSize = ButtonSize.SMALL,
@@ -201,7 +201,7 @@ fun CompletedGoalItem(
                 Spacer(Modifier.size(12.dp))
                 GoalMateButton(
                     content = stringResource(R.string.my_goals_completed_detail_button),
-                    onClick = { navigateToGoalDetail(myGoal.goalId) },
+                    onClick = { navigateToCompletedGoalPage(myGoal.goalId) },
                     modifier = Modifier.weight(1f),
                     buttonSize = ButtonSize.SMALL,
                 )

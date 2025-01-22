@@ -24,6 +24,7 @@ import cmc.goalmate.R
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalMateButton
+import cmc.goalmate.presentation.components.ThickDivider
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
@@ -43,15 +44,15 @@ fun MyGoalsScreen(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        HeaderTitle(modifier = Modifier.fillMaxWidth())
         if (state.hasNoGoals()) {
+            HeaderTitle(modifier = Modifier.fillMaxWidth())
             EmptyGoalContents(
                 onButtonClicked = navigateToHome,
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
             MyGoalsContent(
-                myGoals = listOf(MyGoalUiModel.DUMMY),
+                myGoals = state.myGoals,
                 navigateToCompletedGoal = navigateToCompletedGoal,
                 navigateToProgressGoal = navigateToProgressGoal,
                 navigateToGoalDetail = navigateToGoalDetail,
@@ -67,7 +68,7 @@ private fun HeaderTitle(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = stringResource(R.string.my_goals_header_title),
-            style = MaterialTheme.goalMateTypography.subtitle,
+            style = MaterialTheme.goalMateTypography.subtitleMedium,
             modifier = Modifier.padding(
                 horizontal = GoalMateDimens.HorizontalPadding,
                 vertical = 14.dp,
@@ -76,7 +77,7 @@ private fun HeaderTitle(modifier: Modifier = Modifier) {
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth(),
             thickness = 1.dp,
-            color = MaterialTheme.goalMateColors.outline,
+            color = MaterialTheme.goalMateColors.pending,
         )
     }
 }
@@ -115,20 +116,26 @@ private fun MyGoalsContent(
     LazyColumn(
         modifier = modifier,
     ) {
+        item {
+            HeaderTitle(modifier = Modifier.fillMaxWidth())
+        }
         items(myGoals) { myGoal ->
-            when (myGoal.goalState) {
-                MyGoalState.IN_PROGRESS -> InProgressGoalItem(
-                    myGoal = myGoal,
-                    navigateToProgressPage = navigateToProgressGoal,
-                    modifier = Modifier,
-                )
+            Column {
+                when (myGoal.goalState) {
+                    MyGoalState.IN_PROGRESS -> InProgressGoalItem(
+                        myGoal = myGoal,
+                        navigateToProgressPage = navigateToProgressGoal,
+                        modifier = Modifier,
+                    )
 
-                MyGoalState.COMPLETED -> CompletedGoalItem(
-                    myGoal = myGoal,
-                    navigateToGoalDetail = navigateToGoalDetail,
-                    navigateToCompletedGoalPage = navigateToCompletedGoal,
-                    modifier = Modifier,
-                )
+                    MyGoalState.COMPLETED -> CompletedGoalItem(
+                        myGoal = myGoal,
+                        navigateToGoalDetail = navigateToGoalDetail,
+                        navigateToCompletedGoalPage = navigateToCompletedGoal,
+                        modifier = Modifier,
+                    )
+                }
+                ThickDivider()
             }
         }
     }

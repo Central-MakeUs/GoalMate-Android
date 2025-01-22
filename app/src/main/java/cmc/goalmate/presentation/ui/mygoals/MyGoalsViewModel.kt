@@ -13,7 +13,7 @@ data class MyGoalsUiState(
     fun hasNoGoals(): Boolean = myGoals.isEmpty()
 
     companion object {
-        fun initialMyGoalsUiState(): MyGoalsUiState = MyGoalsUiState(myGoals = listOf(MyGoalUiModel.DUMMY))
+        fun initialMyGoalsUiState(): MyGoalsUiState = MyGoalsUiState(myGoals = listOf(MyGoalUiModel.DUMMY, MyGoalUiModel.DUMMY2))
     }
 }
 

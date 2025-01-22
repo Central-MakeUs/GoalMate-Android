@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import cmc.goalmate.app.navigation.Screen
+import cmc.goalmate.app.navigation.navigateToCompleted
 import cmc.goalmate.app.navigation.navigateToDetail
 import cmc.goalmate.app.navigation.navigateToInProgress
 import cmc.goalmate.presentation.ui.home.HomeScreen
@@ -23,7 +24,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
 
         composable<Screen.Main.MyGoal> {
             MyGoalsScreen(
-                navigateToCompletedGoal = { },
+                navigateToCompletedGoal = { id -> navController.navigateToCompleted(id) },
                 navigateToProgressGoal = { id -> navController.navigateToInProgress(id) },
                 navigateToGoalDetail = { id -> navController.navigateToDetail(id) },
                 navigateToHome = { navController.navigateToHome(Screen.Main.MyGoal) },
