@@ -8,6 +8,7 @@ import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.goalMateColors
 
 data class MyGoalUiModel(
+    val goalId: Long,
     val title: String,
     val mentorName: String,
     val startDate: String,
@@ -18,6 +19,7 @@ data class MyGoalUiModel(
 ) {
     companion object {
         val DUMMY = MyGoalUiModel(
+            goalId = 0,
             title = "다온과 함께하는 영어 완전 정복 30일 목표",
             mentorName = "다온",
             startDate = "2025년 01월 01일 부터",
