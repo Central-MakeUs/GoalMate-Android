@@ -16,9 +16,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cmc.goalmate.R
 import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
@@ -38,7 +40,29 @@ data class CommentUiModel(val content: String, val date: String, val mentor: Str
 }
 
 @Composable
-fun CommentPreview(
+private fun CommentStyleContainer(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.goalMateColors.primaryVariant,
+                shape = RoundedCornerShape(24.dp),
+            )
+            .border(
+                width = 3.dp,
+                color = MaterialTheme.goalMateColors.thinDivider,
+                shape = RoundedCornerShape(24.dp),
+            )
+            .padding(GoalMateDimens.HorizontalPadding),
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun RecentComment(
     comment: CommentUiModel,
     modifier: Modifier = Modifier,
 ) {
@@ -58,7 +82,7 @@ fun CommentPreview(
                 color = MaterialTheme.goalMateColors.onSurface,
             )
             Text(
-                text = "from. ${comment.mentor}",
+                text = stringResource(R.string.goal_comment_mentor, comment.mentor),
                 textAlign = TextAlign.End,
                 modifier = Modifier.align(Alignment.End),
                 style = MaterialTheme.goalMateTypography.caption,
@@ -100,7 +124,7 @@ fun CommentItem(
             )
             Spacer(Modifier.size(14.dp))
             Text(
-                text = "from. ${comment.mentor}",
+                text = stringResource(R.string.goal_comment_mentor, comment.mentor),
                 textAlign = TextAlign.End,
                 modifier = Modifier.align(Alignment.End),
                 style = MaterialTheme.goalMateTypography.caption,
@@ -111,32 +135,41 @@ fun CommentItem(
 }
 
 @Composable
-private fun CommentStyleContainer(
+fun FinalMessage(
+    mentee: String,
+    mentor: String,
+    message: String,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
 ) {
-    Box(
-        modifier = modifier
-            .background(
-                color = MaterialTheme.goalMateColors.primaryVariant,
-                shape = RoundedCornerShape(24.dp),
+    CommentStyleContainer(modifier = modifier) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.goal_comment_mentee, mentee),
+                style = MaterialTheme.goalMateTypography.body,
+                color = MaterialTheme.goalMateColors.onPrimaryVariant,
             )
-            .border(
-                width = 3.dp,
-                color = MaterialTheme.goalMateColors.thinDivider,
-                shape = RoundedCornerShape(24.dp),
+            Text(
+                text = message,
+                style = MaterialTheme.goalMateTypography.body,
+                color = MaterialTheme.goalMateColors.onBackground,
             )
-            .padding(GoalMateDimens.HorizontalPadding),
-    ) {
-        content()
+            Text(
+                text = stringResource(R.string.goal_comment_mentor, mentor),
+                style = MaterialTheme.goalMateTypography.body,
+                color = MaterialTheme.goalMateColors.onPrimaryVariant,
+                modifier = Modifier.align(Alignment.End),
+            )
+        }
     }
 }
 
 @Composable
 @Preview
-private fun CommentItemPreview() {
+private fun RecentCommentPreview() {
     GoalMateTheme {
-        CommentPreview(
+        RecentComment(
             comment = CommentUiModel.DUMMY,
         )
     }
@@ -144,10 +177,24 @@ private fun CommentItemPreview() {
 
 @Composable
 @Preview
-private fun CommentItemPreview2() {
+private fun CommentItemPreview() {
     GoalMateTheme {
         CommentItem(
             comment = CommentUiModel.DUMMY,
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun FinalMessagePreview() {
+    GoalMateTheme {
+        FinalMessage(
+            mentee = "예니",
+            mentor = "다온",
+            message = "김골메이트님!\n" +
+                "30일동안 고생 많았어요~! 어떠셨어요? 조금 힘들었죠? 하지만 지금 김골메이트님은 30일 전보다 훨씬 성장했답니다! 앞으로도 응원할게요!김골메이트님!\n" +
+                "30일동안 고생 많았어요~! 어떠셨어요? 조금 힘들었죠? 하지만 지금 김골메이트님은 30일 전보다 훨씬 성장했답니다! 앞으로도 응원할게요!김골메이트님!",
         )
     }
 }

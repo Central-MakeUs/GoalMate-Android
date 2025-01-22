@@ -34,12 +34,16 @@ fun CircleProgressBar(
     onClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
+    isEnabled: Boolean = true,
 ) {
     Box(
         modifier = modifier
             .size(CIRCLE_SIZE.dp)
             .clip(CircleShape)
-            .clickable { onClick(date) }
+            .clickable(
+                enabled = isEnabled,
+                onClick = { onClick(date) },
+            )
             .background(status.backgroundColor(isSelected))
             .then(status.progress(isSelected)),
         contentAlignment = Alignment.Center,
@@ -109,13 +113,25 @@ private fun ProgressStatus.centerContent(
 
         is ProgressStatus.Completed -> {
             {
-                if (this.actualProgress == 100) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.icon_checkbox_check),
-                        contentDescription = null,
-                    )
-                } else {
-                    TextContent(text = "${this.actualProgress}", color = this.textColor(isSelected))
+                when {
+                    isSelected -> {
+                        TextContent(
+                            text = "$date",
+                            color = this.textColor(true),
+                        )
+                    }
+                    this.actualProgress == 100 -> {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.icon_checkbox_check),
+                            contentDescription = null,
+                        )
+                    }
+                    else -> {
+                        TextContent(
+                            text = "${this.actualProgress}",
+                            color = this.textColor(false),
+                        )
+                    }
                 }
             }
         }

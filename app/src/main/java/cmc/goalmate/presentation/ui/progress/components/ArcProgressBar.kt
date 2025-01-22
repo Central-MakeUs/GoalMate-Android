@@ -64,7 +64,7 @@ fun ArcProgressBar(
 
 @Composable
 fun TodayProgress(
-    progressPercent: Float,
+    progressPercent: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -73,9 +73,9 @@ fun TodayProgress(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Box {
-            ArcProgressBar(percent = progressPercent)
+            ArcProgressBar(percent = progressPercent.toFloat())
             Text(
-                text = "${progressPercent.toInt()}%",
+                text = "$progressPercent%",
                 style = MaterialTheme.goalMateTypography.subtitle,
                 color = Grey700,
                 modifier = Modifier
@@ -120,7 +120,8 @@ enum class ProgressMessage(val range: IntRange, val message: String) {
     ;
 
     companion object {
-        fun getMessageForProgress(progress: Int): String = requireNotNull(entries.find { progress in it.range }?.message)
+        fun getMessageForProgress(progress: Int): String =
+            requireNotNull(entries.find { progress in it.range }?.message) { "유효하지 않은 progress : $progress" }
     }
 }
 
@@ -129,7 +130,7 @@ enum class ProgressMessage(val range: IntRange, val message: String) {
 private fun ArcProgressBarPreview() {
     GoalMateTheme {
         TodayProgress(
-            progressPercent = 0f,
+            progressPercent = 0,
         )
     }
 }

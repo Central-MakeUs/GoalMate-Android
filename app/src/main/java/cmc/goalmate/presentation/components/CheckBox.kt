@@ -32,6 +32,7 @@ fun GoalMateCheckBox(
     isChecked: Boolean,
     onCheckedChange: () -> Unit,
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
 ) {
     val contentColor =
         if (isChecked) MaterialTheme.goalMateColors.primary else MaterialTheme.goalMateColors.checkboxBackground
@@ -40,7 +41,7 @@ fun GoalMateCheckBox(
         modifier = modifier
             .size(18.dp)
             .background(color = contentColor, RoundedCornerShape(4.dp))
-            .clickable { onCheckedChange() },
+            .clickable(enabled = isEnabled, onClick = { onCheckedChange() }),
     ) {
         Column(
             modifier = Modifier
@@ -62,6 +63,7 @@ fun GoalMateCheckBoxWithText(
     isChecked: Boolean,
     onCheckedChange: () -> Unit,
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
 ) {
     Row(
         modifier = modifier,
@@ -71,12 +73,13 @@ fun GoalMateCheckBoxWithText(
         GoalMateCheckBox(
             isChecked = isChecked,
             onCheckedChange = onCheckedChange,
+            isEnabled = isEnabled,
         )
         Text(
             text = content,
             style = MaterialTheme.goalMateTypography.body,
             color = MaterialTheme.goalMateColors.onBackground,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,8 +29,10 @@ import cmc.goalmate.presentation.theme.color.Grey200
 import cmc.goalmate.presentation.theme.color.Grey400
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.progress.inprogress.InProgressAction
 import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressStatus
 import java.time.format.DateTimeFormatter
 
 enum class DayOfWeek(val label: String) {
@@ -45,23 +45,24 @@ enum class DayOfWeek(val label: String) {
     SATURDAY("토"),
 }
 
+private val dateFormatter = DateTimeFormatter.ofPattern("yy년 M월")
+
 @Composable
 fun GoalMateCalendar(
-    calendarUiModel: CalendarUiModel,
+    calendarData: CalendarUiModel,
     selectedDate: Int,
+    onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val pagerState = rememberPagerState(pageCount = { 1 })
-
     Column(
         modifier = modifier,
     ) {
         YearMonthHeader(
-            label = (calendarUiModel.yearMonth).format(DateTimeFormatter.ofPattern("yy년 M월")),
-            hasNext = calendarUiModel.hasNext,
-            hasPrevious = calendarUiModel.hasPrevious,
-            onNextClicked = {},
-            onPreviousClicked = {},
+            label = (calendarData.yearMonth).format(dateFormatter),
+            hasNext = calendarData.hasNext,
+            hasPrevious = calendarData.hasPrevious,
+            onNextClicked = { onAction(InProgressAction.UpdateNextMonth(calendarData.yearMonth)) },
+            onPreviousClicked = { onAction(InProgressAction.UpdatePreviousMonth(calendarData.yearMonth)) },
             modifier = Modifier.align(Alignment.Start),
         )
 
@@ -79,19 +80,12 @@ fun GoalMateCalendar(
             }
         }
 
-        HorizontalPager(
-            state = pagerState,
+        WeeklyProgressItem(
+            progressByDate = calendarData.progressByDate,
+            selectedDate = selectedDate,
+            onDateClicked = onAction,
             modifier = Modifier.fillMaxWidth(),
-        ) { page ->
-            WeeklyProgressItem(
-                progressByDate = calendarUiModel.progressByDate,
-                selectedDate = selectedDate,
-                onDateClicked = {
-                    // TODO: 날짜 클릭시
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        )
 
         Spacer(Modifier.size(16.dp))
     }
@@ -114,6 +108,7 @@ private fun YearMonthHeader(
         IconButton(
             onClick = onPreviousClicked,
             enabled = hasPrevious,
+            modifier = Modifier.size(24.dp)
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_before),
@@ -137,6 +132,7 @@ private fun YearMonthHeader(
         IconButton(
             onClick = onNextClicked,
             enabled = hasNext,
+            modifier = Modifier.size(24.dp)
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_next),
@@ -157,7 +153,7 @@ fun WeekRow(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         content()
@@ -168,16 +164,17 @@ fun WeekRow(
 private fun WeeklyProgressItem(
     progressByDate: List<DailyProgressUiModel>,
     selectedDate: Int,
-    onDateClicked: (Int) -> Unit,
+    onDateClicked: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     WeekRow(modifier = modifier) {
-        progressByDate.forEach {
+        progressByDate.forEach { progressByDate ->
             CircleProgressBar(
-                date = it.date,
-                status = it.status,
-                onClick = onDateClicked,
-                isSelected = it.date == selectedDate,
+                date = progressByDate.date,
+                status = progressByDate.status,
+                onClick = { onDateClicked(InProgressAction.SelectDate(progressByDate)) },
+                isSelected = progressByDate.date == selectedDate,
+                isEnabled = progressByDate.status != ProgressStatus.NotInProgress
             )
         }
     }
@@ -188,8 +185,9 @@ private fun WeeklyProgressItem(
 private fun GoalStartScreenPreview() {
     GoalMateTheme {
         GoalMateCalendar(
-            calendarUiModel = CalendarUiModel.DUMMY,
-            selectedDate = 25,
+            calendarData = CalendarUiModel.DUMMY,
+            selectedDate = 22,
+            onAction = {},
         )
     }
 }

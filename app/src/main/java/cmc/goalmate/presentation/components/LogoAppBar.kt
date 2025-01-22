@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
@@ -72,7 +73,9 @@ fun AppBarWithBackButton(
                 text = title,
                 style = MaterialTheme.goalMateTypography.subtitle,
                 color = MaterialTheme.goalMateColors.onBackground,
-                modifier = Modifier.align(alignment = Alignment.Center),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.align(alignment = Alignment.Center).padding(horizontal = 60.dp),
             )
         }
     }
@@ -85,7 +88,7 @@ private fun LogoAppBarPreview() {
         Column {
             LogoAppBar()
             Spacer(Modifier.size(12.dp))
-            AppBarWithBackButton(onBackButtonClicked = {})
+            AppBarWithBackButton(onBackButtonClicked = {}, title = "다온과 함께하는 영어 완전 정복 목표 뿌시기")
         }
     }
 }
