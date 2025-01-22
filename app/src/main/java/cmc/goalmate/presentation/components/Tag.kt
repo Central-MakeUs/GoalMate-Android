@@ -25,8 +25,16 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.components.TagSize.LARGE
 import cmc.goalmate.presentation.components.TagSize.SMALL
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.color.Secondary01_400
+import cmc.goalmate.presentation.theme.color.Secondary02_700
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.home.GoalState
+
+enum class TextTagSize(val horizontal: Dp, val vertical: Dp) {
+    SMALL(horizontal = 4.dp, vertical = 2.dp),
+    MEDIUM(horizontal = 6.dp, vertical = 4.dp),
+}
 
 @Composable
 fun TextTag(
@@ -35,6 +43,7 @@ fun TextTag(
     backgroundColor: Color,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.goalMateTypography.caption,
+    size: TextTagSize = TextTagSize.SMALL,
 ) {
     Text(
         text = text,
@@ -45,8 +54,22 @@ fun TextTag(
                 color = backgroundColor,
                 shape = RoundedCornerShape(4.dp),
             )
-            .padding(vertical = 2.dp, horizontal = 4.dp),
+            .padding(vertical = size.vertical, horizontal = size.horizontal),
     )
+}
+
+@Composable
+@Preview
+private fun TextTagPreview() {
+    GoalMateTheme {
+        TextTag(
+            text = "마감임박",
+            textColor = MaterialTheme.goalMateColors.background,
+            backgroundColor = Secondary02_700,
+            textStyle = MaterialTheme.goalMateTypography.captionMedium,
+            size = TextTagSize.MEDIUM,
+        )
+    }
 }
 
 enum class TagSize(val height: Dp, val labelText: String) {
@@ -59,6 +82,7 @@ fun ParticipationStatusTag(
     remainingCount: Int,
     participantsCount: Int,
     tagSize: TagSize,
+    goalState: GoalState,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -68,7 +92,7 @@ fun ParticipationStatusTag(
         Box(
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.goalMateColors.secondary01,
+                    color = goalState.startBackgroundColor(),
                     shape = RoundedCornerShape(topStart = 7.dp, bottomStart = 7.dp),
                 )
                 .padding(start = 8.dp, end = 12.dp)
@@ -78,13 +102,13 @@ fun ParticipationStatusTag(
             CountWithLabel(
                 count = remainingCount,
                 label = tagSize.labelText,
-                labelColor = MaterialTheme.goalMateColors.onSecondary,
+                labelColor = goalState.onStartBackgroundColor(),
                 tagSize = tagSize,
             )
         }
 
         TriangleCanvas(
-            backgroundColor = MaterialTheme.goalMateColors.secondary01Variant,
+            backgroundColor = goalState.endBackgroundColor(),
             modifier = Modifier
                 .size(width = 8.dp, height = tagSize.height)
                 .offset(x = (-8).dp),
@@ -94,7 +118,7 @@ fun ParticipationStatusTag(
             modifier = Modifier
                 .offset(x = (-8).dp)
                 .background(
-                    color = MaterialTheme.goalMateColors.secondary01Variant,
+                    color = goalState.endBackgroundColor(),
                     shape = RoundedCornerShape(topEnd = 7.dp, bottomEnd = 7.dp),
                 )
                 .padding(start = 2.dp, end = 8.dp)
@@ -104,7 +128,7 @@ fun ParticipationStatusTag(
             CountWithLabel(
                 count = participantsCount,
                 label = "참여중",
-                labelColor = MaterialTheme.goalMateColors.secondary01,
+                labelColor = goalState.onEndBackgroundColor(),
                 tagSize = tagSize,
             )
         }
@@ -174,6 +198,34 @@ private fun TriangleCanvas(
 }
 
 @Composable
+fun GoalState.startBackgroundColor(): Color =
+    when (this) {
+        GoalState.AVAILABLE -> Secondary01_400
+        GoalState.SOLD_OUT -> MaterialTheme.goalMateColors.finished
+    }
+
+@Composable
+fun GoalState.onStartBackgroundColor(): Color =
+    when (this) {
+        GoalState.AVAILABLE -> MaterialTheme.goalMateColors.onSecondary
+        GoalState.SOLD_OUT -> MaterialTheme.goalMateColors.background
+    }
+
+@Composable
+fun GoalState.endBackgroundColor(): Color =
+    when (this) {
+        GoalState.AVAILABLE -> MaterialTheme.goalMateColors.secondary01Variant
+        GoalState.SOLD_OUT -> MaterialTheme.goalMateColors.pending
+    }
+
+@Composable
+fun GoalState.onEndBackgroundColor(): Color =
+    when (this) {
+        GoalState.AVAILABLE -> MaterialTheme.goalMateColors.secondary01
+        GoalState.SOLD_OUT -> MaterialTheme.goalMateColors.onSurfaceVariant
+    }
+
+@Composable
 @Preview
 private fun ParticipationStatusTagLargePreview() {
     GoalMateTheme {
@@ -181,18 +233,7 @@ private fun ParticipationStatusTagLargePreview() {
             remainingCount = 0,
             participantsCount = 0,
             tagSize = LARGE,
-        )
-    }
-}
-
-@Composable
-@Preview
-private fun ParticipationStatusTagSmallPreview() {
-    GoalMateTheme {
-        ParticipationStatusTag(
-            remainingCount = 0,
-            participantsCount = 0,
-            tagSize = SMALL,
+            goalState = GoalState.AVAILABLE,
         )
     }
 }

@@ -1,6 +1,7 @@
 package cmc.goalmate.presentation.ui.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +23,10 @@ import cmc.goalmate.R
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.components.GoalDateRange
 import cmc.goalmate.presentation.components.GoalMateButton
+import cmc.goalmate.presentation.components.ParticipationStatusTag
 import cmc.goalmate.presentation.components.PriceContent
-import cmc.goalmate.presentation.components.PriceContentStyle
+import cmc.goalmate.presentation.components.PriceContentStyleSize
+import cmc.goalmate.presentation.components.TagSize
 import cmc.goalmate.presentation.components.ThickDivider
 import cmc.goalmate.presentation.components.ThinDivider
 import cmc.goalmate.presentation.theme.GoalMateDimens
@@ -37,6 +40,7 @@ import cmc.goalmate.presentation.ui.detail.components.MilestoneRowItem
 import cmc.goalmate.presentation.ui.detail.components.SubTitleText
 import cmc.goalmate.presentation.ui.detail.components.WeeklyRowItem
 import cmc.goalmate.presentation.ui.home.GoalState
+import cmc.goalmate.presentation.ui.home.components.ClosingSoonLabel
 
 @Composable
 fun GoalDetailContent(
@@ -128,7 +132,10 @@ private fun GoalHeader(
     goal: GoalDetailUiModel,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         Text(
             text = goal.title,
             style = MaterialTheme.goalMateTypography.h5,
@@ -137,9 +144,16 @@ private fun GoalHeader(
             discount = goal.discount,
             price = goal.price,
             totalPrice = goal.totalPrice,
-            style = PriceContentStyle.Large,
+            size = PriceContentStyleSize.LARGE,
+            discountTextColor = MaterialTheme.goalMateColors.error,
         )
-        // TODO: 뱃지 디자인
+        ParticipationStatusTag(
+            remainingCount = (goal.maxMembers - goal.currentMembers),
+            participantsCount = goal.currentMembers,
+            tagSize = TagSize.LARGE,
+            goalState = goal.state,
+        )
+        ClosingSoonLabel()
     }
 }
 

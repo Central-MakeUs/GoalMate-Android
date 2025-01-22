@@ -2,13 +2,11 @@ package cmc.goalmate.presentation.ui.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,19 +14,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.GoalMateImage
+import cmc.goalmate.presentation.components.ParticipationStatusTag
+import cmc.goalmate.presentation.components.PriceContent
+import cmc.goalmate.presentation.components.PriceContentStyleSize
+import cmc.goalmate.presentation.components.TagSize
+import cmc.goalmate.presentation.components.TextTag
+import cmc.goalmate.presentation.components.TextTagSize
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.color.Secondary02_700
+import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.home.GoalState
 import cmc.goalmate.presentation.ui.home.GoalUiModel
@@ -41,47 +41,42 @@ fun GoalItem(
 ) {
     Column(
         modifier = modifier.width(GoalMateDimens.GoalItemWidth).clickable { navigateToDetail(goal.id) },
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         GoalThumbnail(goalState = goal.state)
-        Spacer(modifier = Modifier.size(10.dp))
         Text(
             text = goal.title,
             style = MaterialTheme.goalMateTypography.subtitleMedium,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
-        Spacer(modifier = Modifier.size(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(text = goal.discount)
-            Spacer(modifier = Modifier.size(4.dp))
-            Text(
-                text = goal.price,
-                style = TextStyle(
-                    textDecoration = TextDecoration.LineThrough,
-                ),
-            )
-        }
-        Text(text = goal.totalPrice)
-        Spacer(modifier = Modifier.size(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.icon_alram),
-                contentDescription = stringResource(R.string.goal_available_members),
-            )
-            Spacer(modifier = Modifier.size(4.dp))
-            Text(
-                text = stringResource(R.string.goal_available_members),
-                textAlign = TextAlign.Center,
-            )
-            Spacer(modifier = Modifier.size(4.dp))
-            Text(text = "${goal.currentMembers}/${goal.maxMembers}명", textAlign = TextAlign.Center)
-        }
+        ParticipationStatusTag(
+            remainingCount = (goal.maxMembers - goal.currentMembers),
+            participantsCount = goal.currentMembers,
+            tagSize = TagSize.SMALL,
+            goalState = goal.state,
+        )
+        ClosingSoonLabel()
+        PriceContent(
+            discount = goal.discount,
+            price = goal.price,
+            totalPrice = goal.totalPrice,
+            size = PriceContentStyleSize.SMALL,
+            discountTextColor = MaterialTheme.goalMateColors.secondary01,
+        )
     }
+}
+
+@Composable
+fun ClosingSoonLabel(modifier: Modifier = Modifier) {
+    TextTag(
+        text = "마감임박",
+        textColor = MaterialTheme.goalMateColors.background,
+        backgroundColor = Secondary02_700,
+        textStyle = MaterialTheme.goalMateTypography.captionMedium,
+        size = TextTagSize.MEDIUM,
+        modifier = modifier,
+    )
 }
 
 @Composable
@@ -127,7 +122,7 @@ private fun GoalItemPreview() {
             totalPrice = "0원",
             currentMembers = 0,
             maxMembers = 10,
-            state = GoalState.SOLD_OUT,
+            state = GoalState.AVAILABLE,
         )
         GoalItem(
             goal = dummyGoal,

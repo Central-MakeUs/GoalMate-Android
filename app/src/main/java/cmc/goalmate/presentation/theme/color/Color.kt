@@ -16,12 +16,15 @@ val Primary700 = Color(0xFF8BD300)
 val Primary900 = Color(0xFF709100)
 val Primary50 = Color(0xFFF4FFE5)
 val Primary100 = Color(0xFFE5FFBE)
-val Purple500 = Color(0xFF7423FF)
+
+val Secondary01_400 = Color(0xFF8D4EFF)
+val Secondary01_500 = Color(0xFF7423FF)
 val Secondary01_50 = Color(0xFFF1E7FF)
 val YellowBright500 = Color(0xFFFFE223)
 val GreenBright400 = Color(0xFF40FF23)
 val Secondary02_50 = Color(0xFFFFFCE5)
 val Secondary02_800 = Color(0xFFF99E13)
+val Secondary02_700 = Color(0xFFFBB719)
 
 val Grey50 = Color(0xFFFAFAFA)
 val Grey100 = Color(0xFFF5F5F5)
@@ -43,7 +46,7 @@ sealed class ColorSet {
             material = lightColorScheme(
                 primary = Primary400,
                 onPrimary = Black,
-                secondary = Purple500,
+                secondary = Secondary01_500,
                 onSecondary = White,
                 surface = White,
                 onSurface = Grey800,
@@ -53,7 +56,7 @@ sealed class ColorSet {
                 surfaceVariant = Grey50,
                 onSurfaceVariant = Grey600,
             ),
-            secondary01 = Purple500,
+            secondary01 = Secondary01_500,
             secondary02 = YellowBright500,
             onSecondary02 = Grey800,
             secondary03 = GreenBright400,
@@ -84,7 +87,7 @@ sealed class ColorSet {
 
         override var darkColors = GoalMateColors(
             material = darkColorScheme(),
-            secondary01 = Purple500,
+            secondary01 = Secondary01_500,
             secondary02 = YellowBright500,
             onSecondary02 = Grey800,
             secondary03 = GreenBright400,
