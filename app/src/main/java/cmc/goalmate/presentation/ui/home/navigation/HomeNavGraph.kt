@@ -45,5 +45,7 @@ fun NavController.navigateToHome(
         popUpTo(popUpToRoute) {
             this.inclusive = inclusive
         }
+        launchSingleTop = true
+        restoreState = true
     }
 }

@@ -20,7 +20,7 @@ enum class GoalState {
 val dummyGoals = listOf(
     GoalUiModel(
         id = 0L,
-        title = "새로운 목표 1",
+        title = "다온과 함께 하는 영어 뿌시기 목표",
         imageUrl = "",
         price = "100,000원",
         discount = "20,000원",
@@ -31,7 +31,7 @@ val dummyGoals = listOf(
     ),
     GoalUiModel(
         id = 1L,
-        title = "새로운 목표 2",
+        title = "스더와 함께 하는 디자인 공부",
         imageUrl = "",
         price = "200,000원",
         discount = "50,000원",

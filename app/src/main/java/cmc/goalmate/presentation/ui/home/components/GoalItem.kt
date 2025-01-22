@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.WhitePoint
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,8 +43,9 @@ fun GoalItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.width(GoalMateDimens.GoalItemWidth).clickable { navigateToDetail(goal.id) },
+        modifier = modifier.clickable { navigateToDetail(goal.id) },
         verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         GoalThumbnail(goalState = goal.state)
         Text(
@@ -49,20 +53,23 @@ fun GoalItem(
             style = MaterialTheme.goalMateTypography.subtitleMedium,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.align(Alignment.Start)
         )
         ParticipationStatusTag(
             remainingCount = (goal.maxMembers - goal.currentMembers),
             participantsCount = goal.currentMembers,
             tagSize = TagSize.SMALL,
             goalState = goal.state,
+            modifier = Modifier.align(Alignment.Start)
         )
-        ClosingSoonLabel()
+        ClosingSoonLabel(modifier = Modifier.align(Alignment.Start))
         PriceContent(
             discount = goal.discount,
             price = goal.price,
             totalPrice = goal.totalPrice,
             size = PriceContentStyleSize.SMALL,
             discountTextColor = MaterialTheme.goalMateColors.secondary01,
+            modifier = Modifier.align(Alignment.Start)
         )
     }
 }
@@ -93,7 +100,7 @@ private fun GoalThumbnail(
     }
 
     Box(
-        modifier = modifier.size(width = GoalMateDimens.GoalItemWidth, height = 117.dp),
+        modifier = modifier.height(117.dp),
         contentAlignment = Alignment.Center,
     ) {
         if (goalState == GoalState.SOLD_OUT) {
@@ -110,7 +117,7 @@ private fun GoalThumbnail(
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 private fun GoalItemPreview() {
     GoalMateTheme {
         val dummyGoal = GoalUiModel(
@@ -127,7 +134,7 @@ private fun GoalItemPreview() {
         GoalItem(
             goal = dummyGoal,
             navigateToDetail = {},
-            modifier = Modifier.background(Color.White),
+            modifier = Modifier.width(GoalMateDimens.GoalItemWidth),
         )
     }
 }
