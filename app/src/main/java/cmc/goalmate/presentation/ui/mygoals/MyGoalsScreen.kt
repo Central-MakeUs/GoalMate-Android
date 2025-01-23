@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +26,6 @@ import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.ThickDivider
 import cmc.goalmate.presentation.theme.GoalMateDimens
-import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
 @Composable
@@ -44,8 +43,8 @@ fun MyGoalsScreen(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        HeaderTitle(modifier = Modifier.fillMaxWidth())
         if (state.hasNoGoals()) {
-            HeaderTitle(modifier = Modifier.fillMaxWidth())
             EmptyGoalContents(
                 onButtonClicked = navigateToHome,
                 modifier = Modifier.fillMaxSize(),
@@ -64,20 +63,16 @@ fun MyGoalsScreen(
 @Composable
 private fun HeaderTitle(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier,
+        modifier = modifier.height(GoalMateDimens.TopBarHeight),
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = stringResource(R.string.my_goals_header_title),
-            style = MaterialTheme.goalMateTypography.subtitleMedium,
+            style = MaterialTheme.goalMateTypography.subtitle,
             modifier = Modifier.padding(
                 horizontal = GoalMateDimens.HorizontalPadding,
                 vertical = 14.dp,
             ),
-        )
-        HorizontalDivider(
-            modifier = Modifier.fillMaxWidth(),
-            thickness = 1.dp,
-            color = MaterialTheme.goalMateColors.pending,
         )
     }
 }
@@ -116,9 +111,6 @@ private fun MyGoalsContent(
     LazyColumn(
         modifier = modifier,
     ) {
-        item {
-            HeaderTitle(modifier = Modifier.fillMaxWidth())
-        }
         items(myGoals) { myGoal ->
             Column {
                 when (myGoal.goalState) {
