@@ -23,6 +23,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
+import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
@@ -39,7 +40,7 @@ fun GoalMateCheckBox(
 
     Box(
         modifier = modifier
-            .size(18.dp)
+            .size(GoalMateDimens.CheckBoxSize)
             .background(color = contentColor, RoundedCornerShape(4.dp))
             .clickable(enabled = isEnabled, onClick = { onCheckedChange() }),
     ) {
