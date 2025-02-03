@@ -24,8 +24,6 @@ import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.components.GoalDateRange
 import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.ParticipationStatusTag
-import cmc.goalmate.presentation.components.PriceContent
-import cmc.goalmate.presentation.components.PriceContentStyleSize
 import cmc.goalmate.presentation.components.TagSize
 import cmc.goalmate.presentation.components.ThickDivider
 import cmc.goalmate.presentation.components.ThinDivider
@@ -156,20 +154,26 @@ private fun GoalInfo(
     goal: GoalDetailUiModel,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    val contentTextStyle = goalMateTypography.subtitleSmall
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(GoalMateDimens.InfoRowSpace),
+    ) {
         InfoRow(
             title = stringResource(R.string.goal_detail_subject_title),
             content = goal.category,
-            modifier = Modifier.padding(bottom = 8.dp),
+            contentTextStyle = contentTextStyle,
         )
         InfoRow(
             title = stringResource(R.string.goal_detail_mentor_title),
             content = goal.mentorName,
-            modifier = Modifier.padding(bottom = 8.dp),
+            contentTextStyle = contentTextStyle,
         )
         InfoRow(
             title = stringResource(R.string.goal_detail_date_title),
             content = goal.totalDates,
+            contentTextStyle = contentTextStyle,
         ) {
             GoalDateRange(
                 startDate = goal.startDate,
@@ -177,6 +181,11 @@ private fun GoalInfo(
                 icon = R.drawable.icon_calendar,
             )
         }
+        InfoRow(
+            title = stringResource(R.string.goal_detail_time),
+            content = goal.time,
+            contentTextStyle = contentTextStyle,
+        )
     }
 }
 
@@ -243,6 +252,7 @@ private fun GoalDetailScreenPreview() {
                 totalDates = "30일",
                 startDate = "2025년 01월 01일",
                 endDate = "2025년 01월 30일",
+                time = "하루 평균 4시간",
                 price = "10,000원",
                 discount = "100%",
                 totalPrice = "0원",

@@ -23,6 +23,7 @@ data class GoalDetailUiState(
                 totalDates = "30일",
                 startDate = "2025년 01월 01일",
                 endDate = "2025년 01월 30일",
+                time = "하루 평균 1시간",
                 price = "10,000원",
                 discount = "100%",
                 totalPrice = "0원",

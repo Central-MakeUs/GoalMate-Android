@@ -42,6 +42,7 @@ fun InfoRow(
     title: String,
     content: String,
     modifier: Modifier = Modifier,
+    contentTextStyle: TextStyle = MaterialTheme.goalMateTypography.buttonLabelLarge,
     annotatedContent: AnnotatedString? = null,
     extraContent: (@Composable () -> Unit)? = null,
 ) {
@@ -60,7 +61,7 @@ fun InfoRow(
         ) {
             Text(
                 text = annotatedContent ?: AnnotatedString(content),
-                style = MaterialTheme.goalMateTypography.buttonLabelLarge,
+                style = contentTextStyle,
                 color = MaterialTheme.goalMateColors.onBackground,
             )
             if (extraContent != null) {

@@ -12,6 +12,7 @@ data class GoalDetailUiModel(
     val totalDates: String,
     val startDate: String,
     val endDate: String,
+    val time: String,
     val price: String,
     val discount: String,
     val totalPrice: String,

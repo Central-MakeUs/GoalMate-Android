@@ -40,7 +40,7 @@ fun GoalOverviewCard(
                 vertical = GoalMateDimens.BottomMargin,
                 horizontal = GoalMateDimens.HorizontalPadding,
             ),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(GoalMateDimens.InfoRowSpace),
     ) {
         InfoRow(
             title = stringResource(R.string.goal_detail_start_title),
