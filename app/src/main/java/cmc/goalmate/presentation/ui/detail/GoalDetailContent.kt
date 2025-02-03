@@ -141,13 +141,6 @@ private fun GoalHeader(
             text = goal.title,
             style = MaterialTheme.goalMateTypography.h5,
         )
-        PriceContent(
-            discount = goal.discount,
-            price = goal.price,
-            totalPrice = goal.totalPrice,
-            size = PriceContentStyleSize.LARGE,
-            discountTextColor = MaterialTheme.goalMateColors.error,
-        )
         ParticipationStatusTag(
             remainingCount = (goal.maxMembers - goal.currentMembers),
             participantsCount = goal.currentMembers,

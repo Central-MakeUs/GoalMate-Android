@@ -1,13 +1,10 @@
 package cmc.goalmate.presentation.ui.home.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,16 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.WhitePoint
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.GoalMateImage
 import cmc.goalmate.presentation.components.ParticipationStatusTag
-import cmc.goalmate.presentation.components.PriceContent
-import cmc.goalmate.presentation.components.PriceContentStyleSize
 import cmc.goalmate.presentation.components.TagSize
 import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.components.TextTagSize
@@ -53,24 +46,16 @@ fun GoalItem(
             style = MaterialTheme.goalMateTypography.subtitleMedium,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.align(Alignment.Start)
+            modifier = Modifier.align(Alignment.Start),
         )
         ParticipationStatusTag(
             remainingCount = (goal.maxMembers - goal.currentMembers),
             participantsCount = goal.currentMembers,
             tagSize = TagSize.SMALL,
             goalState = goal.state,
-            modifier = Modifier.align(Alignment.Start)
+            modifier = Modifier.align(Alignment.Start),
         )
         ClosingSoonLabel(modifier = Modifier.align(Alignment.Start))
-        PriceContent(
-            discount = goal.discount,
-            price = goal.price,
-            totalPrice = goal.totalPrice,
-            size = PriceContentStyleSize.SMALL,
-            discountTextColor = MaterialTheme.goalMateColors.secondary01,
-            modifier = Modifier.align(Alignment.Start)
-        )
     }
 }
 
@@ -110,7 +95,7 @@ private fun GoalThumbnail(
             )
         }
         GoalMateImage(
-            image = R.drawable.goal_default_image,
+            image = R.drawable.image_goal_default,
             modifier = imageModifier,
         )
     }

@@ -60,7 +60,7 @@ fun InfoRow(
         ) {
             Text(
                 text = annotatedContent ?: AnnotatedString(content),
-                style = MaterialTheme.goalMateTypography.subtitleSmall,
+                style = MaterialTheme.goalMateTypography.buttonLabelLarge,
                 color = MaterialTheme.goalMateColors.onBackground,
             )
             if (extraContent != null) {

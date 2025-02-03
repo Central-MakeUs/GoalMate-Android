@@ -76,7 +76,7 @@ private fun GoalOverview(
             contentAlignment = Alignment.Center,
         ) {
             GoalMateImage(
-                image = R.drawable.goal_default_image,
+                image = R.drawable.image_goal_default,
                 modifier = Modifier.matchParentSize(),
             )
             if (myGoal.goalState == MyGoalState.COMPLETED) {

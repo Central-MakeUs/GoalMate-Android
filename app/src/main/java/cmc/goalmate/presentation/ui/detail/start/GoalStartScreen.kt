@@ -41,7 +41,7 @@ fun GoalStartScreen(
                 vertical = GoalMateDimens.BottomMargin,
             ),
     ) {
-        GoalOverviewCard(goal.title, goal.mentor, goal.price, goal.totalPrice)
+        GoalOverviewCard(goal.title, goal.mentor)
         Spacer(Modifier.size(16.dp))
         InfoMessage(modifier = Modifier.fillMaxWidth())
         Spacer(Modifier.size(25.dp))

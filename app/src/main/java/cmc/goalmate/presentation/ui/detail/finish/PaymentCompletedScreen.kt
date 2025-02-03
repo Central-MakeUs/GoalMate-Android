@@ -113,7 +113,7 @@ private fun PaymentCompletedScreenPreview() {
         PaymentCompletedScreen(
             goal = GoalSummary("", "", "", ""),
             navigateToAchievingGoal = {},
-            modifier = Modifier.background(Color.White)
+            modifier = Modifier.background(Color.White),
         )
     }
 }
