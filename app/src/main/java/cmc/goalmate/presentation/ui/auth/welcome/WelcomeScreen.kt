@@ -43,7 +43,7 @@ fun WelcomeScreen(
         Spacer(modifier = Modifier.size(83.dp))
         Box {
             Image(
-                painter = painterResource(R.drawable.image_welcome),
+                painter = painterResource(R.drawable.image_login_completed),
                 contentDescription = stringResource(R.string.login_greeting_message, nickName),
                 modifier = Modifier.size(width = 320.dp, height = 300.dp),
             )

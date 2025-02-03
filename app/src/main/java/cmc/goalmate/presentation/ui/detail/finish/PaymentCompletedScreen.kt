@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.detail.finish
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,11 +67,10 @@ private fun PaymentCompletedContent(
             .padding(bottom = GoalMateDimens.BottomMargin),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(Modifier.size(35.dp))
+        Spacer(Modifier.size(32.dp))
         Box {
-            // TODO: 콘텐츠 이미지 추후 변경
             GoalMateImage(
-                image = R.drawable.image_welcome,
+                image = R.drawable.image_goal_start,
                 contentDescription = stringResource(R.string.goal_detail_complete),
                 modifier = Modifier
                     .size(
@@ -112,6 +113,7 @@ private fun PaymentCompletedScreenPreview() {
         PaymentCompletedScreen(
             goal = GoalSummary("", "", "", ""),
             navigateToAchievingGoal = {},
+            modifier = Modifier.background(Color.White)
         )
     }
 }

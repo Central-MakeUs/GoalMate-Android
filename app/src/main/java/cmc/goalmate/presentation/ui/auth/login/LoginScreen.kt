@@ -101,7 +101,7 @@ private fun LoginMainContent(
         Spacer(modifier = Modifier.weight(1f))
         Box {
             Image(
-                painter = painterResource(R.drawable.image_onboarding),
+                painter = painterResource(R.drawable.image_login),
                 contentDescription = stringResource(R.string.login_onboarding_message),
                 modifier = Modifier.size(320.dp, 300.dp),
             )
@@ -150,8 +150,8 @@ private fun LoginTermBottomSheet(
 @Preview(showBackground = true, showSystemUi = true)
 private fun LoginPreview() {
     GoalMateTheme {
-        LoginScreen(
-            navigateToNickNameSetting = {},
+        LoginContent(
+            {},{},
             modifier = Modifier.background(White),
         )
     }
