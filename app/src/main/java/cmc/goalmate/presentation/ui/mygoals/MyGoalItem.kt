@@ -111,7 +111,7 @@ private fun Label(
     modifier: Modifier = Modifier,
 ) {
     val tagText = when (goalState) {
-        MyGoalState.IN_PROGRESS -> "D+$daysFromStart"
+        MyGoalState.IN_PROGRESS -> "D-$daysFromStart"
         MyGoalState.COMPLETED -> "done"
     }
     Row(
@@ -164,11 +164,17 @@ fun InProgressGoalItem(
     navigateToProgressPage: NavigateToGoal,
     modifier: Modifier = Modifier,
 ) {
+    val buttonText = if (myGoal.remainGoals > 0) {
+        stringResource(R.string.my_goals_in_progress_start_button, 1)
+    } else {
+        stringResource(R.string.my_goals_in_progress_button)
+    }
+
     MyGoalItem(
         myGoal = myGoal,
         buttonContent = {
             GoalMateButton(
-                content = stringResource(R.string.my_goals_in_progress_button),
+                content = buttonText,
                 onClick = { navigateToProgressPage(myGoal.goalId) },
                 buttonSize = ButtonSize.SMALL,
                 modifier = modifier.fillMaxWidth(),

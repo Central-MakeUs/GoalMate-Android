@@ -16,6 +16,7 @@ data class MyGoalUiModel(
     val daysFromStart: Int,
     val goalProgress: Float,
     val goalState: MyGoalState,
+    val remainGoals: Int = 0,
 ) {
     companion object {
         val DUMMY = MyGoalUiModel(

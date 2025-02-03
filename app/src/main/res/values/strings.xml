@@ -24,6 +24,7 @@
     <string name="my_goals_empty_message">현재 진행 중인 목표가 없습니다.\n참여할 목표를 보러 갈까요?</string>
     <string name="my_goals_empty_button">보러가기</string>
     <string name="my_goals_in_progress_button">진행하기</string>
+    <string name="my_goals_in_progress_start_button">오늘 해야 할 일 %d개 완료하기</string>
     <string name="my_goals_completed_restart_button">다시 시작하기</string>
     <string name="my_goals_completed_detail_button">보러가기</string>
 
