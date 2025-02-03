@@ -27,7 +27,7 @@ fun InProgressScreen(
             title = state.goalInfo.title,
         )
 
-        InProgressContent(
+         InProgressContent(
             state = state,
             onAction = viewModel::onAction, // TODO: Action 분기 처리
         )

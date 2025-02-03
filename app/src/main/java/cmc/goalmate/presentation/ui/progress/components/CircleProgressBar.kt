@@ -144,7 +144,7 @@ private fun TextContent(
 ) {
     Text(
         text = text,
-        style = MaterialTheme.goalMateTypography.buttonLabelLarge,
+        style = MaterialTheme.goalMateTypography.bodySmallMedium,
         color = color,
         modifier = Modifier,
     )

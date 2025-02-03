@@ -119,7 +119,7 @@ private fun YearMonthHeader(
 
         Text(
             text = label,
-            style = MaterialTheme.goalMateTypography.captionSemiBold,
+            style = MaterialTheme.goalMateTypography.bodySmall,
             color = MaterialTheme.goalMateColors.textButton,
             modifier = Modifier
                 .background(

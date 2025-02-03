@@ -2,6 +2,7 @@ package cmc.goalmate.presentation.ui.progress.inprogress
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,19 +21,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.app.navigation.NavigateToGoal
+import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.GoalMateProgressBar
 import cmc.goalmate.presentation.components.MoreOptionButton
 import cmc.goalmate.presentation.components.ThickDivider
-import cmc.goalmate.presentation.components.ThinDivider
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.mygoals.MyGoalState
-import cmc.goalmate.presentation.ui.progress.components.CommentUiModel
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
-import cmc.goalmate.presentation.ui.progress.components.RecentComment
 import cmc.goalmate.presentation.ui.progress.components.Subtitle
 import cmc.goalmate.presentation.ui.progress.components.ToDoItem
 import cmc.goalmate.presentation.ui.progress.components.TodayProgress
@@ -45,23 +44,38 @@ fun InProgressContent(
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .padding(
-                top = 6.dp,
-                bottom = GoalMateDimens.ItemVerticalPaddingLarge,
+    Box(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .padding(
+                    top = 6.dp,
+                    bottom = GoalMateDimens.ItemVerticalPaddingLarge,
+                )
+                .verticalScroll(rememberScrollState()),
+        ) {
+            GoalProgress(
+                state = state,
+                onAction = onAction,
             )
-            .verticalScroll(rememberScrollState()),
-    ) {
-        GoalProgress(
-            state = state,
-            onAction = onAction,
-        )
-        ThickDivider(paddingTop = 40.dp, paddingBottom = 30.dp)
-        GoalInfoDetail(
-            goalInfo = state.goalInfo,
-            navigateToGoalDetail = { onAction(InProgressAction.NavigateToGoalDetail(state.goalInfo.goalId)) },
-            modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+            ThickDivider(paddingTop = 40.dp, paddingBottom = 30.dp)
+            GoalInfoDetail(
+                goalInfo = state.goalInfo,
+                navigateToGoalDetail = { onAction(InProgressAction.NavigateToGoalDetail(state.goalInfo.goalId)) },
+                modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+            )
+            Spacer(Modifier.size(86.dp))
+        }
+
+        GoalMateButton(
+            content = "멘토 코멘트 받으러 가기",
+            onClick = { onAction(InProgressAction.NavigateToComments(state.goalInfo.goalId)) },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(
+                    horizontal = GoalMateDimens.HorizontalPadding,
+                    vertical = GoalMateDimens.BottomMargin,
+                ),
         )
     }
 }
@@ -99,15 +113,7 @@ private fun GoalProgress(
         AchievementProgress(
             currentProgressPercentage = state.currentAchievementRate,
             totalProgressPercentage = 20f, // TODO: 전체 진행률 고민중
-        )
-
-        ThinDivider()
-
-        CommentSection(
-            comment = state.recentComment,
-            moreOptionClicked = {
-                onAction(InProgressAction.NavigateToComments(state.goalInfo.goalId))
-            },
+            modifier = Modifier.padding(bottom = GoalMateDimens.ItemVerticalPaddingLarge),
         )
     }
 }
@@ -125,9 +131,7 @@ private fun GoalTasks(
             .padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Subtitle(title = "오늘 해야 할 일")
-
-        Spacer(Modifier.size(14.dp))
+        Subtitle(title = "오늘 해야 할 일", modifier = Modifier.padding(bottom = 14.dp))
 
         todos.forEach { todo ->
             ToDoItem(
@@ -171,35 +175,6 @@ private fun AchievementProgress(
             currentProgress = totalProgressPercentage,
             myGoalState = MyGoalState.IN_PROGRESS,
             thickness = 20.dp,
-            modifier = Modifier.fillMaxWidth(),
-        )
-    }
-}
-
-@Composable
-private fun CommentSection(
-    comment: CommentUiModel,
-    moreOptionClicked: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Subtitle(title = stringResource(R.string.goal_progress_comment_title))
-            MoreOptionButton(
-                label = "전체 보기",
-                onClick = moreOptionClicked,
-            )
-        }
-
-        RecentComment(
-            comment = comment,
             modifier = Modifier.fillMaxWidth(),
         )
     }
