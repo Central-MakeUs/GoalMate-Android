@@ -22,7 +22,10 @@ data class GoalDetailUiModel(
     val weeklyGoal: List<String>,
     val milestone: List<String>,
     val detailImageUrl: String,
-)
+) {
+    val isAvailable: Boolean
+        get() = this.state == GoalState.AVAILABLE
+}
 
 fun GoalDetailUiModel.toSummary(): GoalSummary =
     GoalSummary(

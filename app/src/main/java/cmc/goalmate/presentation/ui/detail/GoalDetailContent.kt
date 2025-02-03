@@ -118,6 +118,7 @@ fun GoalDetailContent(
         GoalMateButton(
             content = stringResource(R.string.goal_detail_start_button),
             onClick = showBottomSheet,
+            enabled = goal.isAvailable,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()

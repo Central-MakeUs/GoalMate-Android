@@ -3,6 +3,7 @@ package cmc.goalmate.presentation.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -78,6 +79,26 @@ fun AppBarWithBackButton(
                 modifier = Modifier.align(alignment = Alignment.Center).padding(horizontal = 60.dp),
             )
         }
+    }
+}
+
+@Composable
+fun HeaderTitle(
+    title: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.height(GoalMateDimens.TopBarHeight),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.goalMateTypography.subtitle,
+            modifier = Modifier.padding(
+                horizontal = GoalMateDimens.HorizontalPadding,
+                vertical = 14.dp,
+            ),
+        )
     }
 }
 

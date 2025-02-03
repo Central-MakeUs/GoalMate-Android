@@ -18,10 +18,14 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
         startDestination = Screen.Auth.Login,
     ) {
         composable<Screen.Auth.Login> {
+            val viewModel = hiltViewModel<LoginViewModel>(
+                navController.getBackStackEntry(Screen.Auth),
+            )
             LoginScreen(
-                onLoginButtonClicked = {
+                navigateToNickNameSetting = {
                     navController.navigate(Screen.Auth.NickNameSetting)
                 },
+                viewModel = viewModel,
             )
         }
 
