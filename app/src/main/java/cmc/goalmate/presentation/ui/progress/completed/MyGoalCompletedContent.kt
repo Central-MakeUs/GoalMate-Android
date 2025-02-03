@@ -36,7 +36,7 @@ import cmc.goalmate.presentation.ui.detail.components.SubTitleText
 import cmc.goalmate.presentation.ui.mygoals.MyGoalState
 import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiModel
 import cmc.goalmate.presentation.ui.progress.components.FinalMessage
-import cmc.goalmate.presentation.ui.progress.inprogress.Subtitle
+import cmc.goalmate.presentation.ui.progress.components.Subtitle
 
 @Composable
 fun MyGoalCompletedContent(

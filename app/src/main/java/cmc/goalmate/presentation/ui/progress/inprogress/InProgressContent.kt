@@ -34,21 +34,17 @@ import cmc.goalmate.presentation.ui.mygoals.MyGoalState
 import cmc.goalmate.presentation.ui.progress.components.CommentUiModel
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
 import cmc.goalmate.presentation.ui.progress.components.RecentComment
+import cmc.goalmate.presentation.ui.progress.components.Subtitle
 import cmc.goalmate.presentation.ui.progress.components.TodayProgress
 import cmc.goalmate.presentation.ui.progress.inprogress.model.TodoGoalUiModel
 import java.time.YearMonth
 
 @Composable
-fun MyGoalProgressContent(
+fun InProgressContent(
     state: InProgressUiState,
     onAction: (InProgressAction) -> Unit,
-    navigateToComments: NavigateToGoal,
-    navigateToGoalDetail: NavigateToGoal,
-    showError: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val canModifyTodo = state.canModifyTodoCheck(YearMonth.of(2025, 1), 24) // TODO: 추후 오늘 날짜로 변경
-
     Column(
         modifier = modifier
             .padding(
@@ -57,65 +53,66 @@ fun MyGoalProgressContent(
             )
             .verticalScroll(rememberScrollState()),
     ) {
-        Column(
-            modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
-        ) {
-            GoalMateCalendar(
-                calendarData = state.weeklyData,
-                selectedDate = state.selectedDate.date,
-                onAction = onAction,
-            )
-
-            Spacer(Modifier.size(45.dp))
-
-            GoalTasks(
-                todos = state.todos,
-                isEnabled = canModifyTodo,
-                onTodoCheckedChange = { todoId, updatedChecked ->
-                    if (canModifyTodo) {
-                        onAction(InProgressAction.CheckTodo(todoId, updatedChecked))
-                    } else {
-                        showError()
-                    }
-                },
-            )
-
-            ThinDivider(paddingTop = 30.dp, paddingBottom = 30.dp)
-
-            AchievementProgress(
-                currentProgressPercentage = state.currentAchievementRate,
-                totalProgressPercentage = 20f, // TODO: 전체 진행률 고민중
-            )
-
-            ThinDivider(paddingTop = 30.dp, paddingBottom = 30.dp)
-
-            CommentSection(
-                comment = state.recentComment,
-                moreOptionClicked = {
-                    navigateToComments(state.goalInfo.goalId)
-                },
-            )
-        }
+        GoalProgress(
+            state = state,
+            onAction = onAction,
+        )
         ThickDivider(paddingTop = 40.dp, paddingBottom = 30.dp)
         GoalInfoDetail(
             goalInfo = state.goalInfo,
-            navigateToGoalDetail = { navigateToGoalDetail(state.goalInfo.goalId) },
+            navigateToGoalDetail = { onAction(InProgressAction.NavigateToGoalDetail(state.goalInfo.goalId)) },
             modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
         )
     }
 }
 
 @Composable
-fun Subtitle(
-    title: String,
+private fun GoalProgress(
+    state: InProgressUiState,
+    onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        text = title,
-        style = MaterialTheme.goalMateTypography.subtitleSmall,
-        color = MaterialTheme.goalMateColors.onSecondary02,
-        modifier = modifier,
-    )
+    val canModifyTodo = state.canModifyTodoCheck(YearMonth.of(2025, 1), 24) // TODO: 추후 오늘 날짜로 변경\
+
+    Column(
+        modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+    ) {
+        GoalMateCalendar(
+            calendarData = state.weeklyData,
+            selectedDate = state.selectedDate.date,
+            onAction = onAction,
+        )
+
+        Spacer(Modifier.size(45.dp))
+
+        GoalTasks(
+            todos = state.todos,
+            isEnabled = canModifyTodo,
+            onTodoCheckedChange = { todoId, updatedChecked ->
+                if (canModifyTodo) {
+                    onAction(InProgressAction.CheckTodo(todoId, updatedChecked))
+                } else {
+                    onAction(InProgressAction.ClickUneditableGoal)
+                }
+            },
+        )
+
+        ThinDivider(paddingTop = 30.dp, paddingBottom = 30.dp)
+
+        AchievementProgress(
+            currentProgressPercentage = state.currentAchievementRate,
+            totalProgressPercentage = 20f, // TODO: 전체 진행률 고민중
+        )
+
+        ThinDivider(paddingTop = 30.dp, paddingBottom = 30.dp)
+
+        CommentSection(
+            comment = state.recentComment,
+            moreOptionClicked = {
+                onAction(InProgressAction.NavigateToComments(state.goalInfo.goalId))
+            },
+        )
+    }
 }
 
 @Composable
@@ -256,12 +253,9 @@ private fun GoalInfoDetail(
 @Preview(showBackground = true)
 private fun MyGoalProgressContentPreview() {
     GoalMateTheme {
-        MyGoalProgressContent(
+        InProgressContent(
             state = InProgressUiState.initialInProgressUiState(),
             onAction = {},
-            {},
-            {},
-            {},
             modifier = Modifier.background(White),
         )
     }

@@ -28,6 +28,7 @@ class InProgressViewModel
                 is InProgressAction.SelectDate -> updateTodoList(action.selectedDate)
                 is InProgressAction.UpdateNextMonth -> updateNextMonth(action.currentYearMonth)
                 is InProgressAction.UpdatePreviousMonth -> updatePreviousMonth(action.currentYearMonth)
+                else -> return
             }
         }
 

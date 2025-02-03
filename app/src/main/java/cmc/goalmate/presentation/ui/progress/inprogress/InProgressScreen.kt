@@ -1,11 +1,9 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.app.navigation.NavigateToGoal
@@ -29,14 +27,9 @@ fun InProgressScreen(
             title = state.goalInfo.title,
         )
 
-        MyGoalProgressContent(
+        InProgressContent(
             state = state,
-            onAction = viewModel::onAction,
-            navigateToGoalDetail = navigateToGoalDetail,
-            navigateToComments = navigateToComments,
-            showError = {
-                // TODO: 에러 모달 띄우기
-            },
+            onAction = viewModel::onAction, // TODO: Action 분기 처리
         )
     }
 }
