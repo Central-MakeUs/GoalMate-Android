@@ -46,7 +46,7 @@ fun GoalDetailScreen(
         ModalBottomSheet(
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState,
-            containerColor = MaterialTheme.goalMateColors.surface,
+            containerColor = MaterialTheme.goalMateColors.background,
             tonalElevation = 0.dp,
             windowInsets = BottomSheetDefaults.windowInsets.only(WindowInsetsSides.Bottom),
         ) {

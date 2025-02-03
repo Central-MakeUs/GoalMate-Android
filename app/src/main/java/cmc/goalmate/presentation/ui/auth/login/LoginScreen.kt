@@ -137,7 +137,7 @@ private fun LoginTermBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        containerColor = MaterialTheme.goalMateColors.surface,
+        containerColor = MaterialTheme.goalMateColors.background,
         tonalElevation = 0.dp,
     ) {
         TermsOfServiceScreen(
@@ -151,7 +151,8 @@ private fun LoginTermBottomSheet(
 private fun LoginPreview() {
     GoalMateTheme {
         LoginContent(
-            {},{},
+            {},
+            {},
             modifier = Modifier.background(White),
         )
     }

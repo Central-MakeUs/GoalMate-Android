@@ -45,7 +45,7 @@ fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     NavigationBar(
-        containerColor = MaterialTheme.goalMateColors.surface,
+        containerColor = MaterialTheme.goalMateColors.background,
         tonalElevation = 0.dp,
     ) {
         BottomNavItem.entries.forEach { navItem ->
@@ -77,7 +77,7 @@ fun BottomNavigationBar(navController: NavController) {
                     selectedTextColor = MaterialTheme.goalMateColors.selected,
                     unselectedIconColor = MaterialTheme.goalMateColors.unSelected,
                     unselectedTextColor = MaterialTheme.goalMateColors.unSelected,
-                    indicatorColor = MaterialTheme.goalMateColors.surface,
+                    indicatorColor = MaterialTheme.goalMateColors.background,
                 ),
             )
         }

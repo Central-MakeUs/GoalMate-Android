@@ -87,7 +87,7 @@ private fun ProgressStatus.backgroundColor(isSelected: Boolean): Color =
             if (isSelected) {
                 MaterialTheme.goalMateColors.secondary01
             } else {
-                MaterialTheme.goalMateColors.primaryVariant
+                MaterialTheme.goalMateColors.completed
             }
         }
         ProgressStatus.NotInProgress -> Color.Transparent
@@ -124,12 +124,6 @@ private fun ProgressStatus.centerContent(
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.icon_checkbox_check),
                             contentDescription = null,
-                        )
-                    }
-                    else -> {
-                        TextContent(
-                            text = "${this.actualProgress}",
-                            color = this.textColor(false),
                         )
                     }
                 }
@@ -180,7 +174,7 @@ private fun CircleProgressBarPreview() {
     GoalMateTheme {
         CircleProgressBar(
             date = 10,
-            status = ProgressStatus.InProgress,
+            status = ProgressStatus.Completed(10),
             onClick = {},
             isSelected = false,
         )

@@ -83,7 +83,7 @@ fun GoalMateCalendar(
         WeeklyProgressItem(
             progressByDate = calendarData.progressByDate,
             selectedDate = selectedDate,
-            onDateClicked = onAction,
+            onDateClicked = { onAction(InProgressAction.SelectDate(it)) },
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -108,7 +108,7 @@ private fun YearMonthHeader(
         IconButton(
             onClick = onPreviousClicked,
             enabled = hasPrevious,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_before),
@@ -132,7 +132,7 @@ private fun YearMonthHeader(
         IconButton(
             onClick = onNextClicked,
             enabled = hasNext,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_next),
@@ -164,7 +164,7 @@ fun WeekRow(
 private fun WeeklyProgressItem(
     progressByDate: List<DailyProgressUiModel>,
     selectedDate: Int,
-    onDateClicked: (InProgressAction) -> Unit,
+    onDateClicked: (DailyProgressUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     WeekRow(modifier = modifier) {
@@ -172,9 +172,9 @@ private fun WeeklyProgressItem(
             CircleProgressBar(
                 date = progressByDate.date,
                 status = progressByDate.status,
-                onClick = { onDateClicked(InProgressAction.SelectDate(progressByDate)) },
+                onClick = { onDateClicked(progressByDate) },
                 isSelected = progressByDate.date == selectedDate,
-                isEnabled = progressByDate.status != ProgressStatus.NotInProgress
+                isEnabled = progressByDate.status != ProgressStatus.NotInProgress,
             )
         }
     }

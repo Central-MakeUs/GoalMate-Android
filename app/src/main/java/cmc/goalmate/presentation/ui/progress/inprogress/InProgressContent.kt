@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.app.navigation.NavigateToGoal
-import cmc.goalmate.presentation.components.GoalMateCheckBoxWithText
 import cmc.goalmate.presentation.components.GoalMateProgressBar
 import cmc.goalmate.presentation.components.MoreOptionButton
 import cmc.goalmate.presentation.components.ThickDivider
@@ -35,6 +34,7 @@ import cmc.goalmate.presentation.ui.progress.components.CommentUiModel
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
 import cmc.goalmate.presentation.ui.progress.components.RecentComment
 import cmc.goalmate.presentation.ui.progress.components.Subtitle
+import cmc.goalmate.presentation.ui.progress.components.ToDoItem
 import cmc.goalmate.presentation.ui.progress.components.TodayProgress
 import cmc.goalmate.presentation.ui.progress.inprogress.model.TodoGoalUiModel
 import java.time.YearMonth
@@ -76,14 +76,13 @@ private fun GoalProgress(
 
     Column(
         modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+        verticalArrangement = Arrangement.spacedBy(GoalMateDimens.ItemVerticalPaddingLarge),
     ) {
         GoalMateCalendar(
             calendarData = state.weeklyData,
             selectedDate = state.selectedDate.date,
             onAction = onAction,
         )
-
-        Spacer(Modifier.size(45.dp))
 
         GoalTasks(
             todos = state.todos,
@@ -97,14 +96,12 @@ private fun GoalProgress(
             },
         )
 
-        ThinDivider(paddingTop = 30.dp, paddingBottom = 30.dp)
-
         AchievementProgress(
             currentProgressPercentage = state.currentAchievementRate,
             totalProgressPercentage = 20f, // TODO: 전체 진행률 고민중
         )
 
-        ThinDivider(paddingTop = 30.dp, paddingBottom = 30.dp)
+        ThinDivider()
 
         CommentSection(
             comment = state.recentComment,
@@ -122,19 +119,22 @@ private fun GoalTasks(
     onTodoCheckedChange: (Int, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Subtitle(title = "오늘 해야 할 일", modifier = Modifier.padding(bottom = 16.dp))
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.goalMateColors.thickDivider)
+            .padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Subtitle(title = "오늘 해야 할 일")
 
-        ThinDivider(modifier = Modifier.padding(bottom = 30.dp))
+        Spacer(Modifier.size(14.dp))
 
         todos.forEach { todo ->
-            GoalMateCheckBoxWithText(
-                content = todo.content,
-                isChecked = todo.isCompleted,
-                onCheckedChange = { onTodoCheckedChange(todo.id, !todo.isCompleted) },
+            ToDoItem(
+                todo = todo,
                 isEnabled = isEnabled,
+                onCheckedChange = { onTodoCheckedChange(todo.id, !todo.isCompleted) },
             )
-            Spacer(Modifier.size(16.dp))
         }
     }
 }
@@ -158,6 +158,7 @@ private fun AchievementProgress(
         TodayProgress(
             progressPercent = currentProgressPercentage,
         )
+
         Spacer(Modifier.size(30.dp))
 
         Subtitle(

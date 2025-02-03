@@ -48,7 +48,7 @@ sealed class ColorSet {
                 onPrimary = Black,
                 secondary = Secondary01_500,
                 onSecondary = White,
-                surface = White,
+                surface = Grey200,
                 onSurface = Grey800,
                 background = White,
                 onBackground = Grey900,
