@@ -1,4 +1,4 @@
-package cmc.goalmate.presentation.ui.progress.comments
+package cmc.goalmate.presentation.ui.comments.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

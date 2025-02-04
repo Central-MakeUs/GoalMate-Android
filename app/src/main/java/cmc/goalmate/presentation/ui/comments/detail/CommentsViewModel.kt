@@ -1,4 +1,4 @@
-package cmc.goalmate.presentation.ui.progress.comments
+package cmc.goalmate.presentation.ui.comments.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
