@@ -147,7 +147,7 @@ private val ButtonLabelLarge =
     TextStyle(
         fontFamily = pretendardMedium,
         fontSize = 16.sp,
-        lineHeight = 19.09.sp,
+        lineHeight = 24.sp,
     )
 
 private val ButtonLabelMedium =

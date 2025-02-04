@@ -1,6 +1,5 @@
 package cmc.goalmate.presentation.ui.mygoals
 
-import androidx.annotation.DrawableRes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -44,22 +43,29 @@ data class MyGoalUiModel(
 
 enum class MyGoalState(
     val label: String,
-    @DrawableRes val progressIcon: Int,
-    @DrawableRes val dateIcon: Int,
+    private val dateFormat: String,
 ) {
-    IN_PROGRESS(
-        label = "진행중",
-        progressIcon = R.drawable.icon_progress_active,
-        dateIcon = R.drawable.icon_calendar_active,
-    ),
-    COMPLETED(
-        label = "진행완료",
-        progressIcon = R.drawable.icon_progress_inactive,
-        dateIcon = R.drawable.icon_calendar_inactive,
-    ),
+    IN_PROGRESS(label = "진행중", dateFormat = "D-%s"),
+    COMPLETED(label = "진행완료", dateFormat = "done"),
     ;
 
+    fun getDateTag(daysUntilDeadline: Int): String = dateFormat.format(daysUntilDeadline)
+
     companion object {
+        @Composable
+        fun MyGoalState.dateIcon(): Int =
+            when (this) {
+                IN_PROGRESS -> R.drawable.icon_calendar_active
+                COMPLETED -> R.drawable.icon_calendar_inactive
+            }
+
+        @Composable
+        fun MyGoalState.progressIcon(): Int =
+            when (this) {
+                IN_PROGRESS -> R.drawable.icon_progress_active
+                COMPLETED -> R.drawable.icon_progress_inactive
+            }
+
         @Composable
         fun MyGoalState.textColor(): Color =
             when (this) {

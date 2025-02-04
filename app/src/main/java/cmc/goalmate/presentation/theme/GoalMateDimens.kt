@@ -19,4 +19,8 @@ object GoalMateDimens {
     val CheckBoxSize = 20.dp
 
     val InfoRowSpace = 8.dp
+
+    val VerticalArrangementSpaceSmall = 8.dp
+    val VerticalArrangementSpaceMedium = 16.dp
+    val VerticalArrangementSpaceLarge = 24.dp
 }

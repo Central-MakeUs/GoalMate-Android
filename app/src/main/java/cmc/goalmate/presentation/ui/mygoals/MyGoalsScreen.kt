@@ -13,6 +13,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.HeaderTitle
+import cmc.goalmate.presentation.ui.common.EmptyGoalContents
 
 @Composable
 fun MyGoalsScreen(

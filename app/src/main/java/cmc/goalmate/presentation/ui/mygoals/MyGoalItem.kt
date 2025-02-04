@@ -25,14 +25,14 @@ import cmc.goalmate.presentation.components.GoalDateRange
 import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.GoalMateImage
 import cmc.goalmate.presentation.components.GoalMateProgressBar
-import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.onTagColor
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.tagColor
+import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.dateIcon
+import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.progressIcon
 import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.textColor
+import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
 
 @Composable
 private fun MyGoalItem(
@@ -47,7 +47,7 @@ private fun MyGoalItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Label(
+        GoalStatusTag(
             daysFromStart = myGoal.daysFromStart,
             goalState = myGoal.goalState,
             modifier = Modifier.fillMaxWidth(),
@@ -98,38 +98,9 @@ private fun GoalOverview(
             GoalDateRange(
                 startDate = myGoal.startDate,
                 endDate = myGoal.endDate,
-                icon = myGoal.goalState.dateIcon,
+                icon = myGoal.goalState.dateIcon(),
             )
         }
-    }
-}
-
-@Composable
-private fun Label(
-    daysFromStart: Int,
-    goalState: MyGoalState,
-    modifier: Modifier = Modifier,
-) {
-    val tagText = when (goalState) {
-        MyGoalState.IN_PROGRESS -> "D-$daysFromStart"
-        MyGoalState.COMPLETED -> "done"
-    }
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = goalState.label,
-            style = MaterialTheme.goalMateTypography.captionSemiBold,
-            color = goalState.textColor(),
-        )
-        Spacer(Modifier.size(4.dp))
-        TextTag(
-            text = tagText,
-            textColor = goalState.onTagColor(),
-            backgroundColor = goalState.tagColor(),
-            textStyle = MaterialTheme.goalMateTypography.captionSemiBold,
-        )
     }
 }
 
@@ -148,7 +119,7 @@ private fun ProgressBar(
             color = MaterialTheme.goalMateColors.finished,
             modifier = Modifier.padding(end = 2.dp),
         )
-        GoalMateImage(image = myGoalState.progressIcon, modifier = Modifier.size(16.dp))
+        GoalMateImage(image = myGoalState.progressIcon(), modifier = Modifier.size(16.dp))
         Spacer(Modifier.size(8.dp))
         GoalMateProgressBar(
             currentProgress = currentProgress,
