@@ -1,6 +1,5 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
-import cmc.goalmate.presentation.ui.progress.components.CommentUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressStatus
@@ -13,7 +12,6 @@ data class InProgressUiState(
     val selectedDate: DailyProgressUiModel,
     val todos: List<TodoGoalUiModel>,
     val goalInfo: GoalOverViewUiModel,
-    val recentComment: CommentUiModel,
 ) {
     val currentAchievementRate: Int
         get() = when (val status = selectedDate.status) {
@@ -45,7 +43,6 @@ data class InProgressUiState(
                 selectedDate = DailyProgressUiModel(date = 24, status = ProgressStatus.InProgress),
                 todos = TodoGoalUiModel.DUMMY,
                 goalInfo = GoalOverViewUiModel.DUMMY,
-                recentComment = CommentUiModel.DUMMY,
             )
     }
 }
