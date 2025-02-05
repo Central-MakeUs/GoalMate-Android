@@ -41,7 +41,7 @@ data class GoalCommentUiModel(
             goalId = 0L,
             imageUrl = "",
             mentorName = "ANNA",
-            title = "ANNA와 함께하는 영어 완전 정복 30일 목표",
+            title = "ANNA와 함께하는 영어 완전 정복 30일 목표입니다 블라블라블라",
             remainingDays = 23,
             goalState = MyGoalState.IN_PROGRESS,
             hasNewComment = true,
@@ -54,7 +54,7 @@ data class GoalCommentUiModel(
             title = "ANNA와 함께하는 영어 완전 정복 30일 목표",
             remainingDays = 0,
             goalState = MyGoalState.IN_PROGRESS,
-            hasNewComment = false,
+            hasNewComment = true,
         )
     }
 }

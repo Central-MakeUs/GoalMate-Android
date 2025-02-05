@@ -8,6 +8,7 @@ import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.app.navigation.navigateToCompleted
 import cmc.goalmate.app.navigation.navigateToDetail
 import cmc.goalmate.app.navigation.navigateToInProgress
+import cmc.goalmate.presentation.ui.comments.GoalCommentsScreen
 import cmc.goalmate.presentation.ui.home.HomeScreen
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
 import cmc.goalmate.presentation.ui.mypage.MyPageScreen
@@ -28,6 +29,13 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
                 navigateToProgressGoal = { id -> navController.navigateToInProgress(id) },
                 navigateToGoalDetail = { id -> navController.navigateToDetail(id) },
                 navigateToHome = { navController.navigateToHome(Screen.Main.MyGoal) },
+            )
+        }
+
+        composable<Screen.Main.Comments> {
+            GoalCommentsScreen(
+                navigateToCommentDetail = {},
+                navigateToHome = {},
             )
         }
 

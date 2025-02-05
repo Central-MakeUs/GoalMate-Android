@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,6 +41,7 @@ fun GoalCommentsContent(
             GoalItem(
                 goal = goalComment,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = GoalMateDimens.HorizontalPadding)
                     .clickable { navigateToCommentDetail(goalComment.goalId) },
             )
@@ -64,6 +66,7 @@ private fun GoalItem(
 
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.weight(1f),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -102,7 +105,7 @@ private fun GoalItem(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 private fun GoalCommentsContentPreview() {
     GoalMateTheme {
         GoalCommentsContent(

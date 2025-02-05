@@ -3,6 +3,7 @@
     <string name="home">홈</string>
     <string name="my_goals">목표</string>
     <string name="my_page">마이</string>
+    <string name="comments">코멘트</string>
 
     <string name="login_onboarding_message">당신의 멘토와 함께\n목표 달성을 시작해보세요!</string>
     <string name="login_nick_name_setting_title">앞으로 어떻게 불러드릴까요?</string>

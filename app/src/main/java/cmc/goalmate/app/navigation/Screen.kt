@@ -27,6 +27,9 @@ sealed interface Screen {
 
         @Serializable
         data object MyPage : Screen
+
+        @Serializable
+        data object Comments : Screen
     }
 
     @Serializable
