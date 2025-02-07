@@ -38,7 +38,7 @@ fun MessageTextField(
     modifier: Modifier = Modifier,
 ) {
     val isError = value.length > MAXIMUM_MESSAGE_LENGTH
-    val textColor = if (isError) MaterialTheme.goalMateColors.error else MaterialTheme.goalMateColors.onBackground
+    val textColor = if (isError) MaterialTheme.goalMateColors.onError else MaterialTheme.goalMateColors.onBackground
 
     BasicTextField(
         value = value,
@@ -56,7 +56,7 @@ fun MessageTextField(
                     .background(color = Color.White, shape = RoundedCornerShape(30.dp))
                     .border(
                         width = 2.dp,
-                        color = if (isError) MaterialTheme.goalMateColors.error else MaterialTheme.goalMateColors.outline,
+                        color = if (isError) MaterialTheme.goalMateColors.onError else MaterialTheme.goalMateColors.outline,
                         shape = RoundedCornerShape(30.dp),
                     )
                     .padding(

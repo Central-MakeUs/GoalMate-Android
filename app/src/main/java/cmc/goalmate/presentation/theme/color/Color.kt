@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)
 val Red = Color(0xFFFF3B30)
+val ErrorBackground = Color(0xFFFFEAE9)
 val Green = Color(0xFF34C759)
 val Yellow = Color(0xFFFFCC00)
 val Blue = Color(0xFF007AFF)
@@ -52,7 +53,8 @@ sealed class ColorSet {
                 onSurface = Grey800,
                 background = White,
                 onBackground = Grey900,
-                error = Red,
+                error = ErrorBackground,
+                onError = Red,
                 surfaceVariant = Grey50,
                 onSurfaceVariant = Grey600,
             ),

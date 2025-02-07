@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +33,9 @@ import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.mygoals.MyGoalState
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
+import cmc.goalmate.presentation.ui.progress.components.GoalMateTimer
 import cmc.goalmate.presentation.ui.progress.components.Subtitle
+import cmc.goalmate.presentation.ui.progress.components.TimerStatus
 import cmc.goalmate.presentation.ui.progress.components.ToDoItem
 import cmc.goalmate.presentation.ui.progress.components.TodayProgress
 import cmc.goalmate.presentation.ui.progress.inprogress.model.TodoGoalUiModel
@@ -89,13 +92,14 @@ private fun GoalProgress(
     val canModifyTodo = state.canModifyTodoCheck(YearMonth.of(2025, 1), 24) // TODO: 추후 오늘 날짜로 변경\
 
     Column(
-        modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(GoalMateDimens.ItemVerticalPaddingLarge),
     ) {
         GoalMateCalendar(
             calendarData = state.weeklyData,
             selectedDate = state.selectedDate.date,
             onAction = onAction,
+            modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
         )
 
         GoalTasks(
@@ -108,12 +112,17 @@ private fun GoalProgress(
                     onAction(InProgressAction.ClickUneditableGoal)
                 }
             },
+            modifier = Modifier
+                .background(MaterialTheme.goalMateColors.thickDivider)
+                .padding(horizontal = GoalMateDimens.HorizontalPadding),
         )
 
         AchievementProgress(
             currentProgressPercentage = state.currentAchievementRate,
             totalProgressPercentage = 20f, // TODO: 전체 진행률 고민중
-            modifier = Modifier.padding(bottom = GoalMateDimens.ItemVerticalPaddingLarge),
+            modifier = Modifier
+                .padding(horizontal = GoalMateDimens.HorizontalPadding)
+                .padding(bottom = GoalMateDimens.ItemVerticalPaddingLarge),
         )
     }
 }
@@ -126,19 +135,32 @@ private fun GoalTasks(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .background(MaterialTheme.goalMateColors.thickDivider)
-            .padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
     ) {
-        Subtitle(title = "오늘 해야 할 일", modifier = Modifier.padding(bottom = 14.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Subtitle(title = "오늘 해야 할 일")
+            GoalMateTimer(
+                time = "23:00:00",
+                timerStatus = TimerStatus.RUNNING,
+                modifier = Modifier.width(136.dp),
+            )
+        }
 
-        todos.forEach { todo ->
+        Spacer(Modifier.size(GoalMateDimens.ItemVerticalPaddingLarge))
+
+        todos.forEachIndexed { index, todo ->
             ToDoItem(
                 todo = todo,
                 isEnabled = isEnabled,
                 onCheckedChange = { onTodoCheckedChange(todo.id, !todo.isCompleted) },
             )
+            if (index != todos.lastIndex) {
+                Spacer(Modifier.size(16.dp))
+            }
         }
     }
 }

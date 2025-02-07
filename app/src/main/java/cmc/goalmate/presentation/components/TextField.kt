@@ -108,7 +108,7 @@ fun GoalMateTextField(
 @Composable
 fun InputTextState.getTextColor(): Color =
     when (this) {
-        InputTextState.Error -> MaterialTheme.goalMateColors.error
+        InputTextState.Error -> MaterialTheme.goalMateColors.onError
         InputTextState.Success -> MaterialTheme.goalMateColors.success
         InputTextState.None -> MaterialTheme.goalMateColors.onBackground
     }
@@ -116,7 +116,7 @@ fun InputTextState.getTextColor(): Color =
 @Composable
 fun InputTextState.getBorderColor(): Color =
     when (this) {
-        InputTextState.Error -> MaterialTheme.goalMateColors.error
+        InputTextState.Error -> MaterialTheme.goalMateColors.onError
         InputTextState.Success -> MaterialTheme.goalMateColors.success
         InputTextState.None -> MaterialTheme.goalMateColors.outline
     }

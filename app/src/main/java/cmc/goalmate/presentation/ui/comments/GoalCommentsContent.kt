@@ -96,7 +96,7 @@ private fun GoalItem(
                     modifier = Modifier
                         .size(12.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.goalMateColors.error)
+                        .background(MaterialTheme.goalMateColors.onError)
                         .align(Alignment.Center),
                 )
             }
