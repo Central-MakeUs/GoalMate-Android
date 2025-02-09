@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     implementation(libs.datastore.preferences)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.core.splashscreen)
 }
 
 kapt {

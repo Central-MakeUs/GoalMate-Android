@@ -20,7 +20,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.GoalMate">
+            android:theme="@style/Theme.SplashScreen.GoalMate">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

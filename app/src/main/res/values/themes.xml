@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.GoalMate" parent="android:Theme.Material.Light.NoActionBar" />
+    
+    <style name="Theme.SplashScreen.GoalMate" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.GoalMate</item>
+    </style>
 </resources>
