@@ -1,6 +1,6 @@
 package cmc.goalmate.app.navigation
 
-import cmc.goalmate.presentation.ui.detail.finish.navigation.GoalSummary
+import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -33,12 +33,13 @@ sealed interface Screen {
     }
 
     @Serializable
-    data class Detail(val goalId: Long) : Screen
+    data object GoalDetail : Screen {
+        @Serializable
+        data class Detail(val goalId: Long) : Screen
 
-    @Serializable
-    data class PaymentCompleted(
-        val goalSummary: GoalSummary,
-    ) : Screen
+        @Serializable
+        data class PaymentCompleted(val goalSummary: GoalSummary) : Screen
+    }
 
     @Serializable
     data class CompletedGoal(val goalId: Long) : Screen

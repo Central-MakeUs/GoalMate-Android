@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.presentation.theme.goalMateColors
-import cmc.goalmate.presentation.ui.detail.finish.navigation.GoalSummary
+import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
 import cmc.goalmate.presentation.ui.detail.start.GoalStartScreen
 import kotlinx.coroutines.launch
 

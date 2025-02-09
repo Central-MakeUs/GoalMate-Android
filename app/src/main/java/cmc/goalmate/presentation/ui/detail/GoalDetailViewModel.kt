@@ -45,7 +45,7 @@ class GoalDetailViewModel
     constructor(
         savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
-        private val goalId = savedStateHandle.toRoute<Screen.Detail>()
+        private val goalId = savedStateHandle.toRoute<Screen.GoalDetail.Detail>()
 
         private val _state = MutableStateFlow<GoalDetailUiState>(GoalDetailUiState.initialGoalUiState)
         val state: StateFlow<GoalDetailUiState>

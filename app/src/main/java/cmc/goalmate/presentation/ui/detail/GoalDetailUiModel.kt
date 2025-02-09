@@ -1,6 +1,6 @@
 package cmc.goalmate.presentation.ui.detail
 
-import cmc.goalmate.presentation.ui.detail.finish.navigation.GoalSummary
+import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
 import cmc.goalmate.presentation.ui.home.GoalState
 
 // + 이미 참여중일 경우?

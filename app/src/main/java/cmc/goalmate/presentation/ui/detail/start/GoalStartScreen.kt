@@ -26,7 +26,7 @@ import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.detail.components.GoalOverviewCard
-import cmc.goalmate.presentation.ui.detail.finish.navigation.GoalSummary
+import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
 
 @Composable
 fun GoalStartScreen(

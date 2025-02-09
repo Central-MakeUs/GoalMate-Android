@@ -6,9 +6,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.app.navigation.navigateToCompleted
-import cmc.goalmate.app.navigation.navigateToDetail
 import cmc.goalmate.app.navigation.navigateToInProgress
 import cmc.goalmate.presentation.ui.comments.GoalCommentsScreen
+import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
 import cmc.goalmate.presentation.ui.home.HomeScreen
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
 import cmc.goalmate.presentation.ui.mypage.MyPageScreen

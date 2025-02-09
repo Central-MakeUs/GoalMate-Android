@@ -8,9 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmc.goalmate.presentation.ui.auth.navigation.authNavGraph
 import cmc.goalmate.presentation.ui.comments.detail.CommentsScreen
-import cmc.goalmate.presentation.ui.detail.GoalDetailScreen
-import cmc.goalmate.presentation.ui.detail.finish.navigation.navigateToPaymentCompleted
-import cmc.goalmate.presentation.ui.detail.finish.navigation.paymentCompleted
+import cmc.goalmate.presentation.ui.detail.navigation.detailNavGraph
+import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
 import cmc.goalmate.presentation.ui.home.navigation.mainNavGraph
 import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
 import cmc.goalmate.presentation.ui.progress.completed.CompletedScreen
@@ -24,10 +23,7 @@ fun GoalMateNavHost(navController: NavHostController) {
     ) {
         authNavGraph(navController)
         mainNavGraph(navController)
-        composable<Screen.Detail> {
-            GoalDetailScreen(navigateToCompleted = { navController.navigateToPaymentCompleted(it) })
-        }
-        paymentCompleted { }
+        detailNavGraph(navController)
 
         composable<Screen.InProgressGoal> {
             InProgressScreen(
@@ -52,10 +48,6 @@ fun GoalMateNavHost(navController: NavHostController) {
             )
         }
     }
-}
-
-fun NavController.navigateToDetail(goalId: Long) {
-    navigate(Screen.Detail(goalId = goalId))
 }
 
 fun NavController.navigateToInProgress(goalId: Long) {
