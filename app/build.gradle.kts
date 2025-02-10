@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt.android)
 }
+
+val properties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
+val kakaoKey = properties.getProperty("KAKAO_NATIVE_APP_KEY")
 
 android {
     namespace = "cmc.goalmate"
@@ -21,6 +28,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", kakaoKey)
     }
 
     buildTypes {
@@ -41,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
@@ -84,6 +94,8 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.core.splashscreen)
+
+    implementation("com.kakao.sdk:v2-user:2.20.6")
 }
 
 kapt {
