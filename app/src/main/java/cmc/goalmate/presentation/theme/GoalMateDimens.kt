@@ -23,4 +23,8 @@ object GoalMateDimens {
     val VerticalArrangementSpaceSmall = 8.dp
     val VerticalArrangementSpaceMedium = 16.dp
     val VerticalArrangementSpaceLarge = 24.dp
+
+    val BoxContentVerticalPadding = 24.dp
+
+    val VerticalSpacerLarge = 44.dp
 }
