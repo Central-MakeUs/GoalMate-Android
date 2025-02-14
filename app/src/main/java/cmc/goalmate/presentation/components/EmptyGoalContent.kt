@@ -1,4 +1,4 @@
-package cmc.goalmate.presentation.ui.common
+package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,8 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
-import cmc.goalmate.presentation.components.ButtonSize
-import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.theme.goalMateTypography
 
 @Composable
