@@ -25,11 +25,12 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.comments.model.GoalCommentUiModel
 import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
 
 @Composable
 fun GoalCommentsContent(
-    state: GoalCommentsUiState,
+    goalComments: List<GoalCommentUiModel>,
     navigateToCommentDetail: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -37,7 +38,7 @@ fun GoalCommentsContent(
         verticalArrangement = Arrangement.spacedBy(GoalMateDimens.VerticalArrangementSpaceLarge),
         modifier = modifier,
     ) {
-        items(items = state.myGoals) { goalComment ->
+        items(items = goalComments) { goalComment ->
             GoalItem(
                 goal = goalComment,
                 modifier = Modifier
@@ -109,7 +110,7 @@ private fun GoalItem(
 private fun GoalCommentsContentPreview() {
     GoalMateTheme {
         GoalCommentsContent(
-            state = GoalCommentsUiState.initialCommentsUiState(),
+            goalComments = listOf(GoalCommentUiModel.DUMMY),
             navigateToCommentDetail = {},
         )
     }
