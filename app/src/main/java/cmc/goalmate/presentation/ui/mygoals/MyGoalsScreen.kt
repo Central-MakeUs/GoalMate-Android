@@ -1,7 +1,6 @@
 package cmc.goalmate.presentation.ui.mygoals
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,8 +11,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.app.navigation.NavigateToGoal
+import cmc.goalmate.presentation.components.EmptyGoalContents
 import cmc.goalmate.presentation.components.HeaderTitle
-import cmc.goalmate.presentation.ui.common.EmptyGoalContents
+import cmc.goalmate.presentation.ui.common.UserState
 
 @Composable
 fun MyGoalsScreen(
@@ -34,18 +34,44 @@ fun MyGoalsScreen(
             title = stringResource(R.string.my_goals_header_title),
             modifier = Modifier.fillMaxWidth(),
         )
-        if (state.hasNoGoals()) {
-            EmptyGoalContents(
-                onButtonClicked = navigateToHome,
-                modifier = Modifier.fillMaxSize(),
-            )
-        } else {
-            MyGoalsContent(
-                myGoals = state.myGoals,
-                navigateToCompletedGoal = navigateToCompletedGoal,
-                navigateToProgressGoal = navigateToProgressGoal,
-                navigateToGoalDetail = navigateToGoalDetail,
-            )
+        when (val userGoalState = state.userGoalsState) {
+            is UserState.LoggedIn -> {
+                handleLoggedInState(
+                    myGoals = userGoalState.data,
+                    navigateToCompletedGoal = navigateToCompletedGoal,
+                    navigateToProgressGoal = navigateToProgressGoal,
+                    navigateToGoalDetail = navigateToGoalDetail,
+                    navigateToHome = navigateToHome,
+                )
+            }
+
+            UserState.LoggedOut -> {
+                EmptyGoalContents(
+                    onButtonClicked = navigateToHome,
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun handleLoggedInState(
+    myGoals: List<MyGoalUiModel>,
+    navigateToCompletedGoal: NavigateToGoal,
+    navigateToProgressGoal: NavigateToGoal,
+    navigateToGoalDetail: NavigateToGoal,
+    navigateToHome: () -> Unit,
+) {
+    if (myGoals.isEmpty()) {
+        EmptyGoalContents(
+            onButtonClicked = navigateToHome,
+        )
+        return
+    }
+    MyGoalsContent(
+        myGoals = myGoals,
+        navigateToCompletedGoal = navigateToCompletedGoal,
+        navigateToProgressGoal = navigateToProgressGoal,
+        navigateToGoalDetail = navigateToGoalDetail,
+    )
 }
