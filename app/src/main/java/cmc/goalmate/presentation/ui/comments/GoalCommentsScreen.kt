@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cmc.goalmate.app.navigation.NavigateToGoal
+import cmc.goalmate.presentation.components.EmptyGoalContents
 import cmc.goalmate.presentation.components.HeaderTitle
-import cmc.goalmate.presentation.ui.common.EmptyGoalContents
 import cmc.goalmate.presentation.ui.mygoals.MyGoalState
 
 data class GoalCommentsUiState(

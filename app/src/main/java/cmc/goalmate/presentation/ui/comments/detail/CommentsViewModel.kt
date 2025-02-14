@@ -2,6 +2,7 @@ package cmc.goalmate.presentation.ui.comments.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

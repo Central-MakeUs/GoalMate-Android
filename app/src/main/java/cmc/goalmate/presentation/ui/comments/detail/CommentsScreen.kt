@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cmc.goalmate.presentation.components.AppBarWithBackButton
+import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
 
 @Composable
 fun CommentsScreen(

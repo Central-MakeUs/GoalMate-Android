@@ -1,4 +1,4 @@
-package cmc.goalmate.presentation.ui.comments.detail
+package cmc.goalmate.presentation.ui.comments.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +22,8 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
+import cmc.goalmate.presentation.ui.comments.detail.model.Sender
 
 @Composable
 fun DailyComment(

@@ -30,38 +30,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
-import cmc.goalmate.presentation.components.AppBarWithBackButton
-import cmc.goalmate.presentation.components.HeaderTitle
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.comments.components.DailyComment
 import cmc.goalmate.presentation.ui.comments.components.MessageTextField
-import cmc.goalmate.presentation.ui.comments.detail.MessageUiModel.Companion.DUMMY_MENTEE
-import cmc.goalmate.presentation.ui.comments.detail.MessageUiModel.Companion.DUMMY_MENTOR
-
-enum class Sender {
-    MENTOR,
-    MENTEE,
-}
-
-data class MessageUiModel(val content: String, val sender: Sender) {
-    companion object {
-        val DUMMY_MENTEE = MessageUiModel(
-            "선생님 영어 단어 암기 꿀팁좀 주세요ㅠㅠ선생님 영어 단어 암기 꿀팁좀 주세요ㅠㅠ선생님 영어 단어 암기 꿀팁좀 주세요ㅠㅠ",
-            Sender.MENTEE,
-        )
-        val DUMMY_MENTOR = MessageUiModel("영어 단어 암기는 이렇게 하시면 됩니당", Sender.MENTOR)
-    }
-}
-
-data class CommentUiModel(val date: String, val messages: List<MessageUiModel>) {
-    companion object {
-        val DUMMY =
-            CommentUiModel(date = "2024년 11월 25일", messages = listOf(DUMMY_MENTEE, DUMMY_MENTOR))
-    }
-}
+import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
 
 @Composable
 fun CommentsContent(
