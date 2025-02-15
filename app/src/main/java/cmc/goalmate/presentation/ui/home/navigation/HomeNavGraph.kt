@@ -40,7 +40,10 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         }
 
         composable<Screen.Main.MyPage> {
-            MyPageScreen()
+            MyPageScreen(
+                navigateToLogin = {},
+                navigateToMyGoal = {},
+            )
         }
     }
 }
