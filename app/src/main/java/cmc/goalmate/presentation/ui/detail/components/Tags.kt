@@ -69,20 +69,20 @@ fun FreeEntryCountTag(
                 color = MaterialTheme.goalMateColors.background,
                 shape = RoundedCornerShape(24.dp),
             )
-            .border(width = 1.dp, color = MaterialTheme.goalMateColors.secondary, shape = RoundedCornerShape(24.dp))
+            .border(width = 1.dp, color = MaterialTheme.goalMateColors.onBackground, shape = RoundedCornerShape(24.dp))
             .padding(horizontal = GoalMateDimens.HorizontalPadding, vertical = 9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.icon_bell),
             contentDescription = null,
-            tint =MaterialTheme.goalMateColors.secondary
+            tint =MaterialTheme.goalMateColors.onBackground
         )
         Spacer(Modifier.size(7.dp))
         Text(
             text = stringResource(R.string.goal_detail_available_seats, availableSeatCount),
             style = MaterialTheme.goalMateTypography.caption,
-            color = MaterialTheme.goalMateColors.secondary,
+            color = MaterialTheme.goalMateColors.onBackground,
         )
     }
 }

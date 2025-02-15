@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import cmc.goalmate.app.navigation.Screen
+import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
 import cmc.goalmate.presentation.ui.detail.GoalDetailScreen
 import cmc.goalmate.presentation.ui.detail.finish.PaymentCompletedScreen
 import kotlin.reflect.typeOf
@@ -15,7 +16,11 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
         startDestination = Screen.GoalDetail.Detail::class,
     ) {
         composable<Screen.GoalDetail.Detail> {
-            GoalDetailScreen(navigateToCompleted = { navController.navigateToPaymentCompleted(it) })
+            GoalDetailScreen(
+                navigateBack = { navController.navigateUp() },
+                navigateToLogin = { navController.navigateToLogin() },
+                navigateToCompleted = { navController.navigateToPaymentCompleted(it) },
+            )
         }
 
         composable<Screen.GoalDetail.PaymentCompleted>(

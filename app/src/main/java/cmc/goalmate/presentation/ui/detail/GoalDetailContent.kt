@@ -2,15 +2,13 @@ package cmc.goalmate.presentation.ui.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,9 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
-import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.components.GoalDateRange
-import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.ParticipationStatusTag
 import cmc.goalmate.presentation.components.TagSize
 import cmc.goalmate.presentation.components.ThickDivider
@@ -43,85 +39,86 @@ import cmc.goalmate.presentation.ui.home.components.ClosingSoonLabel
 @Composable
 fun GoalDetailContent(
     goal: GoalDetailUiModel,
-    showBottomSheet: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box {
-        Column(
-            modifier = modifier.verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            AppBarWithBackButton(
-                onBackButtonClicked = {},
-                title = stringResource(R.string.goal_detail_title),
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        ImageSlider(
+            imageUrls = goal.imageUrls,
+            modifier = Modifier.fillMaxWidth().height(270.dp),
+        )
+
+        GoalContent(
+            goal = goal,
+            modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+        )
+
+        ThickDivider()
+
+        GoalList(
+            title = stringResource(R.string.goal_detail_weekly_goals_title),
+            goals = goal.weeklyGoal,
+            modifier = Modifier.padding(
+                vertical = GoalMateDimens.ItemVerticalPaddingLarge,
+                horizontal = GoalMateDimens.HorizontalPadding,
+            ),
+        ) { mileStone, modifier ->
+            WeeklyRowItem(
+                label = mileStone.label,
+                content = mileStone.content,
+                modifier = modifier,
             )
-            ImageSlider(
-                imageUrls = goal.imageUrls,
-                modifier = Modifier.size(width = 360.dp, height = 270.dp),
-            )
-            Column(
-                modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
-            ) {
-                GoalHeader(
-                    goal = goal,
-                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingSmall),
-                )
-
-                ThinDivider()
-
-                GoalInfo(
-                    goal = goal,
-                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingMedium),
-                )
-
-                ThinDivider()
-
-                GoalDescription(
-                    description = goal.description,
-                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
-                )
-
-                ThickDivider()
-
-                GoalList(
-                    title = stringResource(R.string.goal_detail_weekly_goals_title),
-                    goals = goal.weeklyGoal,
-                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
-                ) { goal, modifier ->
-                    WeeklyRowItem(
-                        label = "1주",
-                        content = goal,
-                        modifier = modifier,
-                    )
-                }
-
-                ThickDivider()
-
-                GoalList(
-                    title = stringResource(R.string.goal_detail_milestone_title),
-                    goals = goal.weeklyGoal,
-                    modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
-                ) { goal, modifier ->
-                    MilestoneRowItem(
-                        label = "1",
-                        content = goal,
-                        modifier = modifier,
-                    )
-                }
-
-                // TODO: 상세이미지 위치
-            }
         }
 
-        GoalMateButton(
-            content = stringResource(R.string.goal_detail_start_button),
-            onClick = showBottomSheet,
-            enabled = goal.isAvailable,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(horizontal = GoalMateDimens.HorizontalPadding)
-                .padding(bottom = GoalMateDimens.BottomMargin),
+        ThickDivider()
+
+        GoalList(
+            title = stringResource(R.string.goal_detail_milestone_title),
+            goals = goal.milestone,
+            modifier = Modifier.padding(
+                vertical = GoalMateDimens.ItemVerticalPaddingLarge,
+                horizontal = GoalMateDimens.HorizontalPadding,
+            ),
+        ) { mileStone, modifier ->
+            MilestoneRowItem(
+                label = mileStone.label,
+                content = mileStone.content,
+                modifier = modifier,
+            )
+        }
+
+        // TODO: 상세이미지 위치
+        Spacer(Modifier.size(120.dp))
+    }
+}
+
+@Composable
+private fun GoalContent(
+    goal: GoalDetailUiModel,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        GoalHeader(
+            goal = goal,
+            modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingSmall),
+        )
+
+        ThinDivider()
+
+        GoalInfo(
+            goal = goal,
+            modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingMedium),
+        )
+
+        ThinDivider()
+
+        GoalDescription(
+            description = goal.description,
+            modifier = Modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
         )
     }
 }
@@ -140,7 +137,7 @@ private fun GoalHeader(
             style = MaterialTheme.goalMateTypography.h5,
         )
         ParticipationStatusTag(
-            remainingCount = (goal.maxMembers - goal.currentMembers),
+            remainingCount = goal.remainingCount,
             participantsCount = goal.currentMembers,
             tagSize = TagSize.LARGE,
             goalState = goal.state,
@@ -219,9 +216,9 @@ private fun GoalDescription(
 @Composable
 fun GoalList(
     title: String,
-    goals: List<String>,
+    goals: List<Milestone>,
     modifier: Modifier = Modifier,
-    itemContent: @Composable (String, Modifier) -> Unit,
+    itemContent: @Composable (Milestone, Modifier) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -260,11 +257,13 @@ private fun GoalDetailScreenPreview() {
                 maxMembers = 23,
                 state = GoalState.AVAILABLE,
                 description = "“영어를 하고 싶었지만 어떤 방법으로 해야 할 지, 루틴을 세우지만 어떤 방법이 효율적일지 고민이 많지 않았나요?”",
-                weeklyGoal = listOf("간단한 단어부터 시작하기", "기본 문장 읽기"),
-                milestone = listOf("영어로 원어민과 편안하게 대화하는 법"),
+                weeklyGoal = listOf(
+                    Milestone("1주차", "간단한 단어부터 시작하기"),
+                    Milestone("2주차", "기본 문장 읽기"),
+                ),
+                milestone = listOf(Milestone("1주차", "간단한 단어부터 시작하기"), Milestone("2주차", "기본 문장 읽기")),
                 detailImageUrl = "",
             ),
-            showBottomSheet = {},
             modifier = Modifier.background(White),
         )
     }

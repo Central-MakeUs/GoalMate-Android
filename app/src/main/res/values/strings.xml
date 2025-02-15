@@ -37,8 +37,9 @@
     <string name="goal_detail_time">소요 시간</string>
     <string name="goal_detail_weekly_goals_title">주차별 목표</string>
     <string name="goal_detail_milestone_title">중간 목표</string>
-    <string name="goal_detail_available_seats">무료참여 %d자리 남았어요</string>
+    <string name="goal_detail_available_seats">참여자리 %d자리 남았어요</string>
     <string name="goal_detail_start_button">목표 시작하기</string>
+    <string name="goal_detail_start_login_button">지금 로그인하러 가기</string>
 
     <string name="goal_detail_start_title">목표</string>
     <string name="goal_detail_start_mentor_title">멘토</string>
