@@ -1,7 +1,11 @@
 package cmc.goalmate.presentation.ui.auth.navigation
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -15,24 +19,18 @@ import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
 
 fun NavGraphBuilder.authNavGraph(navController: NavController) {
     navigation<Screen.Auth>(
-        startDestination = Screen.Auth.Login,
+        startDestination = Screen.Auth.Login::class,
     ) {
-        composable<Screen.Auth.Login> {
-            val viewModel = hiltViewModel<LoginViewModel>(
-                navController.getBackStackEntry(Screen.Auth),
-            )
+        composable<Screen.Auth.Login> { backStackEntry ->
+            val viewModel = backStackEntry.sharedViewModel<LoginViewModel>(navController)
             LoginScreen(
-                navigateToNickNameSetting = {
-                    navController.navigate(Screen.Auth.NickNameSetting)
-                },
+                navigateToNickNameSetting = { navController.navigate(Screen.Auth.NickNameSetting) },
                 viewModel = viewModel,
             )
         }
 
-        composable<Screen.Auth.NickNameSetting> {
-            val viewModel = hiltViewModel<LoginViewModel>(
-                navController.getBackStackEntry(Screen.Auth),
-            )
+        composable<Screen.Auth.NickNameSetting> { backStackEntry ->
+            val viewModel = backStackEntry.sharedViewModel<LoginViewModel>(navController)
             NickNameSettingScreen(
                 navigateNextPage = {
                     navController.navigate(Screen.Auth.Welcome)
@@ -42,10 +40,8 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
             )
         }
 
-        composable<Screen.Auth.Welcome> {
-            val viewModel = hiltViewModel<LoginViewModel>(
-                navController.getBackStackEntry(Screen.Auth),
-            )
+        composable<Screen.Auth.Welcome> { backStackEntry ->
+            val viewModel = backStackEntry.sharedViewModel<LoginViewModel>(navController)
             WelcomeScreen(
                 nickName = viewModel.nickName,
                 navigateToNextPage = { navController.navigateToHome(Screen.Auth.Login) },
@@ -53,4 +49,17 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
             )
         }
     }
+}
+
+fun NavController.navigateToLogin() {
+    navigate(Screen.Auth)
+}
+
+@Composable
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navController: NavController): T {
+    val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
+    val parentEntry = remember(this) {
+        navController.getBackStackEntry(navGraphRoute)
+    }
+    return hiltViewModel(parentEntry)
 }

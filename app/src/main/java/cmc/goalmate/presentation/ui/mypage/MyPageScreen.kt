@@ -45,7 +45,7 @@ fun MyPageScreen(
             menuItems = menuItems,
             editNickName = {},
             navigateToMyGoals = {},
-            navigateToLogin = {},
+            navigateToLogin = navigateToLogin,
             modifier = Modifier.fillMaxSize(),
         )
     }

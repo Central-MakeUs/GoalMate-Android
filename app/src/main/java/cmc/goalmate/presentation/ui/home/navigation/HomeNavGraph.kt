@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.app.navigation.navigateToCompleted
 import cmc.goalmate.app.navigation.navigateToInProgress
+import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
 import cmc.goalmate.presentation.ui.comments.GoalCommentsScreen
 import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
 import cmc.goalmate.presentation.ui.home.HomeScreen
@@ -41,7 +42,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
 
         composable<Screen.Main.MyPage> {
             MyPageScreen(
-                navigateToLogin = {},
+                navigateToLogin = { navController.navigateToLogin() },
                 navigateToMyGoal = {},
             )
         }
@@ -52,7 +53,7 @@ fun NavController.navigateToHome(
     popUpToRoute: Screen,
     inclusive: Boolean = true,
 ) {
-    navigate(Screen.Main.Home) {
+    navigate(Screen.Main) {
         popUpTo(popUpToRoute) {
             this.inclusive = inclusive
         }
