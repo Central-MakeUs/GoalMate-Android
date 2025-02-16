@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
 
     implementation("com.kakao.sdk:v2-user:2.20.6")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 }
 
 kapt {
