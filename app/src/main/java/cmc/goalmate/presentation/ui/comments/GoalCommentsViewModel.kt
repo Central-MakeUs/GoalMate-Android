@@ -1,6 +1,6 @@
 package cmc.goalmate.presentation.ui.comments
 
-import cmc.goalmate.domain.repository.UserRepository
+import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.presentation.ui.comments.GoalCommentsUiState.Companion.initialCommentsUiState
 import cmc.goalmate.presentation.ui.comments.model.GoalCommentUiModel
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
@@ -26,7 +26,7 @@ data class GoalCommentsUiState(
 @HiltViewModel
 class GoalCommentsViewModel
     @Inject
-    constructor(userRepository: UserRepository) : LoginStateViewModel(userRepository) {
+    constructor(authRepository: AuthRepository) : LoginStateViewModel(authRepository) {
         private val _state = MutableStateFlow(initialCommentsUiState())
         val state: StateFlow<GoalCommentsUiState>
             get() = _state

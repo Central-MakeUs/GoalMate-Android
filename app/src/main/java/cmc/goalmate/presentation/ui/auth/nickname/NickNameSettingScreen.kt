@@ -130,7 +130,8 @@ private fun NickNameSettingScreenPreview() {
             state = AuthUiState.initialLoginUiState(),
             onAction = {},
             onCompletedButtonClicked = { },
-            modifier = Modifier,
+            modifier = Modifier.fillMaxSize()
+                .padding(horizontal = GoalMateDimens.HorizontalPadding),
         )
     }
 }

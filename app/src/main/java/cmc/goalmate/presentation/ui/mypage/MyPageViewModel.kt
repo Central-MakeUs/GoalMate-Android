@@ -1,6 +1,6 @@
 package cmc.goalmate.presentation.ui.mypage
 
-import cmc.goalmate.domain.repository.UserRepository
+import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import cmc.goalmate.presentation.ui.common.UserState
 import cmc.goalmate.presentation.ui.mypage.MyPageUiState.Companion.initialMyPageUiState
@@ -22,7 +22,7 @@ data class MyPageUiState(
 @HiltViewModel
 class
 MyPageViewModel@Inject
-    constructor(userRepository: UserRepository) : LoginStateViewModel(userRepository) {
+    constructor(authRepository: AuthRepository) : LoginStateViewModel(authRepository) {
         private val _state = MutableStateFlow(initialMyPageUiState())
         val state: StateFlow<MyPageUiState>
             get() = _state

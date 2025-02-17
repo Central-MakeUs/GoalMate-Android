@@ -3,19 +3,19 @@ package cmc.goalmate.presentation.ui.common
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmc.goalmate.domain.repository.UserRepository
+import cmc.goalmate.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-abstract class LoginStateViewModel(private val userRepository: UserRepository) : ViewModel() {
+abstract class LoginStateViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> get() = _isLoggedIn.asStateFlow()
 
     init {
         viewModelScope.launch {
-            userRepository.isLogin().collect { isLogin ->
+            authRepository.isLogin().collect { isLogin ->
                 Log.d("yenny", "isLogin: $isLogin")
                 _isLoggedIn.value = isLogin
             }

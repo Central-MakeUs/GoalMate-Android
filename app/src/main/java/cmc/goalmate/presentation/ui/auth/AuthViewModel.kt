@@ -48,8 +48,8 @@ class LoginViewModel
             when (action) {
                 is AuthAction.KakaoLogin -> loginWithKakao(action.idToken)
                 AuthAction.AgreeTermsOfService -> agreeTermsOfService()
-                is AuthAction.SetNickName -> updateNickName(action.nickName)
                 AuthAction.CheckDuplication -> checkNickNameDuplication()
+                is AuthAction.SetNickName -> updateNickName(action.nickName)
                 AuthAction.CompleteNicknameSetup -> Unit
             }
         }
@@ -64,7 +64,7 @@ class LoginViewModel
                     }
                     is DomainResult.Success -> {
                         if (result.data.isRegistered) {
-                            userRepository.saveToken(result.data.token)
+                            authRepository.saveToken(result.data.token)
                                 .onSuccess {
                                     _state.value = _state.value.copy(isLoginCompleted = true)
                                     _authEvent.send(AuthEvent.NavigateToHome)
@@ -81,7 +81,7 @@ class LoginViewModel
         private fun agreeTermsOfService() {
             viewModelScope.launch {
                 requireNotNull(tempToken) { "저장된 토큰이 없음" }
-                userRepository.saveToken(requireNotNull(tempToken) { "저장된 토큰이 없음" })
+                authRepository.saveToken(requireNotNull(tempToken) { "저장된 토큰이 없음" })
                     .onSuccess {
                         _authEvent.send(AuthEvent.NavigateToNickNameSetting)
                     }
@@ -128,7 +128,7 @@ class LoginViewModel
                 suspendCancellableCoroutine<Unit> { continuation ->
                     if (!state.value.isLoginCompleted) {
                         launch {
-                            userRepository.deleteToken()
+                            authRepository.deleteToken()
                                 .onSuccess {
                                     Log.d("yenny", "delete token successfully!")
                                     continuation.resume(Unit)

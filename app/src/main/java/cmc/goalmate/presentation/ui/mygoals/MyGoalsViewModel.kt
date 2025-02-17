@@ -1,6 +1,6 @@
 package cmc.goalmate.presentation.ui.mygoals
 
-import cmc.goalmate.domain.repository.UserRepository
+import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import cmc.goalmate.presentation.ui.common.UserState
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsUiState.Companion.initialMyGoalsUiState
@@ -21,7 +21,7 @@ data class MyGoalsUiState(
 @HiltViewModel
 class MyGoalsViewModel
     @Inject
-    constructor(userRepository: UserRepository) : LoginStateViewModel(userRepository) {
+    constructor(authRepository: AuthRepository) : LoginStateViewModel(authRepository) {
         private val _state = MutableStateFlow(initialMyGoalsUiState())
         val state: StateFlow<MyGoalsUiState>
             get() = _state
