@@ -24,6 +24,8 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
         composable<Screen.Auth.Login> { backStackEntry ->
             val viewModel = backStackEntry.sharedViewModel<LoginViewModel>(navController)
             LoginScreen(
+                navigateBack = { navController.popBackStack() },
+                navigateToHome = { navController.navigateToHome(Screen.Auth.Login) },
                 navigateToNickNameSetting = { navController.navigate(Screen.Auth.NickNameSetting) },
                 viewModel = viewModel,
             )

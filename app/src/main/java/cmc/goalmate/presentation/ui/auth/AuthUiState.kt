@@ -1,10 +1,9 @@
 package cmc.goalmate.presentation.ui.auth
 
 import cmc.goalmate.presentation.components.InputTextState
-import cmc.goalmate.presentation.ui.auth.component.Step
 
 data class AuthUiState(
-    val loginSteps: List<Step>,
+    val isLoginCompleted: Boolean,
     val nickNameFormatValidationState: InputTextState,
     val duplicationCheckState: InputTextState,
     val helperText: String,
@@ -25,7 +24,7 @@ data class AuthUiState(
     companion object {
         fun initialLoginUiState(): AuthUiState =
             AuthUiState(
-                loginSteps = createInitialLoginSteps(),
+                isLoginCompleted = false,
                 nickNameFormatValidationState = InputTextState.None,
                 duplicationCheckState = InputTextState.None,
                 helperText = "",

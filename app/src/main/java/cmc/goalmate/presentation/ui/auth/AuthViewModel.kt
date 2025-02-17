@@ -9,13 +9,20 @@ import androidx.lifecycle.viewModelScope
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.ValidateNickName
+import cmc.goalmate.domain.model.Token
+import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
+import cmc.goalmate.domain.repository.UserRepository
 import cmc.goalmate.presentation.components.InputTextState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 @HiltViewModel
 class LoginViewModel
@@ -23,17 +30,24 @@ class LoginViewModel
     constructor(
         private val validateNickName: ValidateNickName,
         private val authRepository: AuthRepository,
+        private val userRepository: UserRepository,
     ) : ViewModel() {
         private val _state = MutableStateFlow<AuthUiState>(AuthUiState.initialLoginUiState())
         val state: StateFlow<AuthUiState>
             get() = _state
 
+        private val _authEvent = Channel<AuthEvent>()
+        val authEvent = _authEvent.receiveAsFlow()
+
         var nickName by mutableStateOf("")
             private set
+
+        private var tempToken: Token? = null
 
         fun onAction(action: AuthAction) {
             when (action) {
                 is AuthAction.KakaoLogin -> loginWithKakao(action.idToken)
+                AuthAction.AgreeTermsOfService -> agreeTermsOfService()
                 is AuthAction.SetNickName -> updateNickName(action.nickName)
                 AuthAction.CheckDuplication -> checkNickNameDuplication()
                 AuthAction.CompleteNicknameSetup -> Unit
@@ -49,9 +63,28 @@ class LoginViewModel
                         Log.d("yenny", "error : $errorMessage")
                     }
                     is DomainResult.Success -> {
-                        result.data
+                        if (result.data.isRegistered) {
+                            userRepository.saveToken(result.data.token)
+                                .onSuccess {
+                                    _state.value = _state.value.copy(isLoginCompleted = true)
+                                    _authEvent.send(AuthEvent.NavigateToHome)
+                                }
+                        } else {
+                            tempToken = result.data.token
+                            _authEvent.send(AuthEvent.GetAgreeWithTerms)
+                        }
                     }
                 }
+            }
+        }
+
+        private fun agreeTermsOfService() {
+            viewModelScope.launch {
+                requireNotNull(tempToken) { "저장된 토큰이 없음" }
+                userRepository.saveToken(requireNotNull(tempToken) { "저장된 토큰이 없음" })
+                    .onSuccess {
+                        _authEvent.send(AuthEvent.NavigateToNickNameSetting)
+                    }
             }
         }
 
@@ -89,6 +122,25 @@ class LoginViewModel
                 helperText = "사용 가능한 닉네임이에요 :)",
             )
         }
+
+        override fun onCleared() {
+            viewModelScope.launch {
+                suspendCancellableCoroutine<Unit> { continuation ->
+                    if (!state.value.isLoginCompleted) {
+                        launch {
+                            userRepository.deleteToken()
+                                .onSuccess {
+                                    Log.d("yenny", "delete token successfully!")
+                                    continuation.resume(Unit)
+                                }
+                        }
+                    } else {
+                        continuation.resume(Unit)
+                    }
+                }
+            }
+            super.onCleared()
+        }
     }
 
 fun DataError.asUiText(): String =
@@ -99,4 +151,5 @@ fun DataError.asUiText(): String =
         DataError.Network.UNAUTHORIZED -> "Unauthorized"
         DataError.Network.CONFLICT -> "Conflict"
         DataError.Network.UNKNOWN -> "Unknown error"
+        DataError.Local.IO_ERROR -> "DataStore error"
     }

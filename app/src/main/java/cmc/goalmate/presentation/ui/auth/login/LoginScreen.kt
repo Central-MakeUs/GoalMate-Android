@@ -17,6 +17,7 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,6 +35,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
@@ -42,15 +46,19 @@ import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.auth.AuthAction
+import cmc.goalmate.presentation.ui.auth.AuthEvent
 import cmc.goalmate.presentation.ui.auth.LoginViewModel
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.firstStep
 import com.kakao.sdk.user.UserApiClient
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    navigateBack: () -> Unit,
+    navigateToHome: () -> Unit,
     navigateToNickNameSetting: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
@@ -60,8 +68,18 @@ fun LoginScreen(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    ObserveAsEvent(viewModel.authEvent) { event ->
+        when (event) {
+            AuthEvent.NavigateToHome -> navigateToHome()
+            AuthEvent.NavigateToNickNameSetting -> navigateToNickNameSetting()
+            AuthEvent.GetAgreeWithTerms -> {
+                showBottomSheet = true
+            }
+        }
+    }
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        AppBarWithBackButton(onBackButtonClicked = {}, iconRes = R.drawable.icon_cancel)
+        AppBarWithBackButton(onBackButtonClicked = navigateBack, iconRes = R.drawable.icon_cancel)
         LoginContent(
             onLoginButtonClicked = {
                 coroutineScope.launch {
@@ -82,7 +100,7 @@ fun LoginScreen(
                 if (!sheetState.isVisible) {
                     showBottomSheet = false
                 }
-                navigateToNickNameSetting()
+                viewModel.onAction(AuthAction.AgreeTermsOfService)
             }
         }
     }
@@ -157,5 +175,18 @@ private fun LoginPreview() {
             {},
             modifier = Modifier.background(White),
         )
+    }
+}
+
+@Composable
+fun <T> ObserveAsEvent(
+    flow: Flow<T>,
+    onEvent: (T) -> Unit,
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(flow, lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(onEvent)
+        }
     }
 }

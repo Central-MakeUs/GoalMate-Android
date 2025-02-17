@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.common
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmc.goalmate.domain.repository.UserRepository
@@ -14,7 +15,10 @@ abstract class LoginStateViewModel(private val userRepository: UserRepository) :
 
     init {
         viewModelScope.launch {
-            userRepository.isLogin().collect { isLogin -> _isLoggedIn.value = isLogin }
+            userRepository.isLogin().collect { isLogin ->
+                Log.d("yenny", "isLogin: $isLogin")
+                _isLoggedIn.value = isLogin
+            }
         }
     }
 }
