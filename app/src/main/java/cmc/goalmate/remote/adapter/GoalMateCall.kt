@@ -23,7 +23,10 @@ class GoalMateCall<T>(
                         val successResponse = if (body != null) {
                             ApiResponse.Success(body)
                         } else {
-                            ApiResponse.Failure.UnknownError(throwable = IllegalStateException("body is null"))
+                            ApiResponse.Failure.HttpException(
+                                code = response.code(),
+                                throwable = IllegalStateException("body is null"),
+                            )
                         }
                         callback.onResponse(this@GoalMateCall, Response.success(successResponse))
                         return
@@ -40,7 +43,7 @@ class GoalMateCall<T>(
                     throwable: Throwable,
                 ) {
                     val errorResponse = when (throwable) {
-                        is IOException -> ApiResponse.Failure.NetworkException(throwable.message ?: "IO exception occurred")
+                        is IOException -> ApiResponse.Failure.NetworkException(throwable)
                         else -> ApiResponse.Failure.UnknownError(throwable)
                     }
                     callback.onResponse(this@GoalMateCall, Response.success(errorResponse))

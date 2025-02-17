@@ -1,6 +1,7 @@
 package cmc.goalmate.remote.di
 import cmc.goalmate.BuildConfig
 import cmc.goalmate.remote.adapter.GoalMateCallAdapterFactory
+import cmc.goalmate.remote.interceptor.LoginInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -39,10 +40,15 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient =
+    fun provideLoginInterceptor(): LoginInterceptor = LoginInterceptor()
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(loginInterceptor: LoginInterceptor): OkHttpClient =
         OkHttpClient
             .Builder()
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(loginInterceptor)
             .build()
 
     @Provides
