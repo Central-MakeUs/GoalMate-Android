@@ -1,52 +1,28 @@
 package cmc.goalmate.presentation.ui.auth
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import cmc.goalmate.domain.DataError
+import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.ValidateNickName
+import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.presentation.components.InputTextState
-import cmc.goalmate.presentation.ui.auth.component.Step
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class LoginUiState(
-    val loginSteps: List<Step>,
-    val nickNameFormatValidationState: InputTextState,
-    val duplicationCheckState: InputTextState,
-    val helperText: String,
-) {
-    val isDuplicationCheckEnabled: Boolean
-        get() = nickNameFormatValidationState == InputTextState.Success && duplicationCheckState != InputTextState.Success
-
-    val isNextStepEnabled: Boolean
-        get() = (nickNameFormatValidationState == InputTextState.Success) && (duplicationCheckState == InputTextState.Success)
-
-    val validationState: InputTextState
-        get() = when {
-            nickNameFormatValidationState == InputTextState.Success && duplicationCheckState == InputTextState.Success -> InputTextState.Success
-            nickNameFormatValidationState == InputTextState.Error || duplicationCheckState == InputTextState.Error -> InputTextState.Error
-            else -> InputTextState.None
-        }
-
-    companion object {
-        fun initialLoginUiState(): LoginUiState =
-            LoginUiState(
-                loginSteps = createInitialLoginSteps(),
-                nickNameFormatValidationState = InputTextState.None,
-                duplicationCheckState = InputTextState.None,
-                helperText = "",
-            )
-    }
-}
 
 @HiltViewModel
 class LoginViewModel
     @Inject
     constructor(
         private val validateNickName: ValidateNickName,
+        private val authRepository: AuthRepository,
     ) : ViewModel() {
         private val _state = MutableStateFlow<LoginUiState>(LoginUiState.initialLoginUiState())
         val state: StateFlow<LoginUiState>
@@ -57,14 +33,26 @@ class LoginViewModel
 
         fun onAction(action: LoginAction) {
             when (action) {
-                LoginAction.KakaoLogin -> loginWithKakao()
+                is LoginAction.KakaoLogin -> loginWithKakao(action.idToken)
                 is LoginAction.SetNickName -> updateNickName(action.nickName)
                 LoginAction.CheckDuplication -> checkNickNameDuplication()
                 LoginAction.CompleteNicknameSetup -> Unit
             }
         }
 
-        private fun loginWithKakao() {
+        private fun loginWithKakao(idToken: String?) {
+            requireNotNull(idToken) { "idToken 이 null" }
+            viewModelScope.launch {
+                when (val result = authRepository.login(idToken)) {
+                    is DomainResult.Error -> {
+                        val errorMessage = result.error.asUiText()
+                        Log.d("yenny", "error : $errorMessage")
+                    }
+                    is DomainResult.Success -> {
+                        result.data
+                    }
+                }
+            }
         }
 
         private fun updateNickName(newNickName: String) {
@@ -79,19 +67,18 @@ class LoginViewModel
             }
 
             val result = validateNickName(nickName = newNickName)
-            if (result.successful) {
+            if (result is DomainResult.Success) {
                 _state.value = _state.value.copy(
                     nickNameFormatValidationState = InputTextState.Success,
+                    helperText = "",
                 )
             } else {
                 _state.value = _state.value.copy(
                     nickNameFormatValidationState = InputTextState.Error,
+                    helperText = "2~5글자 닉네임을 입력해주세요.",
+                    duplicationCheckState = InputTextState.None,
                 )
             }
-            _state.value = _state.value.copy(
-                helperText = result.errorMessage ?: "",
-                duplicationCheckState = InputTextState.None,
-            )
         }
 
         private fun checkNickNameDuplication() {
@@ -102,4 +89,14 @@ class LoginViewModel
                 helperText = "사용 가능한 닉네임이에요 :)",
             )
         }
+    }
+
+fun DataError.asUiText(): String =
+    when (this) {
+        DataError.Network.NO_INTERNET -> "No internet connection"
+        DataError.Network.SERVER_ERROR -> "Server error"
+        DataError.Network.NOT_FOUND -> "Not found"
+        DataError.Network.UNAUTHORIZED -> "Unauthorized"
+        DataError.Network.CONFLICT -> "Conflict"
+        DataError.Network.UNKNOWN -> "Unknown error"
     }

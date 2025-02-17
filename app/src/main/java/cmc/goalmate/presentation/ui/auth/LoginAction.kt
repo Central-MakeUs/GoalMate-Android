@@ -1,7 +1,7 @@
 package cmc.goalmate.presentation.ui.auth
 
 sealed interface LoginAction {
-    data object KakaoLogin : LoginAction
+    data class KakaoLogin(val idToken: String?) : LoginAction
 
     data class SetNickName(val nickName: String) : LoginAction
 

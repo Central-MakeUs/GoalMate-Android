@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -23,7 +24,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -41,35 +44,29 @@ import cmc.goalmate.presentation.ui.auth.LoginAction
 import cmc.goalmate.presentation.ui.auth.LoginViewModel
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.firstStep
+import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navigateToNickNameSetting: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    LoginContent(
-        viewModel::onAction,
-        onCompletedButtonClicked = navigateToNickNameSetting,
-        modifier = modifier,
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun LoginContent(
-    onAction: (LoginAction) -> Unit,
-    onCompletedButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
-    LoginMainContent(
-        onLoginButtonClicked = { onAction(LoginAction.KakaoLogin) },
-        modifier.fillMaxWidth(),
+    LoginContent(
+        onLoginButtonClicked = {
+            coroutineScope.launch {
+                val token = UserApiClient.loginWithKakao(context)
+                viewModel.onAction(LoginAction.KakaoLogin(token.idToken))
+            }
+        },
+        modifier = modifier.fillMaxWidth(),
     )
 
     if (showBottomSheet) {
@@ -81,14 +78,14 @@ private fun LoginContent(
                 if (!sheetState.isVisible) {
                     showBottomSheet = false
                 }
-                onCompletedButtonClicked()
+                navigateToNickNameSetting()
             }
         }
     }
 }
 
 @Composable
-private fun LoginMainContent(
+private fun LoginContent(
     onLoginButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -115,10 +112,12 @@ private fun LoginMainContent(
             )
         }
         Spacer(modifier = Modifier.weight(1f))
+
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.kakao_login_image),
             contentDescription = "kakao_login",
             modifier = Modifier
+                .clip(RoundedCornerShape(30.dp))
                 .clickable(
                     onClick = onLoginButtonClicked,
                 ),
@@ -147,11 +146,10 @@ private fun LoginTermBottomSheet(
 }
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 private fun LoginPreview() {
     GoalMateTheme {
         LoginContent(
-            {},
             {},
             modifier = Modifier.background(White),
         )
