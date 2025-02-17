@@ -37,7 +37,7 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
     }
 }
 
-fun NavController.navigateToDetail(goalId: Long) {
+fun NavController.navigateToDetail(goalId: Int) {
     navigate(Screen.GoalDetail.Detail(goalId = goalId))
 }
 

@@ -28,13 +28,20 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
-    Column(modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
         LogoAppBar()
-        HomeContent(
-            goals = state.goals,
-            navigateToDetail = navigateToDetail,
-        )
+        when (val homeState = state) {
+            HomeUiState.Loading -> {}
+            is HomeUiState.Success -> {
+                HomeContent(
+                    goals = homeState.goals,
+                    navigateToDetail = navigateToDetail,
+                )
+            }
+        }
     }
 }
 

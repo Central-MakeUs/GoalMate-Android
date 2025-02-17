@@ -31,7 +31,7 @@ import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
 @Composable
 fun GoalCommentsContent(
     goalComments: List<GoalCommentUiModel>,
-    navigateToCommentDetail: (Long) -> Unit,
+    navigateToCommentDetail: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(

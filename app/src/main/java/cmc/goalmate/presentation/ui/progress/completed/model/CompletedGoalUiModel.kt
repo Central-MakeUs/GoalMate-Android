@@ -1,7 +1,7 @@
 package cmc.goalmate.presentation.ui.progress.completed.model
 
 data class CompletedGoalUiModel(
-    val id: Long,
+    val id: Int,
     val title: String,
     val mentor: String,
     val period: String,
@@ -12,7 +12,7 @@ data class CompletedGoalUiModel(
 ) {
     companion object {
         val DUMMY = CompletedGoalUiModel(
-            id = 0L,
+            id = 0,
             title = "마루와 함께하는 백엔드 서버 찐천재",
             mentor = "마루",
             period = "30일",

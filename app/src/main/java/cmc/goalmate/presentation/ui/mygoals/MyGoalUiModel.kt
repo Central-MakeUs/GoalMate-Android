@@ -7,7 +7,7 @@ import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.goalMateColors
 
 data class MyGoalUiModel(
-    val goalId: Long,
+    val goalId: Int,
     val title: String,
     val mentorName: String,
     val startDate: String,

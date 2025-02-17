@@ -50,14 +50,14 @@ fun GoalMateNavHost(navController: NavHostController) {
     }
 }
 
-fun NavController.navigateToInProgress(goalId: Long) {
+fun NavController.navigateToInProgress(goalId: Int) {
     navigate(Screen.InProgressGoal(goalId = goalId))
 }
 
-fun NavController.navigateToCompleted(goalId: Long) {
+fun NavController.navigateToCompleted(goalId: Int) {
     navigate(Screen.CompletedGoal(goalId = goalId))
 }
 
-fun NavController.navigateToComments(goalId: Long) {
+fun NavController.navigateToComments(goalId: Int) {
     navigate(Screen.Comments(goalId = goalId))
 }

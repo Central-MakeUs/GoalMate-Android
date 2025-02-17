@@ -1,7 +1,7 @@
 package cmc.goalmate.presentation.ui.detail
 
 import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
-import cmc.goalmate.presentation.ui.home.GoalState
+import cmc.goalmate.presentation.ui.home.GoalUiStatus
 
 data class GoalDetailUiModel(
     val title: String,
@@ -17,14 +17,14 @@ data class GoalDetailUiModel(
     val totalPrice: String,
     val currentMembers: Int,
     val maxMembers: Int,
-    val state: GoalState,
+    val state: GoalUiStatus,
     val description: String,
     val weeklyGoal: List<Milestone>,
     val milestone: List<Milestone>,
     val detailImageUrl: String,
 ) {
     val isAvailable: Boolean
-        get() = this.state == GoalState.AVAILABLE
+        get() = this.state == GoalUiStatus.AVAILABLE
 
     val remainingCount: Int
         get() = this.maxMembers - this.currentMembers
@@ -44,7 +44,7 @@ data class GoalDetailUiModel(
             totalPrice = "0원",
             currentMembers = 7,
             maxMembers = 23,
-            state = GoalState.AVAILABLE,
+            state = GoalUiStatus.AVAILABLE,
             description = "“영어를 하고 싶었지만 어떤 방법으로 해야 할 지, 루틴을 세우지만 어떤 방법이 효율적일지 고민이 많지 않았나요?”",
             weeklyGoal = listOf(Milestone("1주차", "간단한 단어부터 시작하기"), Milestone("2주차", "기본 문장 읽기")),
             milestone = listOf(Milestone("1", "간단한 단어부터 시작하기"), Milestone("2", "기본 문장 읽기")),

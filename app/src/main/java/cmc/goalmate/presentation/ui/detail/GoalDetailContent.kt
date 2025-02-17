@@ -33,7 +33,7 @@ import cmc.goalmate.presentation.ui.detail.components.InfoRow
 import cmc.goalmate.presentation.ui.detail.components.MilestoneRowItem
 import cmc.goalmate.presentation.ui.detail.components.SubTitleText
 import cmc.goalmate.presentation.ui.detail.components.WeeklyRowItem
-import cmc.goalmate.presentation.ui.home.GoalState
+import cmc.goalmate.presentation.ui.home.GoalUiStatus
 import cmc.goalmate.presentation.ui.home.components.ClosingSoonLabel
 
 @Composable
@@ -140,7 +140,7 @@ private fun GoalHeader(
             remainingCount = goal.remainingCount,
             participantsCount = goal.currentMembers,
             tagSize = TagSize.LARGE,
-            goalState = goal.state,
+            goalUiStatus = goal.state,
         )
         ClosingSoonLabel()
     }
@@ -255,7 +255,7 @@ private fun GoalDetailScreenPreview() {
                 totalPrice = "0원",
                 currentMembers = 7,
                 maxMembers = 23,
-                state = GoalState.AVAILABLE,
+                state = GoalUiStatus.AVAILABLE,
                 description = "“영어를 하고 싶었지만 어떤 방법으로 해야 할 지, 루틴을 세우지만 어떤 방법이 효율적일지 고민이 많지 않았나요?”",
                 weeklyGoal = listOf(
                     Milestone("1주차", "간단한 단어부터 시작하기"),

@@ -3,7 +3,7 @@ package cmc.goalmate.presentation.ui.comments.model
 import cmc.goalmate.presentation.ui.mygoals.MyGoalState
 
 data class GoalCommentUiModel(
-    val goalId: Long,
+    val goalId: Int,
     val imageUrl: String,
     val mentorName: String,
     val title: String,
@@ -13,7 +13,7 @@ data class GoalCommentUiModel(
 ) {
     companion object {
         val DUMMY = GoalCommentUiModel(
-            goalId = 0L,
+            goalId = 0,
             imageUrl = "",
             mentorName = "ANNA",
             title = "ANNA와 함께하는 영어 완전 정복 30일 목표입니다 블라블라블라",
@@ -23,7 +23,7 @@ data class GoalCommentUiModel(
         )
 
         val DUMMY2 = GoalCommentUiModel(
-            goalId = 1L,
+            goalId = 1,
             imageUrl = "",
             mentorName = "ANNA",
             title = "ANNA와 함께하는 영어 완전 정복 30일 목표",

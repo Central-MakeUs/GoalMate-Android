@@ -47,8 +47,8 @@ data class InProgressUiState(
     }
 }
 
-data class GoalOverViewUiModel(val goalId: Long, val title: String, val mentor: String) {
+data class GoalOverViewUiModel(val goalId: Int, val title: String, val mentor: String) {
     companion object {
-        val DUMMY = GoalOverViewUiModel(0L, "다온과 함께하는 영어 완전 정복 목표 입니당", "다온")
+        val DUMMY = GoalOverViewUiModel(0, "다온과 함께하는 영어 완전 정복 목표 입니당", "다온")
     }
 }
