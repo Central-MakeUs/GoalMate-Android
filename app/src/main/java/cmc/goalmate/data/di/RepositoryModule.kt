@@ -1,6 +1,8 @@
 package cmc.goalmate.data.di
 
+import cmc.goalmate.data.repository.AuthRepositoryImpl
 import cmc.goalmate.data.repository.UserRepositoryImpl
+import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -12,4 +14,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
     @Binds
     abstract fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    abstract fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
 }
