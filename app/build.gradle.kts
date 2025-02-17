@@ -28,8 +28,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey.replace("\"", "")
         buildConfigField("String", "KAKAO_NATIVE_APP_KEY", kakaoKey)
+        buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
     }
 
     buildTypes {

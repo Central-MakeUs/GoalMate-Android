@@ -7,6 +7,7 @@
     <application
         android:name=".app.GoalMateApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/icon_app_logo"
@@ -19,8 +20,8 @@
             android:name=".app.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.App.Starting">
+            android:theme="@style/Theme.App.Starting"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,17 +29,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="oauth"
+                <data
+                    android:host="oauth"
                     android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />
             </intent-filter>
-
         </activity>
     </application>
 
