@@ -26,13 +26,13 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.Secondary02_700
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.home.GoalState
 import cmc.goalmate.presentation.ui.home.GoalUiModel
+import cmc.goalmate.presentation.ui.home.GoalUiStatus
 
 @Composable
 fun GoalItem(
     goal: GoalUiModel,
-    navigateToDetail: (id: Long) -> Unit,
+    navigateToDetail: (id: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -40,7 +40,7 @@ fun GoalItem(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        GoalThumbnail(goalState = goal.state)
+        GoalThumbnail(goalUiStatus = goal.state)
         Text(
             text = goal.title,
             style = MaterialTheme.goalMateTypography.subtitleMedium,
@@ -52,7 +52,7 @@ fun GoalItem(
             remainingCount = (goal.maxMembers - goal.currentMembers),
             participantsCount = goal.currentMembers,
             tagSize = TagSize.SMALL,
-            goalState = goal.state,
+            goalUiStatus = goal.state,
             modifier = Modifier.align(Alignment.Start),
         )
         ClosingSoonLabel(modifier = Modifier.align(Alignment.Start))
@@ -73,11 +73,11 @@ fun ClosingSoonLabel(modifier: Modifier = Modifier) {
 
 @Composable
 private fun GoalThumbnail(
-    goalState: GoalState,
+    goalUiStatus: GoalUiStatus,
     modifier: Modifier = Modifier,
 ) {
     val imageModifier = Modifier.run {
-        if (goalState == GoalState.SOLD_OUT) {
+        if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
             this.alpha(0.2f)
         } else {
             this
@@ -88,7 +88,7 @@ private fun GoalThumbnail(
         modifier = modifier.height(117.dp),
         contentAlignment = Alignment.Center,
     ) {
-        if (goalState == GoalState.SOLD_OUT) {
+        if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
             GoalMateImage(
                 image = R.drawable.image_sold_out,
                 modifier = Modifier,
@@ -106,7 +106,7 @@ private fun GoalThumbnail(
 private fun GoalItemPreview() {
     GoalMateTheme {
         val dummyGoal = GoalUiModel(
-            id = 12L,
+            id = 12,
             title = "(멘토명)과 함께하는 (목표명) 목표",
             imageUrl = "",
             price = "20,000원",
@@ -114,7 +114,7 @@ private fun GoalItemPreview() {
             totalPrice = "0원",
             currentMembers = 0,
             maxMembers = 10,
-            state = GoalState.AVAILABLE,
+            state = GoalUiStatus.AVAILABLE,
         )
         GoalItem(
             goal = dummyGoal,
