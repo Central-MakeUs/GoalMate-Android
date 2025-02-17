@@ -3,7 +3,7 @@ package cmc.goalmate.presentation.ui.auth
 import cmc.goalmate.presentation.components.InputTextState
 import cmc.goalmate.presentation.ui.auth.component.Step
 
-data class LoginUiState(
+data class AuthUiState(
     val loginSteps: List<Step>,
     val nickNameFormatValidationState: InputTextState,
     val duplicationCheckState: InputTextState,
@@ -23,8 +23,8 @@ data class LoginUiState(
         }
 
     companion object {
-        fun initialLoginUiState(): LoginUiState =
-            LoginUiState(
+        fun initialLoginUiState(): AuthUiState =
+            AuthUiState(
                 loginSteps = createInitialLoginSteps(),
                 nickNameFormatValidationState = InputTextState.None,
                 duplicationCheckState = InputTextState.None,

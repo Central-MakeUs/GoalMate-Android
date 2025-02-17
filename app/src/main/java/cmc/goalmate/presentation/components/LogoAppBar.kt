@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,6 +52,7 @@ fun AppBarWithBackButton(
     onBackButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
+    @DrawableRes iconRes: Int = R.drawable.icon_back,
 ) {
     Box(
         modifier = modifier
@@ -60,7 +62,7 @@ fun AppBarWithBackButton(
             .padding(horizontal = 4.dp),
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.icon_back),
+            imageVector = ImageVector.vectorResource(iconRes),
             contentDescription = null,
             modifier = Modifier
                 .align(alignment = Alignment.CenterStart)
@@ -76,7 +78,9 @@ fun AppBarWithBackButton(
                 color = MaterialTheme.goalMateColors.onBackground,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.align(alignment = Alignment.Center).padding(horizontal = 60.dp),
+                modifier = Modifier
+                    .align(alignment = Alignment.Center)
+                    .padding(horizontal = 60.dp),
             )
         }
     }

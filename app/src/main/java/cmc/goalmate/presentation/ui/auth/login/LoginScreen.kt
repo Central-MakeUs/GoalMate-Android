@@ -35,12 +35,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cmc.goalmate.R
+import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.auth.LoginAction
+import cmc.goalmate.presentation.ui.auth.AuthAction
 import cmc.goalmate.presentation.ui.auth.LoginViewModel
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.firstStep
@@ -59,15 +60,18 @@ fun LoginScreen(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    LoginContent(
-        onLoginButtonClicked = {
-            coroutineScope.launch {
-                val token = UserApiClient.loginWithKakao(context)
-                viewModel.onAction(LoginAction.KakaoLogin(token.idToken))
-            }
-        },
-        modifier = modifier.fillMaxWidth(),
-    )
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        AppBarWithBackButton(onBackButtonClicked = {}, iconRes = R.drawable.icon_cancel)
+        LoginContent(
+            onLoginButtonClicked = {
+                coroutineScope.launch {
+                    val token = UserApiClient.loginWithKakao(context)
+                    viewModel.onAction(AuthAction.KakaoLogin(token.idToken))
+                }
+            },
+            modifier = modifier.fillMaxWidth(),
+        )
+    }
 
     if (showBottomSheet) {
         LoginTermBottomSheet(

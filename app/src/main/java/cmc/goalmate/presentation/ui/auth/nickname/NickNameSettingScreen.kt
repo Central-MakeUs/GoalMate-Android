@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -34,8 +33,8 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.auth.LoginAction
-import cmc.goalmate.presentation.ui.auth.LoginUiState
+import cmc.goalmate.presentation.ui.auth.AuthAction
+import cmc.goalmate.presentation.ui.auth.AuthUiState
 import cmc.goalmate.presentation.ui.auth.LoginViewModel
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.secondStep
@@ -61,8 +60,8 @@ fun NickNameSettingScreen(
 @Composable
 fun NickNameSettingContent(
     text: String,
-    state: LoginUiState,
-    onAction: (LoginAction) -> Unit,
+    state: AuthUiState,
+    onAction: (AuthAction) -> Unit,
     onCompletedButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -98,9 +97,9 @@ fun NickNameSettingContent(
 
         GoalMateTextField(
             value = text,
-            onValueChange = { onAction(LoginAction.SetNickName(it)) },
+            onValueChange = { onAction(AuthAction.SetNickName(it)) },
             canCheckDuplicate = state.isDuplicationCheckEnabled,
-            onDuplicateCheck = { onAction(LoginAction.CheckDuplication) },
+            onDuplicateCheck = { onAction(AuthAction.CheckDuplication) },
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
@@ -128,7 +127,7 @@ private fun NickNameSettingScreenPreview() {
     GoalMateTheme {
         NickNameSettingContent(
             text = "UserNickname",
-            state = LoginUiState.initialLoginUiState(),
+            state = AuthUiState.initialLoginUiState(),
             onAction = {},
             onCompletedButtonClicked = { },
             modifier = Modifier,

@@ -24,19 +24,19 @@ class LoginViewModel
         private val validateNickName: ValidateNickName,
         private val authRepository: AuthRepository,
     ) : ViewModel() {
-        private val _state = MutableStateFlow<LoginUiState>(LoginUiState.initialLoginUiState())
-        val state: StateFlow<LoginUiState>
+        private val _state = MutableStateFlow<AuthUiState>(AuthUiState.initialLoginUiState())
+        val state: StateFlow<AuthUiState>
             get() = _state
 
         var nickName by mutableStateOf("")
             private set
 
-        fun onAction(action: LoginAction) {
+        fun onAction(action: AuthAction) {
             when (action) {
-                is LoginAction.KakaoLogin -> loginWithKakao(action.idToken)
-                is LoginAction.SetNickName -> updateNickName(action.nickName)
-                LoginAction.CheckDuplication -> checkNickNameDuplication()
-                LoginAction.CompleteNicknameSetup -> Unit
+                is AuthAction.KakaoLogin -> loginWithKakao(action.idToken)
+                is AuthAction.SetNickName -> updateNickName(action.nickName)
+                AuthAction.CheckDuplication -> checkNickNameDuplication()
+                AuthAction.CompleteNicknameSetup -> Unit
             }
         }
 
