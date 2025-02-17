@@ -5,15 +5,14 @@ import javax.inject.Inject
 class ValidateNickName
     @Inject
     constructor() {
-        operator fun invoke(nickName: String) =
+        operator fun invoke(nickName: String): DomainResult<Unit, NickNameError> =
             if (nickName.length in 2..5) {
-                ValidationResult(successful = true)
+                DomainResult.Success(Unit)
             } else {
-                ValidationResult(successful = false, errorMessage = "2~5글자 닉네임을 입력해주세요.")
+                DomainResult.Error(NickNameError.INVALID_LENGTH)
             }
-    }
 
-data class ValidationResult(
-    val successful: Boolean,
-    val errorMessage: String? = null,
-)
+        enum class NickNameError : Error {
+            INVALID_LENGTH,
+        }
+    }
