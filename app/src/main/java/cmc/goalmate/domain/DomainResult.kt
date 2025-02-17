@@ -14,3 +14,10 @@ inline fun <D, E : RootError> DomainResult<D, E>.onSuccess(block: (D) -> Unit): 
     }
     return this
 }
+
+inline fun <D, E : RootError> DomainResult<D, E>.onFailure(block: (E) -> Unit): DomainResult<D, E> {
+    if (this is DomainResult.Error) {
+        block(error)
+    }
+    return this
+}
