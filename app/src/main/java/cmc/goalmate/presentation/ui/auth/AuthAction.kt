@@ -18,4 +18,6 @@ sealed interface AuthEvent {
     data object NavigateToHome : AuthEvent
 
     data object NavigateToNickNameSetting : AuthEvent
+
+    data object NavigateToCompleted : AuthEvent
 }

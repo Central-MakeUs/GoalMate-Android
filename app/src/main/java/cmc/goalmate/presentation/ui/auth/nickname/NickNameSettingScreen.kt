@@ -34,10 +34,12 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.auth.AuthAction
+import cmc.goalmate.presentation.ui.auth.AuthEvent
 import cmc.goalmate.presentation.ui.auth.AuthUiState
 import cmc.goalmate.presentation.ui.auth.LoginViewModel
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.secondStep
+import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
 fun NickNameSettingScreen(
@@ -47,12 +49,20 @@ fun NickNameSettingScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    ObserveAsEvent(viewModel.authEvent) { event ->
+        when (event) {
+            AuthEvent.NavigateToCompleted -> navigateNextPage()
+            else -> Unit
+        }
+    }
+
     NickNameSettingContent(
         text = viewModel.nickName,
         state = state,
         onAction = viewModel::onAction,
-        onCompletedButtonClicked = navigateNextPage,
-        modifier = modifier.fillMaxSize()
+        onCompletedButtonClicked = { viewModel.onAction(AuthAction.CompleteNicknameSetup) },
+        modifier = modifier
+            .fillMaxSize()
             .padding(horizontal = GoalMateDimens.HorizontalPadding),
     )
 }
@@ -130,7 +140,8 @@ private fun NickNameSettingScreenPreview() {
             state = AuthUiState.initialLoginUiState(),
             onAction = {},
             onCompletedButtonClicked = { },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(horizontal = GoalMateDimens.HorizontalPadding),
         )
     }

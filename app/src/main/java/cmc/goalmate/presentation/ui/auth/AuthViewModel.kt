@@ -10,6 +10,7 @@ import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.ValidateNickName
 import cmc.goalmate.domain.model.Token
+import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.UserRepository
@@ -50,7 +51,7 @@ class LoginViewModel
                 AuthAction.AgreeTermsOfService -> agreeTermsOfService()
                 AuthAction.CheckDuplication -> checkNickNameDuplication()
                 is AuthAction.SetNickName -> updateNickName(action.nickName)
-                AuthAction.CompleteNicknameSetup -> Unit
+                AuthAction.CompleteNicknameSetup -> completeNickNameSetting()
             }
         }
 
@@ -115,12 +116,43 @@ class LoginViewModel
         }
 
         private fun checkNickNameDuplication() {
-            // 검사 후, 중복된 닉네임이 없다면,
+            viewModelScope.launch {
+                userRepository.isNicknameAvailable(nickName)
+                    .onSuccess { isAvailable ->
+                        updateNicknameDuplicationState(isAvailable)
+                    }
+                    .onFailure {
+                        Log.d("yenny", "checkNickNameDuplication error : ${it.asUiText()}")
+                    }
+            }
+        }
+
+        private fun updateNicknameDuplicationState(isAvailable: Boolean) {
+            if (isAvailable) {
+                _state.value = _state.value.copy(
+                    nickNameFormatValidationState = InputTextState.Success,
+                    duplicationCheckState = InputTextState.Success,
+                    helperText = "사용 가능한 닉네임이에요 :)",
+                )
+                return
+            }
             _state.value = _state.value.copy(
-                nickNameFormatValidationState = InputTextState.Success,
-                duplicationCheckState = InputTextState.Success,
-                helperText = "사용 가능한 닉네임이에요 :)",
+                duplicationCheckState = InputTextState.Error,
+                helperText = "이미 있는 닉네임이에요 :(",
             )
+        }
+
+        private fun completeNickNameSetting() {
+            viewModelScope.launch {
+                userRepository.updateNickName(nickName)
+                    .onSuccess {
+                        _state.value = _state.value.copy(isLoginCompleted = true)
+                        _authEvent.send(AuthEvent.NavigateToCompleted)
+                    }
+                    .onFailure {
+                        Log.d("yenny", "completeNickNameSetting error : ${it.asUiText()}")
+                    }
+            }
         }
 
         override fun onCleared() {
