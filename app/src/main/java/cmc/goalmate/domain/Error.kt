@@ -11,4 +11,8 @@ sealed interface DataError : Error {
         CONFLICT,
         UNKNOWN,
     }
+
+    enum class Local : DataError {
+        IO_ERROR,
+    }
 }

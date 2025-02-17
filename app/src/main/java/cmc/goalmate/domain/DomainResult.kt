@@ -7,3 +7,10 @@ sealed interface DomainResult<out D, out E : RootError> {
 
     data class Error<out D, out E : RootError>(val error: E) : DomainResult<D, E>
 }
+
+inline fun <D, E : RootError> DomainResult<D, E>.onSuccess(block: (D) -> Unit): DomainResult<D, E> {
+    if (this is DomainResult.Success) {
+        block(data)
+    }
+    return this
+}
