@@ -1,6 +1,7 @@
 package cmc.goalmate.remote.di
 
 import cmc.goalmate.remote.service.AuthService
+import cmc.goalmate.remote.service.CommentService
 import cmc.goalmate.remote.service.GoalService
 import cmc.goalmate.remote.service.MenteeGoalService
 import cmc.goalmate.remote.service.MenteeService
@@ -29,4 +30,8 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideMenteeGoalService(retrofit: Retrofit): MenteeGoalService = retrofit.create(MenteeGoalService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCommentService(retrofit: Retrofit): CommentService = retrofit.create(CommentService::class.java)
 }
