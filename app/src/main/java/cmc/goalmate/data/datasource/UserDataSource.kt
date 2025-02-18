@@ -1,5 +1,7 @@
 package cmc.goalmate.data.datasource
 
+import cmc.goalmate.data.model.UserInfoDto
+import cmc.goalmate.data.model.toData
 import cmc.goalmate.data.util.getOrThrow
 import cmc.goalmate.remote.service.MenteeService
 import javax.inject.Inject
@@ -19,5 +21,10 @@ class UserDataSource
                 menteeService.setNickName(nickName)
                     .getOrThrow()
                     .let { Unit }
+            }
+
+        suspend fun getUserInfo(): Result<UserInfoDto> =
+            runCatching {
+                menteeService.getUserInfo().getOrThrow().toData()
             }
     }
