@@ -2,9 +2,11 @@ package cmc.goalmate.data.di
 
 import cmc.goalmate.data.repository.AuthRepositoryImpl
 import cmc.goalmate.data.repository.GoalsRepositoryImpl
+import cmc.goalmate.data.repository.MenteeGoalRepositoryImpl
 import cmc.goalmate.data.repository.UserRepositoryImpl
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.GoalsRepository
+import cmc.goalmate.domain.repository.MenteeGoalRepository
 import cmc.goalmate.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -22,4 +24,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindGoalsRepository(goalsRepositoryImpl: GoalsRepositoryImpl): GoalsRepository
+
+    @Binds
+    abstract fun bindMenteeGoalRepository(menteeGoalRepositoryImpl: MenteeGoalRepositoryImpl): MenteeGoalRepository
 }
