@@ -11,7 +11,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.HeaderTitle
-import cmc.goalmate.presentation.ui.common.UserState
 import cmc.goalmate.presentation.ui.mypage.model.MenuItemData
 
 @Composable
@@ -33,7 +32,7 @@ fun MyPageScreen(
         MenuItemData("로그아웃") { },
     )
 
-    val menuItems = commonMenuItems + if (state.userGoalsState is UserState.LoggedIn) loggedInMenuItems else emptyList()
+    val menuItems = commonMenuItems + if (state.isLoggedIn()) loggedInMenuItems else emptyList()
 
     Column {
         HeaderTitle(
@@ -41,10 +40,10 @@ fun MyPageScreen(
             modifier = Modifier.fillMaxWidth(),
         )
         MyPageContent(
-            userState = state.userGoalsState,
+            userState = state,
             menuItems = menuItems,
             editNickName = {},
-            navigateToMyGoals = {},
+            navigateToMyGoals = navigateToMyGoal,
             navigateToLogin = navigateToLogin,
             modifier = Modifier.fillMaxSize(),
         )

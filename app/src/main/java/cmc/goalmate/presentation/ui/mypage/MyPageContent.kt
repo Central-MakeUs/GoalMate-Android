@@ -2,6 +2,7 @@ package cmc.goalmate.presentation.ui.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +26,6 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.common.UserState
 import cmc.goalmate.presentation.ui.mypage.components.GoalCountItem
 import cmc.goalmate.presentation.ui.mypage.components.LoginSection
 import cmc.goalmate.presentation.ui.mypage.components.MenuItem
@@ -35,7 +35,7 @@ import cmc.goalmate.presentation.ui.mypage.model.MyPageUiModel
 
 @Composable
 fun MyPageContent(
-    userState: UserState<MyPageUiModel>,
+    userState: MyPageUiState,
     menuItems: List<MenuItemData>,
     editNickName: () -> Unit,
     navigateToMyGoals: () -> Unit,
@@ -43,10 +43,12 @@ fun MyPageContent(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
+        Spacer(Modifier.size(16.dp))
+
         when (userState) {
-            is UserState.LoggedIn -> {
+            is MyPageUiState.LoggedIn -> {
                 NickNameSection(
-                    nickName = userState.data.nickName,
+                    nickName = userState.userInfo.nickName,
                     onEditButtonClicked = editNickName,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -54,7 +56,7 @@ fun MyPageContent(
                 )
             }
 
-            UserState.LoggedOut -> {
+            MyPageUiState.LoggedOut -> {
                 LoginSection(
                     onLoginButtonClicked = navigateToLogin,
                     modifier = Modifier
@@ -62,6 +64,9 @@ fun MyPageContent(
                         .padding(horizontal = GoalMateDimens.HorizontalPadding),
                 )
             }
+
+            MyPageUiState.Error -> {}
+            MyPageUiState.Loading -> {}
         }
 
         Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
@@ -69,6 +74,7 @@ fun MyPageContent(
         GoalStatusSummary(
             onGoingGoalCount = userState.loggedInOrDefault { it.onGoingGoalCount },
             completedGoalCount = userState.loggedInOrDefault { it.completedGoalCount },
+            onSectionClicked = navigateToMyGoals,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = GoalMateDimens.HorizontalPadding),
@@ -90,13 +96,14 @@ fun MyPageContent(
     }
 }
 
-private inline fun UserState<MyPageUiModel>.loggedInOrDefault(defaultValue: (MyPageUiModel) -> Int): Int =
-    if (this is UserState.LoggedIn) defaultValue(this.data) else MyPageUiModel.DEFAULT_COUNT
+private inline fun MyPageUiState.loggedInOrDefault(defaultValue: (MyPageUiModel) -> Int): Int =
+    if (this is MyPageUiState.LoggedIn) defaultValue(this.userInfo) else MyPageUiModel.DEFAULT_COUNT
 
 @Composable
 private fun GoalStatusSummary(
     onGoingGoalCount: Int,
     completedGoalCount: Int,
+    onSectionClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -112,10 +119,11 @@ private fun GoalStatusSummary(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(20.dp))
+                .clickable { onSectionClicked() }
                 .background(
                     color = MaterialTheme.goalMateColors.primaryVariant,
                 )
-                .border(width = 1.dp, color = MaterialTheme.goalMateColors.completed)
+                .border(width = 1.dp, color = MaterialTheme.goalMateColors.completed,RoundedCornerShape(20.dp))
                 .padding(vertical = GoalMateDimens.BoxContentVerticalPadding),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
@@ -137,7 +145,7 @@ private fun GoalStatusSummary(
 private fun MyPageContentPreview() {
     GoalMateTheme {
         MyPageContent(
-            userState = UserState.LoggedOut,
+            userState = MyPageUiState.LoggedOut,
             menuItems = listOf(),
             editNickName = {},
             navigateToMyGoals = {},

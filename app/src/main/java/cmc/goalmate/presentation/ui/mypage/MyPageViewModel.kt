@@ -1,37 +1,50 @@
 package cmc.goalmate.presentation.ui.mypage
 
+import androidx.lifecycle.viewModelScope
+import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.repository.AuthRepository
+import cmc.goalmate.domain.repository.UserRepository
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
-import cmc.goalmate.presentation.ui.common.UserState
-import cmc.goalmate.presentation.ui.mypage.MyPageUiState.Companion.initialMyPageUiState
 import cmc.goalmate.presentation.ui.mypage.model.MyPageUiModel
+import cmc.goalmate.presentation.ui.mypage.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-data class MyPageUiState(
-    val isLoading: Boolean,
-    val userGoalsState: UserState<MyPageUiModel>,
-) {
-    companion object {
-        fun initialMyPageUiState(): MyPageUiState = MyPageUiState(isLoading = true, userGoalsState = UserState.LoggedOut)
-    }
+sealed interface MyPageUiState {
+    data object Loading : MyPageUiState
+
+    data class LoggedIn(val userInfo: MyPageUiModel) : MyPageUiState
+
+    data object LoggedOut : MyPageUiState
+
+    data object Error : MyPageUiState
 }
 
-@HiltViewModel
-class
-MyPageViewModel@Inject
-    constructor(authRepository: AuthRepository) : LoginStateViewModel(authRepository) {
-        private val _state = MutableStateFlow(initialMyPageUiState())
-        val state: StateFlow<MyPageUiState>
-            get() = _state
+fun MyPageUiState.isLoggedIn(): Boolean = this is MyPageUiState.LoggedIn
 
-        init {
-            if (isLoggedIn.value) {
-                // 사용자 정보 가져오기
-            } else {
-                _state.value = MyPageUiState(isLoading = false, userGoalsState = UserState.LoggedOut)
+@HiltViewModel
+class MyPageViewModel
+    @Inject
+    constructor(authRepository: AuthRepository, private val userRepository: UserRepository) :
+    LoginStateViewModel(authRepository) {
+        val state: StateFlow<MyPageUiState> = isLoggedIn
+            .map { isLoggedIn ->
+                if (isLoggedIn) {
+                    when (val result = userRepository.getUserInfo()) {
+                        is DomainResult.Success -> MyPageUiState.LoggedIn(result.data.toUi())
+                        is DomainResult.Error -> MyPageUiState.Error
+                    }
+                } else {
+                    MyPageUiState.LoggedOut
+                }
             }
-        }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = MyPageUiState.Loading,
+            )
     }
