@@ -14,6 +14,8 @@ import cmc.goalmate.remote.dto.response.MenteeGoalsResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+val goalMateDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
 fun MenteeGoalsResponse.toData(): MenteeGoalsDto = MenteeGoalsDto(goals = this.menteeGoals.map { it.toData() })
 
 fun MenteeGoalResponse.toData(): MenteeGoalDto =
@@ -38,7 +40,7 @@ fun MenteeGoalResponse.toData(): MenteeGoalDto =
 
 fun MenteeGoalsDto.toDomain(): MenteeGoals = MenteeGoals(goals.map { it.toDomain() })
 
-fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")): MenteeGoal =
+fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = goalMateDateFormatter): MenteeGoal =
     MenteeGoal(
         id = id,
         title = title,

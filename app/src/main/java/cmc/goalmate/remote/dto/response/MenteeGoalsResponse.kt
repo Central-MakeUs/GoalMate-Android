@@ -18,7 +18,7 @@ data class MenteeGoalResponse(
     @SerialName("main_image") val mainImage: String?,
     @SerialName("start_date") val startDate: String,
     @SerialName("end_date") val endDate: String,
-    @SerialName("final_comment") val finalComment: String?,
+    @SerialName("mentor_letter") val finalComment: String?,
     @SerialName("today_todo_count") val todayTodoCount: Int,
     @SerialName("today_completed_count") val todayCompletedCount: Int,
     @SerialName("today_remaining_count") val todayRemainingCount: Int,
