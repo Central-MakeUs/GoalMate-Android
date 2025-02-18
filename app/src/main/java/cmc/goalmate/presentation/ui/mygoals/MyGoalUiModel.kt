@@ -1,10 +1,11 @@
 package cmc.goalmate.presentation.ui.mygoals
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import cmc.goalmate.R
-import cmc.goalmate.presentation.theme.goalMateColors
+import cmc.goalmate.domain.model.MenteeGoal
+import cmc.goalmate.domain.model.MenteeGoalStatus
+import cmc.goalmate.domain.model.MenteeGoals
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 data class MyGoalUiModel(
     val goalId: Int,
@@ -50,55 +51,29 @@ enum class MyGoalState(
     ;
 
     fun getDateTag(daysUntilDeadline: Int): String = dateFormat.format(daysUntilDeadline)
-
-    companion object {
-        @Composable
-        fun MyGoalState.dateIcon(): Int =
-            when (this) {
-                IN_PROGRESS -> R.drawable.icon_calendar_active
-                COMPLETED -> R.drawable.icon_calendar_inactive
-            }
-
-        @Composable
-        fun MyGoalState.progressIcon(): Int =
-            when (this) {
-                IN_PROGRESS -> R.drawable.icon_progress_active
-                COMPLETED -> R.drawable.icon_progress_inactive
-            }
-
-        @Composable
-        fun MyGoalState.textColor(): Color =
-            when (this) {
-                IN_PROGRESS -> MaterialTheme.goalMateColors.onBackground
-                COMPLETED -> MaterialTheme.goalMateColors.finished
-            }
-
-        @Composable
-        fun MyGoalState.tagColor(): Color =
-            when (this) {
-                IN_PROGRESS -> MaterialTheme.goalMateColors.secondary02
-                COMPLETED -> MaterialTheme.goalMateColors.secondary01
-            }
-
-        @Composable
-        fun MyGoalState.onTagColor(): Color =
-            when (this) {
-                IN_PROGRESS -> MaterialTheme.goalMateColors.onSecondary02
-                COMPLETED -> MaterialTheme.goalMateColors.onSecondary
-            }
-
-        @Composable
-        fun MyGoalState.progressIndicatorColor(): Color =
-            when (this) {
-                IN_PROGRESS -> MaterialTheme.goalMateColors.activeProgressBar
-                COMPLETED -> MaterialTheme.goalMateColors.completedProgressBar
-            }
-
-        @Composable
-        fun MyGoalState.progressBackgroundColor(): Color =
-            when (this) {
-                IN_PROGRESS -> MaterialTheme.goalMateColors.activeProgressBackground
-                COMPLETED -> MaterialTheme.goalMateColors.completedProgressBackground
-            }
-    }
 }
+
+fun MenteeGoals.toUi(): List<MyGoalUiModel> = this.goals.map { it.toUi() }
+
+fun MenteeGoal.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): MyGoalUiModel {
+    val daysFromStart = ChronoUnit.DAYS.between(LocalDate.now(), endDate).toInt().coerceAtLeast(0)
+    val goalProgress = if (totalTodoCount > 0) totalCompletedCount.toFloat() / totalTodoCount else 0f
+
+    return MyGoalUiModel(
+        goalId = id,
+        title = title,
+        mentorName = mentorName,
+        startDate = "${startDate.format(formatter)} 부터",
+        endDate = "${endDate.format(formatter)} 까지",
+        daysFromStart = daysFromStart,
+        goalProgress = goalProgress,
+        goalState = menteeGoalStatus.toUi(),
+        remainGoals = todayRemainingCount,
+    )
+}
+
+fun MenteeGoalStatus.toUi(): MyGoalState =
+    when (this) {
+        MenteeGoalStatus.IN_PROGRESS -> MyGoalState.IN_PROGRESS
+        else -> MyGoalState.COMPLETED
+    }

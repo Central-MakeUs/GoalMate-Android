@@ -20,8 +20,8 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.mygoals.MyGoalState
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.progressBackgroundColor
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.progressIndicatorColor
+import cmc.goalmate.presentation.ui.mygoals.progressBackgroundColor
+import cmc.goalmate.presentation.ui.mygoals.progressIndicatorColor
 
 @Composable
 fun GoalMateProgressBar(
@@ -54,7 +54,7 @@ private fun GoalMateProgressBarPreview() {
         GoalMateProgressBar(
             currentProgress = 70f,
             myGoalState = MyGoalState.IN_PROGRESS,
-            thickness = 14.dp
+            thickness = 14.dp,
         )
     }
 }

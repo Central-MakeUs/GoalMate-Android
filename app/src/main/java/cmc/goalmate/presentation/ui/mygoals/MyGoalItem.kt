@@ -29,9 +29,6 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.dateIcon
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.progressIcon
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.textColor
 import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
 
 @Composable

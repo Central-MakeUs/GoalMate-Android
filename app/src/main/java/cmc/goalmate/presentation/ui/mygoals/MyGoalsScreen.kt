@@ -13,7 +13,6 @@ import cmc.goalmate.R
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.EmptyGoalContents
 import cmc.goalmate.presentation.components.HeaderTitle
-import cmc.goalmate.presentation.ui.common.UserState
 
 @Composable
 fun MyGoalsScreen(
@@ -34,10 +33,10 @@ fun MyGoalsScreen(
             title = stringResource(R.string.my_goals_header_title),
             modifier = Modifier.fillMaxWidth(),
         )
-        when (val userGoalState = state.userGoalsState) {
-            is UserState.LoggedIn -> {
+        when (state) {
+            is MyGoalsUiState.LoggedIn -> {
                 handleLoggedInState(
-                    myGoals = userGoalState.data,
+                    myGoals = (state as MyGoalsUiState.LoggedIn).myGoals,
                     navigateToCompletedGoal = navigateToCompletedGoal,
                     navigateToProgressGoal = navigateToProgressGoal,
                     navigateToGoalDetail = navigateToGoalDetail,
@@ -45,11 +44,14 @@ fun MyGoalsScreen(
                 )
             }
 
-            UserState.LoggedOut -> {
+            MyGoalsUiState.LoggedOut -> {
                 EmptyGoalContents(
                     onButtonClicked = navigateToHome,
                 )
             }
+
+            MyGoalsUiState.Error -> {}
+            MyGoalsUiState.Loading -> {}
         }
     }
 }

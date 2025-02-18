@@ -12,9 +12,9 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.mygoals.MyGoalState
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.onTagColor
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.tagColor
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState.Companion.textColor
+import cmc.goalmate.presentation.ui.mygoals.onTagColor
+import cmc.goalmate.presentation.ui.mygoals.tagColor
+import cmc.goalmate.presentation.ui.mygoals.textColor
 
 @Composable
 fun GoalStatusTag(
