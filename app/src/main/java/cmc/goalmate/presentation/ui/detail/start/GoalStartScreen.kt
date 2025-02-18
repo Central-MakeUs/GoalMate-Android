@@ -42,9 +42,7 @@ fun GoalStartScreen(
             ),
     ) {
         GoalOverviewCard(goal.title, goal.mentor)
-        Spacer(Modifier.size(16.dp))
-        InfoMessage(modifier = Modifier.fillMaxWidth())
-        Spacer(Modifier.size(25.dp))
+        Spacer(Modifier.size(138.dp))
         GoalMateButton(
             content = stringResource(R.string.goal_detail_start_button),
             onClick = onStartButtonClicked,

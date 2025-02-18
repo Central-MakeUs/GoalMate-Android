@@ -32,6 +32,7 @@ import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.detail.components.GoalStartButton
 import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
 import cmc.goalmate.presentation.ui.detail.start.GoalStartScreen
+import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +40,7 @@ import kotlinx.coroutines.launch
 fun GoalDetailScreen(
     navigateBack: () -> Unit,
     navigateToLogin: () -> Unit,
-    navigateToCompleted: (GoalSummary) -> Unit,
+    navigateToCompleted: (goalId: Int, goalInfo: GoalSummary) -> Unit,
     viewModel: GoalDetailViewModel = hiltViewModel(),
 ) {
     val goalDetailUiState by viewModel.state.collectAsStateWithLifecycle()
@@ -47,6 +48,23 @@ fun GoalDetailScreen(
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+    ObserveAsEvent(viewModel.event) { event ->
+        when (event) {
+            is GoalDetailEvent.NavigateToGoalStart -> {
+                coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        showBottomSheet = false
+                    }
+                    navigateToCompleted(event.newGoalId, event.goalSummary)
+                }
+            }
+            GoalDetailEvent.NavigateToLogin -> navigateToLogin()
+            GoalDetailEvent.ShowGoalStartConfirmation -> {
+                showBottomSheet = true
+            }
+        }
+    }
 
     Column {
         AppBarWithBackButton(
@@ -60,11 +78,7 @@ fun GoalDetailScreen(
                     goal = state.goal,
                     isLoggedIn = state.isLoggedIn,
                     onButtonClicked = {
-                        if (state.isLoggedIn) {
-                            showBottomSheet = true
-                        } else {
-                            navigateToLogin()
-                        }
+                        viewModel.onAction(GoalDetailAction.InitiateGoal)
                     },
                 )
             }
@@ -78,7 +92,6 @@ fun GoalDetailScreen(
     }
 
     if (showBottomSheet) {
-        val goalSummary = goalDetailUiState.getGoalOrNull()?.toSummary() ?: return
         ModalBottomSheet(
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState,
@@ -87,15 +100,8 @@ fun GoalDetailScreen(
             windowInsets = BottomSheetDefaults.windowInsets.only(WindowInsetsSides.Bottom),
         ) {
             GoalStartScreen(
-                goal = goalSummary,
-                onStartButtonClicked = {
-                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet = false
-                        }
-                        navigateToCompleted(goalSummary)
-                    }
-                },
+                goal = goalDetailUiState.goalSummary(),
+                onStartButtonClicked = { viewModel.onAction(GoalDetailAction.ConfirmGoalStart) },
             )
         }
     }

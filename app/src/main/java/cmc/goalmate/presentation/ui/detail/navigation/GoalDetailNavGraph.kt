@@ -19,7 +19,9 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
             GoalDetailScreen(
                 navigateBack = { navController.navigateUp() },
                 navigateToLogin = { navController.navigateToLogin() },
-                navigateToCompleted = { navController.navigateToPaymentCompleted(it) },
+                navigateToCompleted = { goaId, goalInfo ->
+                    navController.navigateToPaymentCompleted(goaId, goalInfo)
+                },
             )
         }
 
@@ -30,7 +32,7 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
             PaymentCompletedScreen(
                 goal = content.goalSummary,
                 navigateToAchievingGoal = {
-                    // TODO: 목표 시작 화면
+                    // TODO: 목표 시작 화면 -> content.newGoalId로 연결!
                 },
             )
         }
@@ -41,6 +43,9 @@ fun NavController.navigateToDetail(goalId: Int) {
     navigate(Screen.GoalDetail.Detail(goalId = goalId))
 }
 
-fun NavController.navigateToPaymentCompleted(goalSummary: GoalSummary) {
-    navigate(Screen.GoalDetail.PaymentCompleted(goalSummary = goalSummary))
+fun NavController.navigateToPaymentCompleted(
+    goalId: Int,
+    goalSummary: GoalSummary,
+) {
+    navigate(Screen.GoalDetail.PaymentCompleted(newGoalId = goalId, goalSummary = goalSummary))
 }
