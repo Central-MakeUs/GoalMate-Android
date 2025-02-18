@@ -28,7 +28,7 @@ fun Goal.toUi(): GoalUiModel =
     GoalUiModel(
         id = this.id,
         title = this.title,
-        imageUrl = this.mainImage,
+        imageUrl = this.mainImage ?: "",
         currentMembers = this.currentParticipants,
         maxMembers = this.participantsLimit,
         state = this.goalStatus.toUi(),

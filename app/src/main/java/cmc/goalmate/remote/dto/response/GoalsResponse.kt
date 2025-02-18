@@ -24,7 +24,7 @@ data class GoalResponse(
     @SerialName("mentor_name") val mentorName: String,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String,
-    @SerialName("main_image") val mainImage: String,
+    @SerialName("main_image") val mainImage: String?,
 )
 
 @Serializable

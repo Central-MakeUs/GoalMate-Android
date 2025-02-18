@@ -24,7 +24,7 @@ data class GoalDto(
     val mentorName: String,
     val createdAt: String,
     val updatedAt: String,
-    val mainImage: String,
+    val mainImage: String?,
 )
 
 fun GoalResponse.toData(): GoalDto =
@@ -69,8 +69,8 @@ fun GoalDto.toDomain(): Goal =
 
 fun convertGoalStatus(status: String): GoalStatus =
     when (status) {
-        "NOT_STARTED" -> GoalStatus.NOT_STARTED
-        "IN_PROGRESS" -> GoalStatus.IN_PROGRESS
+        "UPCOMING" -> GoalStatus.NOT_STARTED
+        "OPEN" -> GoalStatus.IN_PROGRESS
         "CLOSED" -> GoalStatus.CLOSED
         else -> throw IllegalArgumentException("알 수 없는 상태: $status")
     }

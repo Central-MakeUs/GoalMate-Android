@@ -16,7 +16,7 @@ data class Goal(
     val mentorName: String,
     val createdAt: String,
     val updatedAt: String,
-    val mainImage: String,
+    val mainImage: String?,
 )
 
 enum class GoalStatus {

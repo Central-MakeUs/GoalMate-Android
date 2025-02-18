@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +42,7 @@ fun GoalItem(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        GoalThumbnail(goalUiStatus = goal.state)
+        GoalThumbnail(goalUiStatus = goal.state, goalImage = goal.imageUrl)
         Text(
             text = goal.title,
             style = MaterialTheme.goalMateTypography.subtitleMedium,
@@ -74,6 +76,7 @@ fun ClosingSoonLabel(modifier: Modifier = Modifier) {
 @Composable
 private fun GoalThumbnail(
     goalUiStatus: GoalUiStatus,
+    goalImage: String,
     modifier: Modifier = Modifier,
 ) {
     val imageModifier = Modifier.run {
@@ -85,18 +88,25 @@ private fun GoalThumbnail(
     }
 
     Box(
-        modifier = modifier.height(117.dp),
+        modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
         if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
             GoalMateImage(
                 image = R.drawable.image_sold_out,
-                modifier = Modifier,
+                modifier = Modifier.size(
+                    width = GoalMateDimens.GoalItemWidth,
+                    height = GoalMateDimens.GoalItemImageHeight,
+                ),
             )
         }
         GoalMateImage(
-            image = R.drawable.image_goal_default,
-            modifier = imageModifier,
+            image = goalImage,
+            modifier = imageModifier.size(
+                width = GoalMateDimens.GoalItemWidth,
+                height = GoalMateDimens.GoalItemImageHeight,
+            ),
+            shape = RoundedCornerShape(4.dp),
         )
     }
 }
