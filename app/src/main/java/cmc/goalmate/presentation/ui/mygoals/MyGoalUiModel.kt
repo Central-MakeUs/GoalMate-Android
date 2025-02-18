@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit
 data class MyGoalUiModel(
     val goalId: Int,
     val title: String,
+    val thumbnailUrl: String,
     val mentorName: String,
     val startDate: String,
     val endDate: String,
@@ -21,7 +22,8 @@ data class MyGoalUiModel(
     companion object {
         val DUMMY = MyGoalUiModel(
             goalId = 0,
-            title = "다온과 함께하는 영어 완전 정복 30일 목표",
+            title = "다온과 함께하는 영어 완전 정복",
+            thumbnailUrl = "",
             mentorName = "다온",
             startDate = "2025년 01월 01일 부터",
             endDate = "2025년 01월 30일까지",
@@ -32,6 +34,7 @@ data class MyGoalUiModel(
         val DUMMY2 = MyGoalUiModel(
             goalId = 0,
             title = "마루와 함께하는 백앤드 서버 찐천재 목표",
+            thumbnailUrl = "",
             mentorName = "마루",
             startDate = "2025년 01월 01일 부터",
             endDate = "2025년 01월 30일까지",
@@ -62,6 +65,7 @@ fun MenteeGoal.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("
     return MyGoalUiModel(
         goalId = id,
         title = title,
+        thumbnailUrl = mainImage ?: "",
         mentorName = mentorName,
         startDate = "${startDate.format(formatter)} 부터",
         endDate = "${endDate.format(formatter)} 까지",

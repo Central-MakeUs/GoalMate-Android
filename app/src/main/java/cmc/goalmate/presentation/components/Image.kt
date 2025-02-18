@@ -31,8 +31,8 @@ fun GoalMateImage(
 
 @Composable
 fun GoalMateImage(
-    image: String = "",
     modifier: Modifier = Modifier,
+    image: String = "",
     contentDescription: String? = null,
     shape: Shape = RectangleShape,
     contentScale: ContentScale = ContentScale.FillWidth

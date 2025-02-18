@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
@@ -27,6 +28,7 @@ fun GoalDateRange(
     endDate: String,
     @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.goalMateTypography.bodySmallMedium,
 ) {
     Row(
         modifier = modifier
@@ -39,16 +41,16 @@ fun GoalDateRange(
         GoalMateImage(image = icon, modifier = Modifier.size(24.dp))
         Spacer(Modifier.size(10.dp))
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = startDate,
-                style = MaterialTheme.goalMateTypography.bodySmallMedium,
+                style = textStyle,
                 color = Grey600,
             )
             Text(
                 text = endDate,
-                style = MaterialTheme.goalMateTypography.bodySmallMedium,
+                style = textStyle,
                 color = Grey600,
             )
         }
