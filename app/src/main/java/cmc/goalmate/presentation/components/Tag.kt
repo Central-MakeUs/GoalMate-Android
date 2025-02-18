@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.components.TagSize.LARGE
 import cmc.goalmate.presentation.components.TagSize.SMALL
 import cmc.goalmate.presentation.theme.GoalMateTheme
-import cmc.goalmate.presentation.theme.color.Secondary01_400
 import cmc.goalmate.presentation.theme.color.Secondary02_700
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
@@ -200,7 +199,7 @@ private fun TriangleCanvas(
 @Composable
 fun GoalUiStatus.startBackgroundColor(): Color =
     when (this) {
-        GoalUiStatus.AVAILABLE -> Secondary01_400
+        GoalUiStatus.AVAILABLE -> MaterialTheme.goalMateColors.secondary01
         GoalUiStatus.SOLD_OUT -> MaterialTheme.goalMateColors.finished
     }
 

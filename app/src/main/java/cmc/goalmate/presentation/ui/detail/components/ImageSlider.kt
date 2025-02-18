@@ -5,6 +5,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -20,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cmc.goalmate.presentation.components.GoalMateImage
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 
@@ -38,17 +41,10 @@ fun ImageSlider(
             state = pagerState,
             modifier = Modifier,
         ) { page ->
-//            GoalMateImage(
-//                image = imageUrls[page],
-//            )
-            Box(
-                modifier = modifier
-                    .size(width = 360.dp, height = 270.dp)
-                    .background(color = MaterialTheme.goalMateColors.primaryVariant),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text("이미지 : ${imageUrls[page]}", modifier = Modifier.align(Alignment.Center))
-            }
+            GoalMateImage(
+                image = imageUrls[page],
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         Indicator(
@@ -102,7 +98,7 @@ private fun indicatorColor(isSelected: Boolean): Color =
 private fun ImageSliderPreview() {
     GoalMateTheme {
         ImageSlider(
-            imageUrls = listOf("이미지1", "이미지2", "이미지3"),
+            imageUrls = listOf("이미지1","이미지1"),
             modifier = Modifier,
         )
     }

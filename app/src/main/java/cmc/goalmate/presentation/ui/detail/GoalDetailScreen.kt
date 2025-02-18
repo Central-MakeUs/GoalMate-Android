@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.detail
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -69,6 +70,10 @@ fun GoalDetailScreen(
             }
 
             GoalDetailUiState.Loading -> {}
+
+            is GoalDetailUiState.Error -> {
+                Log.d("yenny", "error! -> ${state.error}")
+            }
         }
     }
 

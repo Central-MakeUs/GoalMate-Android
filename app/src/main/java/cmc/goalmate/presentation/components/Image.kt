@@ -31,20 +31,23 @@ fun GoalMateImage(
 
 @Composable
 fun GoalMateImage(
-    image: String,
+    image: String = "",
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     shape: Shape = RectangleShape,
+    contentScale: ContentScale = ContentScale.FillWidth
 ) {
     SubcomposeAsyncImage(
         model = image,
         contentDescription = contentDescription,
-        contentScale = ContentScale.FillBounds,
+        contentScale = contentScale,
         modifier = modifier.clip(shape),
         error = {
             Image(
                 imageVector = ImageVector.vectorResource(R.drawable.image_goal_default),
                 contentDescription = contentDescription,
+                contentScale = contentScale,
+                modifier = modifier
             )
         },
     )

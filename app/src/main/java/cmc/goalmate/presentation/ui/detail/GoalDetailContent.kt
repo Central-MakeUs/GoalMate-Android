@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.GoalDateRange
+import cmc.goalmate.presentation.components.GoalMateImage
 import cmc.goalmate.presentation.components.ParticipationStatusTag
 import cmc.goalmate.presentation.components.TagSize
 import cmc.goalmate.presentation.components.ThickDivider
@@ -33,7 +34,6 @@ import cmc.goalmate.presentation.ui.detail.components.InfoRow
 import cmc.goalmate.presentation.ui.detail.components.MilestoneRowItem
 import cmc.goalmate.presentation.ui.detail.components.SubTitleText
 import cmc.goalmate.presentation.ui.detail.components.WeeklyRowItem
-import cmc.goalmate.presentation.ui.home.GoalUiStatus
 import cmc.goalmate.presentation.ui.home.components.ClosingSoonLabel
 
 @Composable
@@ -45,7 +45,7 @@ fun GoalDetailContent(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ImageSlider(
+        ThumbnailsSlider(
             imageUrls = goal.imageUrls,
             modifier = Modifier.fillMaxWidth().height(270.dp),
         )
@@ -76,7 +76,7 @@ fun GoalDetailContent(
 
         GoalList(
             title = stringResource(R.string.goal_detail_milestone_title),
-            goals = goal.milestone,
+            goals = goal.milestones,
             modifier = Modifier.padding(
                 vertical = GoalMateDimens.ItemVerticalPaddingLarge,
                 horizontal = GoalMateDimens.HorizontalPadding,
@@ -92,6 +92,23 @@ fun GoalDetailContent(
         // TODO: 상세이미지 위치
         Spacer(Modifier.size(120.dp))
     }
+}
+
+@Composable
+private fun ThumbnailsSlider(
+    imageUrls: List<String>,
+    modifier: Modifier = Modifier,
+) {
+    if (imageUrls.isEmpty()) {
+        GoalMateImage(
+            modifier = modifier
+        )
+        return
+    }
+    ImageSlider(
+        imageUrls = imageUrls,
+        modifier = modifier,
+    )
 }
 
 @Composable
@@ -142,7 +159,9 @@ private fun GoalHeader(
             tagSize = TagSize.LARGE,
             goalUiStatus = goal.state,
         )
-        ClosingSoonLabel()
+        if (goal.isClosingSoon) {
+            ClosingSoonLabel()
+        }
     }
 }
 
@@ -173,8 +192,8 @@ private fun GoalInfo(
             contentTextStyle = contentTextStyle,
         ) {
             GoalDateRange(
-                startDate = goal.startDate,
-                endDate = goal.endDate,
+                startDate = "${goal.startDate} 시작해서",
+                endDate = "${goal.endDate} 끝나요",
                 icon = R.drawable.icon_calendar,
             )
         }
@@ -216,9 +235,9 @@ private fun GoalDescription(
 @Composable
 fun GoalList(
     title: String,
-    goals: List<Milestone>,
+    goals: List<MilestoneUiModel>,
     modifier: Modifier = Modifier,
-    itemContent: @Composable (Milestone, Modifier) -> Unit,
+    itemContent: @Composable (MilestoneUiModel, Modifier) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -241,29 +260,7 @@ fun GoalList(
 private fun GoalDetailScreenPreview() {
     GoalMateTheme {
         GoalDetailContent(
-            goal = GoalDetailUiModel(
-                title = "다온과 함께하는 영어 완전 정복 30일 목표",
-                mentorName = "다온",
-                imageUrls = listOf("이미지1", "이미지2", "이미지3"),
-                category = "영어",
-                totalDates = "30일",
-                startDate = "2025년 01월 01일",
-                endDate = "2025년 01월 30일",
-                time = "하루 평균 4시간",
-                price = "10,000원",
-                discount = "100%",
-                totalPrice = "0원",
-                currentMembers = 7,
-                maxMembers = 23,
-                state = GoalUiStatus.AVAILABLE,
-                description = "“영어를 하고 싶었지만 어떤 방법으로 해야 할 지, 루틴을 세우지만 어떤 방법이 효율적일지 고민이 많지 않았나요?”",
-                weeklyGoal = listOf(
-                    Milestone("1주차", "간단한 단어부터 시작하기"),
-                    Milestone("2주차", "기본 문장 읽기"),
-                ),
-                milestone = listOf(Milestone("1주차", "간단한 단어부터 시작하기"), Milestone("2주차", "기본 문장 읽기")),
-                detailImageUrl = "",
-            ),
+            goal = GoalDetailUiModel.DUMMY,
             modifier = Modifier.background(White),
         )
     }
