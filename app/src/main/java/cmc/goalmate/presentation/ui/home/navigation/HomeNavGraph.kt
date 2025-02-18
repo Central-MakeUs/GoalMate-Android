@@ -8,7 +8,7 @@ import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.app.navigation.navigateToCompleted
 import cmc.goalmate.app.navigation.navigateToInProgress
 import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
-import cmc.goalmate.presentation.ui.comments.GoalCommentsScreen
+import cmc.goalmate.presentation.ui.comments.CommentRoomsScreen
 import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
 import cmc.goalmate.presentation.ui.home.HomeScreen
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
@@ -34,7 +34,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         }
 
         composable<Screen.Main.Comments> {
-            GoalCommentsScreen(
+            CommentRoomsScreen(
                 navigateToCommentDetail = {},
                 navigateToHome = {},
             )

@@ -12,10 +12,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.EmptyGoalContents
 import cmc.goalmate.presentation.components.HeaderTitle
-import cmc.goalmate.presentation.ui.common.UserState
 
 @Composable
-fun GoalCommentsScreen(
+fun CommentRoomsScreen(
     navigateToCommentDetail: NavigateToGoal,
     navigateToHome: () -> Unit,
     viewModel: GoalCommentsViewModel = hiltViewModel(),
@@ -28,9 +27,9 @@ fun GoalCommentsScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        when (val userGoalState = state.userGoalsState) {
-            is UserState.LoggedIn -> {
-                if (userGoalState.data.isEmpty()) {
+        when (state) {
+            is GoalCommentsUiState.LoggedIn -> {
+                if (state.hasNoGoals()) {
                     EmptyGoalContents(
                         onButtonClicked = navigateToHome,
                         modifier = Modifier.fillMaxSize(),
@@ -38,16 +37,19 @@ fun GoalCommentsScreen(
                     return
                 }
                 GoalCommentsContent(
-                    goalComments = userGoalState.data,
+                    goalComments = (state as GoalCommentsUiState.LoggedIn).commentRooms,
                     navigateToCommentDetail = navigateToCommentDetail,
                 )
             }
-            UserState.LoggedOut -> {
+            GoalCommentsUiState.LoggedOut -> {
                 EmptyGoalContents(
                     onButtonClicked = navigateToHome,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
+
+            GoalCommentsUiState.Error -> {}
+            GoalCommentsUiState.Loading -> {}
         }
     }
 }

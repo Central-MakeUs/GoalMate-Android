@@ -25,12 +25,12 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.comments.model.GoalCommentUiModel
+import cmc.goalmate.presentation.ui.comments.model.CommentRoomsUiModel
 import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
 
 @Composable
 fun GoalCommentsContent(
-    goalComments: List<GoalCommentUiModel>,
+    goalComments: List<CommentRoomsUiModel>,
     navigateToCommentDetail: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -44,7 +44,7 @@ fun GoalCommentsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = GoalMateDimens.HorizontalPadding)
-                    .clickable { navigateToCommentDetail(goalComment.goalId) },
+                    .clickable { navigateToCommentDetail(goalComment.roomId) },
             )
         }
     }
@@ -52,7 +52,7 @@ fun GoalCommentsContent(
 
 @Composable
 private fun GoalItem(
-    goal: GoalCommentUiModel,
+    goal: CommentRoomsUiModel,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -110,7 +110,7 @@ private fun GoalItem(
 private fun GoalCommentsContentPreview() {
     GoalMateTheme {
         GoalCommentsContent(
-            goalComments = listOf(GoalCommentUiModel.DUMMY),
+            goalComments = listOf(CommentRoomsUiModel.DUMMY),
             navigateToCommentDetail = {},
         )
     }
