@@ -20,4 +20,9 @@ class GoalsDataSource
             runCatching {
                 goalService.getGoalDetail(goalId).getOrThrow().toData()
             }
+
+        suspend fun createGoalForMentee(goalId: Int): Result<Int> =
+            runCatching {
+                goalService.createGoalForMentee(goalId).getOrThrow()
+            }
     }

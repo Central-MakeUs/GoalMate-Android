@@ -6,6 +6,7 @@ import cmc.goalmate.data.mapper.toDomain
 import cmc.goalmate.data.model.toDomain
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
+import cmc.goalmate.domain.model.CreatedGoalId
 import cmc.goalmate.domain.model.GoalDetail
 import cmc.goalmate.domain.model.Goals
 import cmc.goalmate.domain.repository.GoalsRepository
@@ -26,6 +27,16 @@ class GoalsRepositoryImpl
             goalsDataSource.getGoalDetail(goalId).fold(
                 onSuccess = { goalDetail ->
                     DomainResult.Success(goalDetail.toDomain())
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
+
+        override suspend fun startGoal(goalId: Int): DomainResult<CreatedGoalId, DataError.Network> =
+            goalsDataSource.createGoalForMentee(goalId).fold(
+                onSuccess = {
+                    DomainResult.Success(CreatedGoalId(it))
                 },
                 onFailure = {
                     DomainResult.Error(it.toDataError())
