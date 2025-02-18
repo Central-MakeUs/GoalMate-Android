@@ -1,5 +1,7 @@
 package cmc.goalmate.data.datasource
 
+import cmc.goalmate.data.mapper.toData
+import cmc.goalmate.data.model.GoalDetailDto
 import cmc.goalmate.data.model.GoalsDto
 import cmc.goalmate.data.model.toData
 import cmc.goalmate.data.util.getOrThrow
@@ -12,5 +14,10 @@ class GoalsDataSource
         suspend fun getGoals(): Result<GoalsDto> =
             runCatching {
                 goalService.getGoals().getOrThrow().toData()
+            }
+
+        suspend fun getGoalDetail(goalId: Int): Result<GoalDetailDto> =
+            runCatching {
+                goalService.getGoalDetail(goalId).getOrThrow().toData()
             }
     }
