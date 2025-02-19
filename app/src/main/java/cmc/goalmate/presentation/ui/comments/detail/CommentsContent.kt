@@ -63,7 +63,6 @@ fun CommentsContent(
                     modifier = Modifier.align(Alignment.Center),
                 )
             }
-            return
         } else {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(44.dp),

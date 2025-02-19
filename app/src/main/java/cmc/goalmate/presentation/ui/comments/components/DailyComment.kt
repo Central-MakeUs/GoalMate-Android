@@ -23,7 +23,7 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
-import cmc.goalmate.presentation.ui.comments.detail.model.Sender
+import cmc.goalmate.presentation.ui.comments.detail.model.SenderUiModel
 
 @Composable
 fun DailyComment(
@@ -56,11 +56,11 @@ fun DailyComment(
 @Composable
 private fun DailyCommentItem(
     content: String,
-    sender: Sender,
+    sender: SenderUiModel,
     modifier: Modifier,
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
-        if (sender == Sender.MENTEE) Spacer(Modifier.width(80.dp))
+        if (sender == SenderUiModel.MENTEE) Spacer(Modifier.width(80.dp))
 
         Text(
             text = content,
@@ -74,15 +74,15 @@ private fun DailyCommentItem(
                 .padding(GoalMateDimens.HorizontalPadding),
         )
 
-        if (sender == Sender.MENTOR) Spacer(Modifier.width(80.dp))
+        if (sender == SenderUiModel.MENTOR) Spacer(Modifier.width(80.dp))
     }
 }
 
 @Composable
-fun Sender.backgroundColor(): Color =
+fun SenderUiModel.backgroundColor(): Color =
     when (this) {
-        Sender.MENTEE -> MaterialTheme.goalMateColors.completed
-        Sender.MENTOR -> MaterialTheme.goalMateColors.surfaceVariant
+        SenderUiModel.MENTEE -> MaterialTheme.goalMateColors.completed
+        SenderUiModel.MENTOR -> MaterialTheme.goalMateColors.surfaceVariant
     }
 
 @Composable
