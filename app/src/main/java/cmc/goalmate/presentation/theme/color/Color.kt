@@ -18,6 +18,8 @@ val Primary900 = Color(0xFF709100)
 val Primary50 = Color(0xFFF4FFE5)
 val Primary100 = Color(0xFFE5FFBE)
 
+val Secondary03 = Color(0xFFF7FEFF)
+
 val Secondary01_400 = Color(0xFF8D4EFF)
 val Secondary01_500 = Color(0xFF7423FF)
 val Secondary01_50 = Color(0xFFF1E7FF)
@@ -47,7 +49,7 @@ sealed class ColorSet {
             material = lightColorScheme(
                 primary = Primary400,
                 onPrimary = Black,
-                secondary = Secondary01_500,
+                secondary = Secondary01_400,
                 onSecondary = White,
                 surface = Grey200,
                 onSurface = Grey800,
