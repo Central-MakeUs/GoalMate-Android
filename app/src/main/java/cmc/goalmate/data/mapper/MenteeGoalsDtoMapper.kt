@@ -53,12 +53,10 @@ fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = goalMateDateFormat
         menteeGoalStatus = convertMenteeGoalStatus(),
     )
 
-private fun MenteeGoalDto.convertMenteeGoalStatus(): MenteeGoalStatus {
-    val goalProgress = if (totalTodoCount > 0) totalCompletedCount.toFloat() / totalTodoCount else 0f
-    return when (menteeGoalStatus) {
+private fun MenteeGoalDto.convertMenteeGoalStatus(): MenteeGoalStatus =
+    when (menteeGoalStatus) {
         "IN_PROGRESS" -> MenteeGoalStatus.InProgress
-        "COMPLETED" -> MenteeGoalStatus.Completed(requireNotNull(finalComment), goalProgress)
+        "COMPLETED" -> MenteeGoalStatus.Completed(requireNotNull(finalComment))
         "CANCELED" -> MenteeGoalStatus.Canceled
         else -> MenteeGoalStatus.Unknown
     }
-}
