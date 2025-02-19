@@ -20,9 +20,12 @@ data class MenteeGoal(
     val menteeGoalStatus: MenteeGoalStatus,
 )
 
-enum class MenteeGoalStatus {
-    IN_PROGRESS,
-    COMPLETED,
-    CANCELED,
-    UNKNOWN,
+sealed class MenteeGoalStatus {
+    data object InProgress : MenteeGoalStatus()
+
+    data class Completed(val finalComment: String, val totalProgress: Float) : MenteeGoalStatus()
+
+    data object Canceled : MenteeGoalStatus()
+
+    data object Unknown : MenteeGoalStatus()
 }

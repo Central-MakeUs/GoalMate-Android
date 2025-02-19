@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
-import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalDateRange
@@ -34,7 +33,7 @@ import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.detail.components.InfoRow
 import cmc.goalmate.presentation.ui.detail.components.SubTitleText
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState
+import cmc.goalmate.presentation.ui.mygoals.MyGoalUiState
 import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiModel
 import cmc.goalmate.presentation.ui.progress.components.FinalMessage
 import cmc.goalmate.presentation.ui.progress.components.Subtitle
@@ -134,7 +133,7 @@ private fun CompletedAchievementProgress(
 
         GoalMateProgressBar(
             currentProgress = achievementProgress,
-            myGoalState = MyGoalState.IN_PROGRESS,
+            myGoalState = MyGoalUiState.IN_PROGRESS,
             thickness = 14.dp,
         )
     }

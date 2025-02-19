@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.mygoals
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -35,7 +36,7 @@ fun MyGoalsScreen(
         )
         when (state) {
             is MyGoalsUiState.LoggedIn -> {
-                handleLoggedInState(
+                HandleLoggedInState(
                     myGoals = (state as MyGoalsUiState.LoggedIn).myGoals,
                     navigateToCompletedGoal = navigateToCompletedGoal,
                     navigateToProgressGoal = navigateToProgressGoal,
@@ -50,14 +51,16 @@ fun MyGoalsScreen(
                 )
             }
 
-            MyGoalsUiState.Error -> {}
+            is MyGoalsUiState.Error -> {
+                Log.d("yenny", "myGoals error : ${(state as MyGoalsUiState.Error).error}")
+            }
             MyGoalsUiState.Loading -> {}
         }
     }
 }
 
 @Composable
-private fun handleLoggedInState(
+private fun HandleLoggedInState(
     myGoals: List<MyGoalUiModel>,
     navigateToCompletedGoal: NavigateToGoal,
     navigateToProgressGoal: NavigateToGoal,

@@ -16,7 +16,7 @@ data class MyGoalUiModel(
     val endDate: String,
     val daysFromStart: Int,
     val goalProgress: Float,
-    val goalState: MyGoalState,
+    val goalState: MyGoalUiState,
     val remainGoals: Int = 0,
 ) {
     companion object {
@@ -29,7 +29,7 @@ data class MyGoalUiModel(
             endDate = "2025년 01월 30일까지",
             daysFromStart = 2,
             goalProgress = 0.2f,
-            goalState = MyGoalState.IN_PROGRESS,
+            goalState = MyGoalUiState.IN_PROGRESS,
         )
         val DUMMY2 = MyGoalUiModel(
             goalId = 0,
@@ -40,12 +40,12 @@ data class MyGoalUiModel(
             endDate = "2025년 01월 30일까지",
             daysFromStart = 2,
             goalProgress = 0.2f,
-            goalState = MyGoalState.COMPLETED,
+            goalState = MyGoalUiState.COMPLETED,
         )
     }
 }
 
-enum class MyGoalState(
+enum class MyGoalUiState(
     val label: String,
     private val dateFormat: String,
 ) {
@@ -76,8 +76,8 @@ fun MenteeGoal.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("
     )
 }
 
-fun MenteeGoalStatus.toUi(): MyGoalState =
+fun MenteeGoalStatus.toUi(): MyGoalUiState =
     when (this) {
-        MenteeGoalStatus.IN_PROGRESS -> MyGoalState.IN_PROGRESS
-        else -> MyGoalState.COMPLETED
+        MenteeGoalStatus.InProgress -> MyGoalUiState.IN_PROGRESS
+        else -> MyGoalUiState.COMPLETED
     }

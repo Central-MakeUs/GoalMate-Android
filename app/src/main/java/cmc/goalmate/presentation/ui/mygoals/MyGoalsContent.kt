@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import cmc.goalmate.app.navigation.NavigateToGoal
@@ -27,16 +26,16 @@ fun MyGoalsContent(
         items(myGoals) { myGoal ->
             Column {
                 when (myGoal.goalState) {
-                    MyGoalState.IN_PROGRESS -> InProgressGoalItem(
+                    MyGoalUiState.IN_PROGRESS -> InProgressGoalItem(
                         myGoal = myGoal,
-                        navigateToProgressPage = navigateToProgressGoal,
+                        onStartButtonClicked = { navigateToProgressGoal(myGoal.goalId) },
                         modifier = Modifier,
                     )
 
-                    MyGoalState.COMPLETED -> CompletedGoalItem(
+                    MyGoalUiState.COMPLETED -> CompletedGoalItem(
                         myGoal = myGoal,
-                        navigateToGoalDetail = navigateToGoalDetail,
-                        navigateToCompletedGoalPage = navigateToCompletedGoal,
+                        onCompletedButtonClicked = { navigateToCompletedGoal(myGoal.goalId) },
+                        onRestartButtonClicked = { navigateToGoalDetail(myGoal.goalId) },
                         modifier = Modifier,
                     )
                 }

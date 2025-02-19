@@ -97,7 +97,6 @@ private fun RowItem(
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = labelText,
@@ -108,7 +107,7 @@ private fun RowItem(
                     color = labelBackgroundColor,
                     shape = RoundedCornerShape(6.dp),
                 )
-                .padding(6.dp),
+                .padding(horizontal = 6.dp, vertical = 2.dp),
         )
         Spacer(modifier = Modifier.size(12.dp))
         Text(
@@ -162,7 +161,7 @@ private fun WeeklyRowItemPreview() {
     GoalMateTheme {
         WeeklyRowItem(
             label = "1주",
-            content = "간단한 코딩부터 시작하기",
+            content = "간단한 코딩부터 시작해봅시다 화이팅 목표 가 길 경우에는 어떻게 되나 봅시다",
             modifier = Modifier.fillMaxWidth(),
         )
     }

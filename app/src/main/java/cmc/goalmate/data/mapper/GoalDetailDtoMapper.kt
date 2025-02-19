@@ -52,7 +52,6 @@ fun ImageResponse.toData(): ImageDto =
         imageUrl = this.imageUrl,
     )
 
-// GoalDetailDto -> GoalDetail 매핑
 fun GoalDetailDto.toDomain(): GoalDetail =
     GoalDetail(
         id = this.id,

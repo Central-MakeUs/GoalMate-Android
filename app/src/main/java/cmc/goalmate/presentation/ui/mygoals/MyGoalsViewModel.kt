@@ -1,10 +1,10 @@
 package cmc.goalmate.presentation.ui.mygoals
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.MenteeGoalRepository
+import cmc.goalmate.presentation.ui.auth.asUiText
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,7 +20,7 @@ sealed interface MyGoalsUiState {
 
     data object LoggedOut : MyGoalsUiState
 
-    data object Error : MyGoalsUiState
+    data class Error(val error: String) : MyGoalsUiState
 }
 
 @HiltViewModel
@@ -33,12 +33,9 @@ class MyGoalsViewModel
         val state: StateFlow<MyGoalsUiState> = isLoggedIn
             .map { isLoggedIn ->
                 if (isLoggedIn) {
-                    Log.d("yenny", "load mentees goals")
-                    val result = menteeGoalRepository.getMenteeGoals()
-                    Log.d("yenny", "result -> $result")
-                    when (result) {
+                    when (val result = menteeGoalRepository.getMenteeGoals()) {
                         is DomainResult.Success -> MyGoalsUiState.LoggedIn(result.data.toUi())
-                        is DomainResult.Error -> MyGoalsUiState.Error
+                        is DomainResult.Error -> MyGoalsUiState.Error(result.error.asUiText())
                     }
                 } else {
                     MyGoalsUiState.LoggedOut

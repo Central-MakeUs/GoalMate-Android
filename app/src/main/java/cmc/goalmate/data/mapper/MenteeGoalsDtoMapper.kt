@@ -4,10 +4,6 @@ import cmc.goalmate.data.model.MenteeGoalDto
 import cmc.goalmate.data.model.MenteeGoalsDto
 import cmc.goalmate.domain.model.MenteeGoal
 import cmc.goalmate.domain.model.MenteeGoalStatus
-import cmc.goalmate.domain.model.MenteeGoalStatus.CANCELED
-import cmc.goalmate.domain.model.MenteeGoalStatus.COMPLETED
-import cmc.goalmate.domain.model.MenteeGoalStatus.IN_PROGRESS
-import cmc.goalmate.domain.model.MenteeGoalStatus.UNKNOWN
 import cmc.goalmate.domain.model.MenteeGoals
 import cmc.goalmate.remote.dto.response.MenteeGoalResponse
 import cmc.goalmate.remote.dto.response.MenteeGoalsResponse
@@ -54,13 +50,15 @@ fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = goalMateDateFormat
         todayRemainingCount = todayRemainingCount,
         totalTodoCount = totalTodoCount,
         totalCompletedCount = totalCompletedCount,
-        menteeGoalStatus = convertMenteeGoalStatus(menteeGoalStatus),
+        menteeGoalStatus = convertMenteeGoalStatus(),
     )
 
-private fun convertMenteeGoalStatus(status: String): MenteeGoalStatus =
-    when (status) {
-        "IN_PROGRESS" -> IN_PROGRESS
-        "COMPLETED" -> COMPLETED
-        "CANCELED" -> CANCELED
-        else -> UNKNOWN
+private fun MenteeGoalDto.convertMenteeGoalStatus(): MenteeGoalStatus {
+    val goalProgress = if (totalTodoCount > 0) totalCompletedCount.toFloat() / totalTodoCount else 0f
+    return when (menteeGoalStatus) {
+        "IN_PROGRESS" -> MenteeGoalStatus.InProgress
+        "COMPLETED" -> MenteeGoalStatus.Completed(requireNotNull(finalComment), goalProgress)
+        "CANCELED" -> MenteeGoalStatus.Canceled
+        else -> MenteeGoalStatus.Unknown
     }
+}

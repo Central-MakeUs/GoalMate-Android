@@ -31,7 +31,7 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState
+import cmc.goalmate.presentation.ui.mygoals.MyGoalUiState
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
 import cmc.goalmate.presentation.ui.progress.components.GoalMateTimer
 import cmc.goalmate.presentation.ui.progress.components.Subtitle
@@ -195,7 +195,7 @@ private fun AchievementProgress(
         )
         GoalMateProgressBar(
             currentProgress = totalProgressPercentage,
-            myGoalState = MyGoalState.IN_PROGRESS,
+            myGoalState = MyGoalUiState.IN_PROGRESS,
             thickness = 20.dp,
             modifier = Modifier.fillMaxWidth(),
         )

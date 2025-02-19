@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
-import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalDateRange
 import cmc.goalmate.presentation.components.GoalMateButton
@@ -35,7 +33,7 @@ import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
 
 @Composable
-private fun MyGoalItem(
+private fun MyGoalItemLayout(
     myGoal: MyGoalUiModel,
     buttonContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
@@ -110,7 +108,7 @@ private fun Thumbnail(
     modifier: Modifier = Modifier,
 ) {
     val imageModifier = Modifier.run {
-        if (myGoal.goalState == MyGoalState.COMPLETED) {
+        if (myGoal.goalState == MyGoalUiState.COMPLETED) {
             this.alpha(0.2f)
         } else {
             this
@@ -126,7 +124,7 @@ private fun Thumbnail(
             modifier = imageModifier.size(width = 123.dp, height = 91.dp),
             shape = RoundedCornerShape(4.dp),
         )
-        if (myGoal.goalState == MyGoalState.COMPLETED) {
+        if (myGoal.goalState == MyGoalUiState.COMPLETED) {
             GoalMateImage(
                 image = R.drawable.image_completed,
                 modifier = Modifier.size(width = 123.dp, height = 91.dp),
@@ -137,7 +135,7 @@ private fun Thumbnail(
 
 @Composable
 private fun ProgressBar(
-    myGoalState: MyGoalState,
+    myGoalState: MyGoalUiState,
     currentProgress: Float,
     modifier: Modifier = Modifier,
 ) {
@@ -163,7 +161,7 @@ private fun ProgressBar(
 @Composable
 fun InProgressGoalItem(
     myGoal: MyGoalUiModel,
-    navigateToProgressPage: NavigateToGoal,
+    onStartButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val buttonText = if (myGoal.remainGoals > 0) {
@@ -172,12 +170,12 @@ fun InProgressGoalItem(
         stringResource(R.string.my_goals_in_progress_button)
     }
 
-    MyGoalItem(
+    MyGoalItemLayout(
         myGoal = myGoal,
         buttonContent = {
             GoalMateButton(
                 content = buttonText,
-                onClick = { navigateToProgressPage(myGoal.goalId) },
+                onClick = onStartButtonClicked,
                 buttonSize = ButtonSize.SMALL,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -189,11 +187,11 @@ fun InProgressGoalItem(
 @Composable
 fun CompletedGoalItem(
     myGoal: MyGoalUiModel,
-    navigateToCompletedGoalPage: NavigateToGoal,
-    navigateToGoalDetail: NavigateToGoal,
+    onRestartButtonClicked: () -> Unit,
+    onCompletedButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MyGoalItem(
+    MyGoalItemLayout(
         myGoal = myGoal,
         buttonContent = {
             Row(
@@ -202,7 +200,7 @@ fun CompletedGoalItem(
             ) {
                 GoalMateButton(
                     content = stringResource(R.string.my_goals_completed_restart_button),
-                    onClick = { navigateToGoalDetail(myGoal.goalId) },
+                    onClick = onRestartButtonClicked,
                     hasOutLine = true,
                     modifier = Modifier.weight(1f),
                     buttonSize = ButtonSize.SMALL,
@@ -210,7 +208,7 @@ fun CompletedGoalItem(
                 Spacer(Modifier.size(12.dp))
                 GoalMateButton(
                     content = stringResource(R.string.my_goals_completed_detail_button),
-                    onClick = { navigateToCompletedGoalPage(myGoal.goalId) },
+                    onClick = onCompletedButtonClicked,
                     modifier = Modifier.weight(1f),
                     buttonSize = ButtonSize.SMALL,
                 )
@@ -224,7 +222,7 @@ fun CompletedGoalItem(
 private fun MyGoalItemActivePreview() {
     GoalMateTheme {
         InProgressGoalItem(
-            myGoal = MyGoalUiModel.DUMMY.copy(goalState = MyGoalState.IN_PROGRESS),
+            myGoal = MyGoalUiModel.DUMMY.copy(goalState = MyGoalUiState.IN_PROGRESS),
             {},
             modifier = Modifier.background(Color.Blue),
         )
@@ -236,7 +234,7 @@ private fun MyGoalItemActivePreview() {
 private fun MyGoalItemCompletedPreview() {
     GoalMateTheme {
         CompletedGoalItem(
-            myGoal = MyGoalUiModel.DUMMY.copy(goalState = MyGoalState.COMPLETED),
+            myGoal = MyGoalUiModel.DUMMY.copy(goalState = MyGoalUiState.COMPLETED),
             {},
             {},
             modifier = Modifier.background(Color.White),

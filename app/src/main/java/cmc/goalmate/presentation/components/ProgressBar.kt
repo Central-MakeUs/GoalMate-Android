@@ -19,14 +19,14 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.mygoals.MyGoalState
+import cmc.goalmate.presentation.ui.mygoals.MyGoalUiState
 import cmc.goalmate.presentation.ui.mygoals.progressBackgroundColor
 import cmc.goalmate.presentation.ui.mygoals.progressIndicatorColor
 
 @Composable
 fun GoalMateProgressBar(
     currentProgress: Float,
-    myGoalState: MyGoalState,
+    myGoalState: MyGoalUiState,
     thickness: Dp,
     modifier: Modifier = Modifier,
 ) {
@@ -53,7 +53,7 @@ private fun GoalMateProgressBarPreview() {
     GoalMateTheme {
         GoalMateProgressBar(
             currentProgress = 70f,
-            myGoalState = MyGoalState.IN_PROGRESS,
+            myGoalState = MyGoalUiState.IN_PROGRESS,
             thickness = 14.dp,
         )
     }
