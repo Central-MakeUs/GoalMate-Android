@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import cmc.goalmate.app.navigation.Screen
+import cmc.goalmate.app.navigation.navigateToCommentDetail
 import cmc.goalmate.app.navigation.navigateToCompleted
 import cmc.goalmate.app.navigation.navigateToInProgress
 import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
@@ -35,8 +36,8 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
 
         composable<Screen.Main.Comments> {
             CommentRoomsScreen(
-                navigateToCommentDetail = {},
-                navigateToHome = {},
+                navigateToCommentDetail = navController::navigateToCommentDetail,
+                navigateToHome = { navController.navigateToHome(Screen.Main.Comments) },
             )
         }
 

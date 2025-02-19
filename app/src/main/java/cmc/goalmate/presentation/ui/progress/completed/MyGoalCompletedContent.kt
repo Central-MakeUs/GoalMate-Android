@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
+import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalDateRange
@@ -41,7 +42,6 @@ import cmc.goalmate.presentation.ui.progress.components.Subtitle
 @Composable
 fun MyGoalCompletedContent(
     completedGoal: CompletedGoalUiModel,
-    navigateToComments: NavigateToGoal,
     navigateToGoalDetail: NavigateToGoal,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
@@ -71,7 +71,9 @@ fun MyGoalCompletedContent(
                 nickName = "마루",
                 mentor = "다온",
                 comment = completedGoal.finalComment,
-                navigateToMoreComments = { navigateToComments(completedGoal.id) },
+                navigateToMoreComments = {
+                    // TODO: 코멘트 화면 이동
+                },
             )
             Spacer(Modifier.size(156.dp))
         }
@@ -184,7 +186,6 @@ private fun MyGoalCompletedContentPreview() {
     GoalMateTheme {
         MyGoalCompletedContent(
             completedGoal = CompletedGoalUiModel.DUMMY,
-            {},
             {},
             {},
             modifier = Modifier.background(White),

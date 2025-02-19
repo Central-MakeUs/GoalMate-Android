@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmc.goalmate.presentation.ui.auth.navigation.authNavGraph
-import cmc.goalmate.presentation.ui.comments.detail.CommentsScreen
+import cmc.goalmate.presentation.ui.comments.detail.CommentsDetailScreen
 import cmc.goalmate.presentation.ui.detail.navigation.detailNavGraph
 import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
 import cmc.goalmate.presentation.ui.home.navigation.mainNavGraph
@@ -27,23 +27,25 @@ fun GoalMateNavHost(navController: NavHostController) {
 
         composable<Screen.InProgressGoal> {
             InProgressScreen(
-                navigateToGoalDetail = { navController.navigateToDetail(it) },
-                navigateToComments = { navController.navigateToComments(it) },
+                navigateToGoalDetail = navController::navigateToDetail,
+                navigateToComments = navController::navigateToCommentDetail,
                 navigateBack = {},
             )
         }
 
         composable<Screen.CompletedGoal> { navBackStackEntry ->
             CompletedScreen(
-                navigateToGoalDetail = { navController.navigateToDetail(it) },
-                navigateToComments = { navController.navigateToComments(it) },
+                navigateToGoalDetail = navController::navigateToDetail,
+                navigateToComments = navController::navigateToCommentDetail,
                 navigateToHome = { navController.navigateToHome(navBackStackEntry.toRoute<Screen.CompletedGoal>()) },
                 navigateBack = {},
             )
         }
 
-        composable<Screen.Comments> {
-            CommentsScreen(
+        composable<Screen.CommentsDetail> { backStackEntry ->
+            val content = backStackEntry.toRoute<Screen.CommentsDetail>()
+            CommentsDetailScreen(
+                goalTitle = content.goalTitle,
                 navigateBack = {},
             )
         }
@@ -58,6 +60,9 @@ fun NavController.navigateToCompleted(goalId: Int) {
     navigate(Screen.CompletedGoal(goalId = goalId))
 }
 
-fun NavController.navigateToComments(goalId: Int) {
-    navigate(Screen.Comments(goalId = goalId))
+fun NavController.navigateToCommentDetail(
+    id: Int,
+    title: String,
+) {
+    navigate(Screen.CommentsDetail(roomId = id, goalTitle = title))
 }

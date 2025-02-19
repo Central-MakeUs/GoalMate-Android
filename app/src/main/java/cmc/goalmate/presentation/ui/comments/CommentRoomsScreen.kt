@@ -9,13 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cmc.goalmate.app.navigation.NavigateToGoal
+import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.presentation.components.EmptyGoalContents
 import cmc.goalmate.presentation.components.HeaderTitle
 
 @Composable
 fun CommentRoomsScreen(
-    navigateToCommentDetail: NavigateToGoal,
+    navigateToCommentDetail: NavigateToCommentDetail,
     navigateToHome: () -> Unit,
     viewModel: GoalCommentsViewModel = hiltViewModel(),
 ) {
@@ -36,7 +36,7 @@ fun CommentRoomsScreen(
                     )
                     return
                 }
-                GoalCommentsContent(
+                CommentRoomsContent(
                     goalComments = (state as GoalCommentsUiState.LoggedIn).commentRooms,
                     navigateToCommentDetail = navigateToCommentDetail,
                 )

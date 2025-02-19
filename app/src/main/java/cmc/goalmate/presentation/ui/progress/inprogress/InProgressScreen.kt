@@ -6,12 +6,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 
 @Composable
 fun InProgressScreen(
-    navigateToComments: NavigateToGoal,
+    navigateToComments: NavigateToCommentDetail,
     navigateToGoalDetail: NavigateToGoal,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -27,7 +28,7 @@ fun InProgressScreen(
             title = state.goalInfo.title,
         )
 
-         InProgressContent(
+        InProgressContent(
             state = state,
             onAction = viewModel::onAction, // TODO: Action 분기 처리
         )

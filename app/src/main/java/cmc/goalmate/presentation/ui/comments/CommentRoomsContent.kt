@@ -29,9 +29,9 @@ import cmc.goalmate.presentation.ui.comments.model.CommentRoomsUiModel
 import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
 
 @Composable
-fun GoalCommentsContent(
+fun CommentRoomsContent(
     goalComments: List<CommentRoomsUiModel>,
-    navigateToCommentDetail: (Int) -> Unit,
+    navigateToCommentDetail: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -39,19 +39,19 @@ fun GoalCommentsContent(
         modifier = modifier,
     ) {
         items(items = goalComments) { goalComment ->
-            GoalItem(
+            RoomItem(
                 goal = goalComment,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = GoalMateDimens.HorizontalPadding)
-                    .clickable { navigateToCommentDetail(goalComment.roomId) },
+                    .clickable { navigateToCommentDetail(goalComment.roomId, goalComment.title) },
             )
         }
     }
 }
 
 @Composable
-private fun GoalItem(
+private fun RoomItem(
     goal: CommentRoomsUiModel,
     modifier: Modifier = Modifier,
 ) {
@@ -109,9 +109,9 @@ private fun GoalItem(
 @Preview(showBackground = true, showSystemUi = true)
 private fun GoalCommentsContentPreview() {
     GoalMateTheme {
-        GoalCommentsContent(
+        CommentRoomsContent(
             goalComments = listOf(CommentRoomsUiModel.DUMMY),
-            navigateToCommentDetail = {},
+            navigateToCommentDetail = { id, title -> },
         )
     }
 }
