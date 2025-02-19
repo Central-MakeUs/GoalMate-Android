@@ -2,11 +2,12 @@ package cmc.goalmate.presentation.ui.progress.completed
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.AppBarWithBackButton
-import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiModel
 
 @Composable
 fun CompletedScreen(
@@ -14,18 +15,43 @@ fun CompletedScreen(
     navigateToGoalDetail: NavigateToGoal,
     navigateToHome: () -> Unit,
     navigateBack: () -> Unit,
-    modifier: Modifier = Modifier,
+    viewModel: CompletedGoalViewModel = hiltViewModel(),
 ) {
-    Column(modifier = modifier) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    Column {
         AppBarWithBackButton(
             onBackButtonClicked = navigateBack,
             title = "목표 완료",
         )
-        // TODO : 뷰모델 사용 여부 보류 - 서버와 이야기 해보기
-        MyGoalCompletedContent(
-            completedGoal = CompletedGoalUiModel.DUMMY,
-            navigateToHome = navigateToHome,
+        CompletedScreenContent(
+            state = state,
+            navigateToComments = navigateToComments,
             navigateToGoalDetail = navigateToGoalDetail,
+            navigateToHome = navigateToHome,
         )
+    }
+}
+
+@Composable
+private fun CompletedScreenContent(
+    state: CompletedGoalUiState,
+    navigateToComments: NavigateToCommentDetail,
+    navigateToGoalDetail: NavigateToGoal,
+    navigateToHome: () -> Unit,
+) {
+    when (state) {
+        CompletedGoalUiState.Error -> {}
+        CompletedGoalUiState.Loading -> {}
+        is CompletedGoalUiState.Success -> {
+            MyGoalCompletedContent(
+                completedGoal = state.goal,
+                navigateToHome = { navigateToHome() },
+                navigateToGoalDetail = { navigateToGoalDetail(state.goal.id) },
+                navigateToCommentDetail = {
+                    // ROOM ID랑 Title 넘기기
+                },
+            )
+        }
     }
 }

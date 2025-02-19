@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
-import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalDateRange
 import cmc.goalmate.presentation.components.GoalMateButton
@@ -41,8 +40,9 @@ import cmc.goalmate.presentation.ui.progress.components.Subtitle
 @Composable
 fun MyGoalCompletedContent(
     completedGoal: CompletedGoalUiModel,
-    navigateToGoalDetail: NavigateToGoal,
+    navigateToGoalDetail: () -> Unit,
     navigateToHome: () -> Unit,
+    navigateToCommentDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding)) {
@@ -57,7 +57,7 @@ fun MyGoalCompletedContent(
         ) {
             MoreOptionButton(
                 label = "목표 상세보기",
-                onClick = { navigateToGoalDetail(completedGoal.id) },
+                onClick = navigateToGoalDetail,
                 modifier = Modifier.align(Alignment.End),
             )
             GoalInfoOverview(
@@ -185,6 +185,7 @@ private fun MyGoalCompletedContentPreview() {
     GoalMateTheme {
         MyGoalCompletedContent(
             completedGoal = CompletedGoalUiModel.DUMMY,
+            {},
             {},
             {},
             modifier = Modifier.background(White),

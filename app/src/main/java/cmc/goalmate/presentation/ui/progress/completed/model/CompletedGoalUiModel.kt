@@ -1,5 +1,10 @@
 package cmc.goalmate.presentation.ui.progress.completed.model
 
+import cmc.goalmate.domain.model.MenteeGoalInfo
+import cmc.goalmate.domain.model.MenteeGoalStatus
+import cmc.goalmate.presentation.ui.util.calculateProgress
+import java.time.format.DateTimeFormatter
+
 data class CompletedGoalUiModel(
     val id: Int,
     val title: String,
@@ -29,4 +34,18 @@ data class CompletedGoalUiModel(
                 "f",
         )
     }
+}
+
+internal fun MenteeGoalInfo.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): CompletedGoalUiModel {
+    require(menteeGoalStatus is MenteeGoalStatus.Completed) { "Goal status must be Completed : $menteeGoalStatus" }
+    return CompletedGoalUiModel(
+        id = id,
+        title = title,
+        mentor = mentorName,
+        period = "${period}일",
+        startDate = "${startDate.format(formatter)} 부터",
+        endDate = "${endDate.format(formatter)} 까지",
+        achievementProgress = calculateProgress(totalCompletedCount, totalTodoCount),
+        finalComment = menteeGoalStatus.finalComment,
+    )
 }
