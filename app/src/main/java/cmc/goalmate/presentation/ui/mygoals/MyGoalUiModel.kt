@@ -3,9 +3,9 @@ package cmc.goalmate.presentation.ui.mygoals
 import cmc.goalmate.domain.model.MenteeGoal
 import cmc.goalmate.domain.model.MenteeGoalStatus
 import cmc.goalmate.domain.model.MenteeGoals
-import java.time.LocalDate
+import cmc.goalmate.presentation.ui.util.calculateDaysFromStart
+import cmc.goalmate.presentation.ui.util.calculateProgress
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 data class MyGoalUiModel(
     val goalId: Int,
@@ -58,23 +58,19 @@ enum class MyGoalUiState(
 
 fun MenteeGoals.toUi(): List<MyGoalUiModel> = this.goals.map { it.toUi() }
 
-fun MenteeGoal.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): MyGoalUiModel {
-    val daysFromStart = ChronoUnit.DAYS.between(LocalDate.now(), endDate).toInt().coerceAtLeast(0)
-    val goalProgress = if (totalTodoCount > 0) totalCompletedCount.toFloat() / totalTodoCount else 0f
-
-    return MyGoalUiModel(
+fun MenteeGoal.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): MyGoalUiModel =
+    MyGoalUiModel(
         goalId = id,
         title = title,
         thumbnailUrl = mainImage ?: "",
         mentorName = mentorName,
         startDate = "${startDate.format(formatter)} 부터",
         endDate = "${endDate.format(formatter)} 까지",
-        daysFromStart = daysFromStart,
-        goalProgress = goalProgress,
+        daysFromStart = calculateDaysFromStart(endDate),
+        goalProgress = calculateProgress(totalCompletedCount, totalTodoCount),
         goalState = menteeGoalStatus.toUi(),
         remainGoals = todayRemainingCount,
     )
-}
 
 fun MenteeGoalStatus.toUi(): MyGoalUiState =
     when (this) {
