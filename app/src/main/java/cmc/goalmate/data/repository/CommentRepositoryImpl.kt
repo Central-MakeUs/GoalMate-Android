@@ -28,4 +28,40 @@ class CommentRepositoryImpl
                 },
                 onFailure = { DomainResult.Error(it.toDataError()) },
             )
+
+        override suspend fun postComment(
+            roomId: Int,
+            content: String,
+        ): DomainResult<Int, DataError.Network> =
+            commentDataSource.postComment(roomId, content).fold(
+                onSuccess = {
+                    DomainResult.Success(it.id)
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
+
+        override suspend fun updateComment(
+            commentId: Int,
+            content: String,
+        ): DomainResult<Int, DataError.Network> =
+            commentDataSource.updateComment(commentId, content).fold(
+                onSuccess = {
+                    DomainResult.Success(it.id)
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
+
+        override suspend fun deleteComment(commentId: Int): DomainResult<Unit, DataError.Network> =
+            commentDataSource.deleteComment(commentId).fold(
+                onSuccess = {
+                    DomainResult.Success(Unit)
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
     }

@@ -9,4 +9,16 @@ interface CommentRepository {
     suspend fun getCommentRooms(): DomainResult<CommentRooms, DataError.Network>
 
     suspend fun getComments(roomId: Int): DomainResult<Comments, DataError.Network>
+
+    suspend fun postComment(
+        roomId: Int,
+        content: String,
+    ): DomainResult<Int, DataError.Network>
+
+    suspend fun updateComment(
+        commentId: Int,
+        content: String,
+    ): DomainResult<Int, DataError.Network>
+
+    suspend fun deleteComment(commentId: Int): DomainResult<Unit, DataError.Network>
 }
