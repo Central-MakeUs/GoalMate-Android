@@ -32,8 +32,7 @@ import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.progress.inprogress.InProgressAction
 import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiModel
-import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressStatus
-import java.time.format.DateTimeFormatter
+import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressUiState
 
 enum class DayOfWeek(val label: String) {
     SUNDAY("일"),
@@ -44,8 +43,6 @@ enum class DayOfWeek(val label: String) {
     FRIDAY("금"),
     SATURDAY("토"),
 }
-
-private val dateFormatter = DateTimeFormatter.ofPattern("yy년 M월")
 
 @Composable
 fun GoalMateCalendar(
@@ -58,11 +55,11 @@ fun GoalMateCalendar(
         modifier = modifier,
     ) {
         YearMonthHeader(
-            label = (calendarData.yearMonth).format(dateFormatter),
+            label = calendarData.yearMonth,
             hasNext = calendarData.hasNext,
             hasPrevious = calendarData.hasPrevious,
-            onNextClicked = { onAction(InProgressAction.UpdateNextMonth(calendarData.yearMonth)) },
-            onPreviousClicked = { onAction(InProgressAction.UpdatePreviousMonth(calendarData.yearMonth)) },
+            onNextClicked = { onAction(InProgressAction.UpdateNextMonth) },
+            onPreviousClicked = { onAction(InProgressAction.UpdatePreviousMonth) },
             modifier = Modifier.align(Alignment.Start),
         )
 
@@ -124,7 +121,7 @@ private fun YearMonthHeader(
             color = MaterialTheme.goalMateColors.textButton,
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.goalMateColors.outline,
+                    color = MaterialTheme.goalMateColors.surface,
                     shape = RoundedCornerShape(6.dp),
                 )
                 .padding(vertical = 6.dp, horizontal = 8.dp),
@@ -175,7 +172,7 @@ private fun WeeklyProgressItem(
                 status = progressByDate.status,
                 onClick = { onDateClicked(progressByDate) },
                 isSelected = progressByDate.date == selectedDate,
-                isEnabled = progressByDate.status != ProgressStatus.NotInProgress,
+                isEnabled = progressByDate.status != ProgressUiState.NotInProgress,
             )
         }
     }

@@ -1,6 +1,7 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -31,6 +32,7 @@ fun InProgressScreen(
         InProgressScreenContent(
             state = state,
             onAction = viewModel::onAction,
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

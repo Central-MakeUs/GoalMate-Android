@@ -1,16 +1,14 @@
 package cmc.goalmate.presentation.ui.progress.inprogress.model
 
-import java.time.YearMonth
-
 data class CalendarUiModel(
-    val yearMonth: YearMonth,
+    val yearMonth: String,
     val hasNext: Boolean,
     val hasPrevious: Boolean,
     val progressByDate: List<DailyProgressUiModel>,
 ) {
     companion object {
         val DUMMY = CalendarUiModel(
-            yearMonth = YearMonth.of(2025, 1),
+            yearMonth = "2025년 1월",
             hasNext = true,
             hasPrevious = false,
             progressByDate = DailyProgressUiModel.DUMMY_LIST,
@@ -18,33 +16,33 @@ data class CalendarUiModel(
     }
 }
 
-data class DailyProgressUiModel(val date: Int, val status: ProgressStatus) {
+data class DailyProgressUiModel(val date: Int, val status: ProgressUiState) {
     companion object {
         val DUMMY_LIST = listOf(
-            DailyProgressUiModel(date = 21, status = ProgressStatus.Completed(0.5f)),
-            DailyProgressUiModel(date = 22, status = ProgressStatus.Completed(0.8f)),
-            DailyProgressUiModel(date = 23, status = ProgressStatus.Completed(1f)),
-            DailyProgressUiModel(date = 24, status = ProgressStatus.InProgress),
-            DailyProgressUiModel(date = 25, status = ProgressStatus.NotStart),
-            DailyProgressUiModel(date = 26, status = ProgressStatus.NotStart),
-            DailyProgressUiModel(date = 27, status = ProgressStatus.NotInProgress),
+            DailyProgressUiModel(date = 21, status = ProgressUiState.Completed(0.5f)),
+            DailyProgressUiModel(date = 22, status = ProgressUiState.Completed(0.8f)),
+            DailyProgressUiModel(date = 23, status = ProgressUiState.Completed(1f)),
+            DailyProgressUiModel(date = 24, status = ProgressUiState.InProgress),
+            DailyProgressUiModel(date = 25, status = ProgressUiState.NotStart),
+            DailyProgressUiModel(date = 26, status = ProgressUiState.NotStart),
+            DailyProgressUiModel(date = 27, status = ProgressUiState.NotInProgress),
         )
     }
 }
 
-sealed interface ProgressStatus {
-    data class Completed(val actualProgress: Float) : ProgressStatus {
-        val displayProgress: Float = DailyProgress.fromActualProgress(actualProgress).displayProgress
+sealed interface ProgressUiState {
+    data class Completed(val actualProgress: Float) : ProgressUiState {
+        val displayProgress: Float = DailyProgressRateUiModel.fromActualProgress(actualProgress).displayProgress
     }
 
-    data object InProgress : ProgressStatus
+    data object InProgress : ProgressUiState // 오늘 날짜
 
-    data object NotStart : ProgressStatus
+    data object NotStart : ProgressUiState
 
-    data object NotInProgress : ProgressStatus
+    data object NotInProgress : ProgressUiState
 }
 
-enum class DailyProgress(val range: ClosedFloatingPointRange<Float>, val displayProgress: Float) {
+enum class DailyProgressRateUiModel(val range: ClosedFloatingPointRange<Float>, val displayProgress: Float) {
     ZERO(0f..0f, 0f),
     ONE_TO_NINE(0.01f..0.09f, 32.4f),
     TEN_TO_NINETEEN(0.10f..0.19f, 36f),
@@ -60,6 +58,6 @@ enum class DailyProgress(val range: ClosedFloatingPointRange<Float>, val display
     ;
 
     companion object {
-        fun fromActualProgress(actual: Float): DailyProgress = requireNotNull(entries.find { actual in it.range })
+        fun fromActualProgress(actual: Float): DailyProgressRateUiModel = requireNotNull(entries.find { actual in it.range })
     }
 }

@@ -48,7 +48,6 @@ fun CalendarSection(
         is UiState.Error -> {}
         UiState.Loading -> {}
         is UiState.Success -> {
-            // TODO : 캘린더 뷰페이저로 구현
             GoalMateCalendar(
                 calendarData = weeklyProgressState.data,
                 selectedDate = selectedDate,
