@@ -5,14 +5,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import cmc.goalmate.app.navigation.Screen
+import cmc.goalmate.domain.fold
+import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.MenteeGoalRepository
+import cmc.goalmate.presentation.ui.auth.asUiText
 import cmc.goalmate.presentation.ui.progress.inprogress.mapper.toUi
+import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressDetailUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.GoalOverViewUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressUiState
 import cmc.goalmate.presentation.ui.progress.inprogress.model.UiState
+import cmc.goalmate.presentation.ui.progress.inprogress.model.convertToDomain
+import cmc.goalmate.presentation.ui.progress.inprogress.model.successData
+import cmc.goalmate.presentation.ui.progress.inprogress.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -26,27 +40,71 @@ class InProgressViewModel
     ) : ViewModel() {
         private val goalId = savedStateHandle.toRoute<Screen.InProgressGoal>().goalId
 
-        private val _state = MutableStateFlow(InProgressUiState.initialState)
-        val state: StateFlow<InProgressUiState>
-            get() = _state
+        private val selectedDate = MutableStateFlow(LocalDate.now())
+        private val weeklyProgressState = MutableStateFlow<UiState<CalendarUiModel>>(UiState.Loading)
+        private val selectedDateTodoState = MutableStateFlow<UiState<DailyProgressDetailUiModel>>(UiState.Loading)
+        private val goalInfoState = MutableStateFlow<UiState<GoalOverViewUiModel>>(UiState.Loading)
+
+        val state: StateFlow<InProgressUiState> = combine(
+            weeklyProgressState,
+            selectedDateTodoState,
+            goalInfoState,
+            selectedDate,
+        ) { weekly, daily, goal, date ->
+            InProgressUiState(
+                weeklyProgressState = weekly,
+                selectedDailyState = daily,
+                goalInfoState = goal,
+                selectedDate = date.dayOfMonth,
+            )
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            InProgressUiState.initialState,
+        )
 
         init {
-            loadGoalInfo(goalId)
+            loadInitialData()
         }
 
-        private fun loadGoalInfo(id: Int) {
-            // 목표 정보 로드
+        private fun loadInitialData() {
             viewModelScope.launch {
-                menteeGoalRepository.getWeeklyProgress(id, LocalDate.now())
-                    .onSuccess { weeklyData ->
-                        _state.value = state.value.copy(weeklyProgressState = UiState.Success(weeklyData.toUi()))
-                    }
+                combine(
+                    flow { emit(menteeGoalRepository.getWeeklyProgress(goalId, LocalDate.now())) },
+                    flow { emit(menteeGoalRepository.getDailyTodos(goalId, LocalDate.now())) },
+                    flow { emit(menteeGoalRepository.getGoalInfo(goalId)) },
+                ) { weeklyProgressResult, dailyTodosResult, goalInfoResult ->
+                    Triple(
+                        weeklyProgressResult.fold(
+                            onSuccess = { UiState.Success(it.toUi()) },
+                            onFailure = { UiState.Error(it.asUiText()) },
+                        ),
+                        dailyTodosResult.fold(
+                            onSuccess = {
+                                UiState.Success(
+                                    it.toUi(LocalDate.now()),
+                                )
+                            },
+                            onFailure = { UiState.Error(it.asUiText()) },
+                        ),
+                        goalInfoResult.fold(
+                            onSuccess = { UiState.Success(it.toUi()) },
+                            onFailure = {
+                                UiState.Error(it.asUiText())
+                            },
+                        ),
+                    )
+                }.collect { (weeklyProgressState, dailyTodosState, goalInfoState) ->
+                    this@InProgressViewModel.weeklyProgressState.value = weeklyProgressState
+                    selectedDateTodoState.value = dailyTodosState
+                    this@InProgressViewModel.goalInfoState.value = goalInfoState
+                }
             }
         }
 
         fun onAction(action: InProgressAction) {
             when (action) {
-                is InProgressAction.CheckTodo -> updateTodoItem(action.todoId, action.updatedChecked)
+                is InProgressAction.CheckTodo -> updateTodoItem(action.todoId, action.currentState)
                 is InProgressAction.SelectDate -> updateTodoList(action.selectedDate)
                 is InProgressAction.UpdateNextMonth -> updateNextMonth()
                 is InProgressAction.UpdatePreviousMonth -> updatePreviousMonth()
@@ -56,18 +114,60 @@ class InProgressViewModel
 
         private fun updateTodoItem(
             todoId: Int,
-            updated: Boolean,
+            currentState: Boolean,
         ) {
-            val updatedState = _state.value.updateTodoState(todoId, updated)
-            _state.value = updatedState
+            val dailyProgress = selectedDateTodoState.successData()
+            if (!dailyProgress.canModifyTodo()) {
+                // TODO: 에러 모달 이벤트
+                return
+            }
+            val updatedState = !currentState
+            updateTodosUi(dailyProgress = dailyProgress, todoId = todoId, updatedState = updatedState)
 
             viewModelScope.launch {
-                // 서버 통신 후, 성공이면 그대로, 실패시 rollback
+                menteeGoalRepository.updateTodoStatus(
+                    menteeGoalId = goalId,
+                    todoId = todoId,
+                    updatedStatus = convertToDomain(updatedState),
+                ).onFailure {
+                    updateTodosUi(dailyProgress = dailyProgress, todoId = todoId, updatedState = currentState)
+                    // 에러 처리
+                }
             }
         }
 
-        private fun updateTodoList(date: DailyProgressUiModel) {
-            // 해당 날짜에 대한 투두 목록 불러오기
+        private fun updateTodosUi(
+            dailyProgress: DailyProgressDetailUiModel,
+            todoId: Int,
+            updatedState: Boolean,
+        ) {
+            val updatedTodos = dailyProgress.todos.map { todo ->
+                if (todo.id == todoId) {
+                    todo.copy(isCompleted = updatedState)
+                } else {
+                    todo
+                }
+            }
+            selectedDateTodoState.value = UiState.Success(dailyProgress.copy(todos = updatedTodos))
+        }
+
+        private fun updateTodoList(newDate: DailyProgressUiModel) {
+            if (newDate.status == ProgressUiState.NotInProgress) return
+
+            selectedDate.value = newDate.actualDate
+            selectedDateTodoState.value = UiState.Loading
+            viewModelScope.launch {
+                menteeGoalRepository.getDailyTodos(
+                    menteeGoalId = goalId,
+                    targetDate = newDate.actualDate,
+                ).onSuccess { dailyTodos ->
+                    selectedDateTodoState.value = UiState.Success(
+                        dailyTodos.toUi(newDate.actualDate),
+                    )
+                }.onFailure {
+                    selectedDateTodoState.value = UiState.Error(it.asUiText())
+                }
+            }
         }
 
         private fun updateNextMonth() {

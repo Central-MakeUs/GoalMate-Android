@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,13 +74,7 @@ fun DailyTodoSection(
                 GoalTasks(
                     todos = dailyProgress.todos,
                     isEnabled = dailyProgress.canModifyTodo(),
-                    onTodoCheckedChange = { todoId, updatedChecked ->
-                        if (dailyProgress.canModifyTodo()) {
-                            onAction(InProgressAction.CheckTodo(todoId, updatedChecked))
-                        } else {
-                            onAction(InProgressAction.ClickUneditableGoal)
-                        }
-                    },
+                    onAction = onAction,
                     modifier = Modifier
                         .background(MaterialTheme.goalMateColors.thickDivider)
                         .padding(horizontal = GoalMateDimens.HorizontalPadding),
@@ -105,7 +100,7 @@ fun DailyTodoSection(
 private fun GoalTasks(
     todos: List<TodoGoalUiModel>,
     isEnabled: Boolean,
-    onTodoCheckedChange: (Int, Boolean) -> Unit,
+    onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -130,7 +125,7 @@ private fun GoalTasks(
             ToDoItem(
                 todo = todo,
                 isEnabled = isEnabled,
-                onCheckedChange = { onTodoCheckedChange(todo.id, !todo.isCompleted) },
+                onCheckedChange = { onAction(InProgressAction.CheckTodo(todoId = todo.id, currentState = todo.isCompleted)) },
             )
             if (index != todos.lastIndex) {
                 Spacer(Modifier.size(16.dp))
@@ -146,7 +141,9 @@ fun GoalInfoSection(
     modifier: Modifier = Modifier,
 ) {
     when (goalInfoState) {
-        is UiState.Error -> {}
+        is UiState.Error -> {
+            Log.d("yenny", "GoalInfoSection error")
+        }
         UiState.Loading -> {}
         is UiState.Success -> {
             val goalInfo = goalInfoState.data

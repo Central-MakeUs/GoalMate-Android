@@ -25,25 +25,3 @@ data class InProgressUiState(
         )
     }
 }
-
-fun InProgressUiState.updateTodoState(
-    todoId: Int,
-    isCompleted: Boolean,
-): InProgressUiState {
-    val updatedSelectedDailyState = when (val state = selectedDailyState) {
-        is UiState.Success -> {
-            val updatedTodos = state.data.todos.map { todo ->
-                if (todo.id == todoId) {
-                    todo.copy(isCompleted = isCompleted)
-                } else {
-                    todo
-                }
-            }
-            UiState.Success(state.data.copy(todos = updatedTodos))
-        }
-        is UiState.Loading -> state
-        is UiState.Error -> state
-    }
-
-    return this.copy(selectedDailyState = updatedSelectedDailyState)
-}

@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.progress.inprogress.model
 
+import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.presentation.ui.util.calculateProgress
 
 data class GoalOverViewUiModel(
@@ -25,3 +26,12 @@ data class GoalOverViewUiModel(
         )
     }
 }
+
+fun MenteeGoalInfo.toUi(): GoalOverViewUiModel =
+    GoalOverViewUiModel(
+        goalId = id,
+        title = title,
+        mentor = mentorName,
+        totalTodoCount = totalTodoCount,
+        completedTodoCount = totalCompletedCount,
+    )

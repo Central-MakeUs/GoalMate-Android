@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -172,14 +171,14 @@ private fun ToDoItemPreview() {
         ToDoItem(
             todo = TodoGoalUiModel(
                 0,
-                "팝송 부르기",
+                "팝송 부르기팝송 부르기팝송 부르기팝송 부르기팝송 부르기팝송 부르기팝송 부르기 팝송 부르기",
                 "30분",
                 false,
                 tip = "영어 단어 보카 암기 할 때는 이렇게 하는 게 좋아요 블라블라",
             ),
             isEnabled = true,
             onCheckedChange = {},
-            modifier = Modifier.background(White).fillMaxHeight(),
+            modifier = Modifier.background(White),
         )
     }
 }

@@ -20,7 +20,7 @@ fun DailyProgress.toUi(): DailyProgressUiModel =
     when (this) {
         is DailyProgress.InvalidProgress -> {
             DailyProgressUiModel(
-                date = date.dayOfMonth,
+                actualDate = date,
                 status = ProgressUiState.NotInProgress,
             )
         }
@@ -39,7 +39,7 @@ fun DailyProgress.toUi(): DailyProgressUiModel =
             }
 
             DailyProgressUiModel(
-                date = date.dayOfMonth,
+                actualDate = date,
                 status = progressUiState,
             )
         }

@@ -21,3 +21,12 @@ inline fun <D, E : RootError> DomainResult<D, E>.onFailure(block: (E) -> Unit): 
     }
     return this
 }
+
+inline fun <D, E : RootError, R> DomainResult<D, E>.fold(
+    onSuccess: (D) -> R,
+    onFailure: (E) -> R,
+): R =
+    when (this) {
+        is DomainResult.Success -> onSuccess(data)
+        is DomainResult.Error -> onFailure(error)
+    }

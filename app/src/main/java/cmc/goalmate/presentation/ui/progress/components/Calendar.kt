@@ -168,10 +168,10 @@ private fun WeeklyProgressItem(
     WeekRow(modifier = modifier) {
         progressByDate.forEach { progressByDate ->
             CircleProgressBar(
-                date = progressByDate.date,
+                date = progressByDate.displayedDate,
                 status = progressByDate.status,
                 onClick = { onDateClicked(progressByDate) },
-                isSelected = progressByDate.date == selectedDate,
+                isSelected = progressByDate.displayedDate == selectedDate,
                 isEnabled = progressByDate.status != ProgressUiState.NotInProgress,
             )
         }

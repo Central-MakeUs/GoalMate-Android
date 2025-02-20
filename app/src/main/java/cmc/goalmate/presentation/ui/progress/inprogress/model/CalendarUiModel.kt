@@ -1,5 +1,7 @@
 package cmc.goalmate.presentation.ui.progress.inprogress.model
 
+import java.time.LocalDate
+
 data class CalendarUiModel(
     val yearMonth: String,
     val hasNext: Boolean,
@@ -16,16 +18,18 @@ data class CalendarUiModel(
     }
 }
 
-data class DailyProgressUiModel(val date: Int, val status: ProgressUiState) {
+data class DailyProgressUiModel(val actualDate: LocalDate, val status: ProgressUiState) {
+    val displayedDate: Int = actualDate.dayOfMonth
+
     companion object {
         val DUMMY_LIST = listOf(
-            DailyProgressUiModel(date = 21, status = ProgressUiState.Completed(0.5f)),
-            DailyProgressUiModel(date = 22, status = ProgressUiState.Completed(0.8f)),
-            DailyProgressUiModel(date = 23, status = ProgressUiState.Completed(1f)),
-            DailyProgressUiModel(date = 24, status = ProgressUiState.InProgress),
-            DailyProgressUiModel(date = 25, status = ProgressUiState.NotStart),
-            DailyProgressUiModel(date = 26, status = ProgressUiState.NotStart),
-            DailyProgressUiModel(date = 27, status = ProgressUiState.NotInProgress),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 21), status = ProgressUiState.Completed(0.5f)),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 22), status = ProgressUiState.Completed(0.8f)),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 23), status = ProgressUiState.Completed(1f)),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 24), status = ProgressUiState.InProgress),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 25), status = ProgressUiState.NotStart),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 26), status = ProgressUiState.NotStart),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 27), status = ProgressUiState.NotInProgress),
         )
     }
 }
