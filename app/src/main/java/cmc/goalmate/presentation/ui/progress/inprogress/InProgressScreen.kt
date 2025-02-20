@@ -25,12 +25,12 @@ fun InProgressScreen(
     ) {
         AppBarWithBackButton(
             onBackButtonClicked = navigateBack,
-            title = state.goalInfo.title,
+//            title = state.goalInfoState.title,
         )
 
-        InProgressContent(
+        InProgressScreenContent(
             state = state,
-            onAction = viewModel::onAction, // TODO: Action 분기 처리
+            onAction = viewModel::onAction,
         )
     }
 }

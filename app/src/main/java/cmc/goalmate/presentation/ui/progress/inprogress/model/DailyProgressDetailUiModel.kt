@@ -1,5 +1,28 @@
 package cmc.goalmate.presentation.ui.progress.inprogress.model
 
+import cmc.goalmate.presentation.ui.util.calculateProgress
+import java.time.LocalDate
+
+data class DailyProgressDetailUiModel(
+    val selectedDate: LocalDate,
+    val todos: List<TodoGoalUiModel>,
+) {
+    val completedTodayTodoCount: Int = todos.count { it.isCompleted }
+
+    val totalTodayTodoCount: Int = todos.size
+
+    val actualProgress: Float = calculateProgress(totalTodoCount = totalTodayTodoCount, totalCompletedCount = completedTodayTodoCount)
+
+    fun canModifyTodo(comparedDate: LocalDate = LocalDate.now()): Boolean = selectedDate == comparedDate
+
+    companion object {
+        val DUMMY = DailyProgressDetailUiModel(
+            selectedDate = LocalDate.of(2025, 2, 20),
+            todos = TodoGoalUiModel.DUMMY,
+        )
+    }
+}
+
 data class TodoGoalUiModel(
     val id: Int,
     val content: String,

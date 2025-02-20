@@ -80,6 +80,7 @@ fun GoalMateCalendar(
             }
         }
 
+        // TODO: Viewpager로 수정
         WeeklyProgressItem(
             progressByDate = calendarData.progressByDate,
             selectedDate = selectedDate,

@@ -14,7 +14,7 @@ sealed interface InProgressAction {
 
     data object ClickUneditableGoal : InProgressAction
 
-    data class NavigateToComments(val goalId: Int) : InProgressAction
-
     data class NavigateToGoalDetail(val goalId: Int) : InProgressAction
+
+    data class NavigateToComment(val goalId: Int) : InProgressAction
 }

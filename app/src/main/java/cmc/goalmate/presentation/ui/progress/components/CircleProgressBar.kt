@@ -120,7 +120,7 @@ private fun ProgressStatus.centerContent(
                             color = this.textColor(true),
                         )
                     }
-                    this.actualProgress == 100 -> {
+                    this.actualProgress == 1f -> {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.icon_checkbox_check),
                             contentDescription = null,
@@ -174,7 +174,7 @@ private fun CircleProgressBarPreview() {
     GoalMateTheme {
         CircleProgressBar(
             date = 10,
-            status = ProgressStatus.Completed(10),
+            status = ProgressStatus.Completed(0.5f),
             onClick = {},
             isSelected = false,
         )

@@ -1,54 +1,49 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
 import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
-import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiModel
-import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressStatus
-import cmc.goalmate.presentation.ui.progress.inprogress.model.TodoGoalUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressDetailUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.GoalOverViewUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.UiState
 import java.time.LocalDate
-import java.time.YearMonth
 
 data class InProgressUiState(
-    val weeklyData: CalendarUiModel,
-    val selectedDate: DailyProgressUiModel,
-    val todos: List<TodoGoalUiModel>,
-    val goalInfo: GoalOverViewUiModel,
+    val weeklyProgressState: UiState<CalendarUiModel>,
+    val selectedDailyState: UiState<DailyProgressDetailUiModel>,
+    val goalInfoState: UiState<GoalOverViewUiModel>,
+    val selectedDate: Int = LocalDate.now().dayOfMonth,
 ) {
-    val currentAchievementRate: Int
-        get() = when (val status = selectedDate.status) {
-            is ProgressStatus.InProgress -> calculateInProgressAchievement().toInt()
-            is ProgressStatus.Completed -> status.actualProgress
-            else -> 0
-        }
-
-    private fun calculateInProgressAchievement(): Float {
-        val totalTodos = todos.size
-        val completedTodos = todos.count { it.isCompleted }
-
-        return if (totalTodos > 0) {
-            (completedTodos / totalTodos.toFloat()) * 100f
-        } else {
-            0f
-        }
-    }
-
-    fun canModifyTodoCheck(
-        yearMonth: YearMonth = YearMonth.now(),
-        date: Int = LocalDate.now().dayOfMonth,
-    ): Boolean = weeklyData.yearMonth == yearMonth && selectedDate.date == date
-
     companion object {
-        fun initialInProgressUiState(): InProgressUiState =
-            InProgressUiState(
-                weeklyData = CalendarUiModel.DUMMY,
-                selectedDate = DailyProgressUiModel(date = 24, status = ProgressStatus.InProgress),
-                todos = TodoGoalUiModel.DUMMY,
-                goalInfo = GoalOverViewUiModel.DUMMY,
-            )
+        val initialState = InProgressUiState(
+            weeklyProgressState = UiState.Loading,
+            selectedDailyState = UiState.Loading,
+            goalInfoState = UiState.Loading,
+        )
+        val DUMMY = InProgressUiState(
+            weeklyProgressState = UiState.Success(CalendarUiModel.DUMMY),
+            selectedDailyState = UiState.Success(DailyProgressDetailUiModel.DUMMY),
+            goalInfoState = UiState.Success(GoalOverViewUiModel.DUMMY),
+        )
     }
 }
 
-data class GoalOverViewUiModel(val goalId: Int, val title: String, val mentor: String) {
-    companion object {
-        val DUMMY = GoalOverViewUiModel(0, "다온과 함께하는 영어 완전 정복 목표 입니당", "다온")
+fun InProgressUiState.updateTodoState(
+    todoId: Int,
+    isCompleted: Boolean,
+): InProgressUiState {
+    val updatedSelectedDailyState = when (val state = selectedDailyState) {
+        is UiState.Success -> {
+            val updatedTodos = state.data.todos.map { todo ->
+                if (todo.id == todoId) {
+                    todo.copy(isCompleted = isCompleted)
+                } else {
+                    todo
+                }
+            }
+            UiState.Success(state.data.copy(todos = updatedTodos))
+        }
+        is UiState.Loading -> state
+        is UiState.Error -> state
     }
+
+    return this.copy(selectedDailyState = updatedSelectedDailyState)
 }

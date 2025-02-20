@@ -26,20 +26,23 @@ import cmc.goalmate.presentation.ui.mygoals.progressIndicatorColor
 @Composable
 fun GoalMateProgressBar(
     currentProgress: Float,
-    myGoalState: MyGoalUiState,
     thickness: Dp,
     modifier: Modifier = Modifier,
+    myGoalState: MyGoalUiState = MyGoalUiState.IN_PROGRESS,
 ) {
     Column(modifier = modifier) {
         LinearProgressIndicator(
-            progress = { currentProgress / 100 },
+            progress = { currentProgress },
             color = myGoalState.progressIndicatorColor(),
-            modifier = Modifier.fillMaxWidth().height(thickness).clip(RoundedCornerShape(14.dp)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(thickness)
+                .clip(RoundedCornerShape(14.dp)),
             trackColor = myGoalState.progressBackgroundColor(),
         )
         Spacer(Modifier.size(8.dp))
         Text(
-            text = "${(currentProgress).toInt()}%",
+            text = "${(currentProgress * 100).toInt()}%",
             style = MaterialTheme.goalMateTypography.bodySmallMedium,
             color = MaterialTheme.goalMateColors.onSurfaceVariant,
             modifier = Modifier.align(alignment = Alignment.End),
@@ -52,7 +55,7 @@ fun GoalMateProgressBar(
 private fun GoalMateProgressBarPreview() {
     GoalMateTheme {
         GoalMateProgressBar(
-            currentProgress = 70f,
+            currentProgress = 0.7f,
             myGoalState = MyGoalUiState.IN_PROGRESS,
             thickness = 14.dp,
         )

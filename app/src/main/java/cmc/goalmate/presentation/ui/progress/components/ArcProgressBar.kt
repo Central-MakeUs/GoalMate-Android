@@ -23,6 +23,7 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.Grey700
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.progress.components.ProgressMessage.Companion.convertDisplayPercent
 
 private const val MIN_SWIPE_ANGLE = 1f
 private const val MAX_SWIPE_ANGLE = 180f
@@ -64,18 +65,19 @@ fun ArcProgressBar(
 
 @Composable
 fun TodayProgress(
-    progressPercent: Int,
+    actualPercent: Float,
     modifier: Modifier = Modifier,
 ) {
+    val displayPercent = convertDisplayPercent(actualPercent)
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Box {
-            ArcProgressBar(percent = progressPercent.toFloat())
+            ArcProgressBar(percent = displayPercent.toFloat())
             Text(
-                text = "$progressPercent%",
+                text = "$displayPercent%",
                 style = MaterialTheme.goalMateTypography.subtitle,
                 color = Grey700,
                 modifier = Modifier
@@ -95,7 +97,7 @@ fun TodayProgress(
                 .padding(vertical = 12.dp, horizontal = 10.dp),
         ) {
             Text(
-                text = ProgressMessage.getMessageForProgress(progressPercent.toInt()),
+                text = ProgressMessage.getMessageForProgress(displayPercent),
                 style = MaterialTheme.goalMateTypography.bodySmallMedium,
                 color = Grey700,
                 modifier = Modifier.align(Alignment.Center),
@@ -122,6 +124,8 @@ enum class ProgressMessage(val range: IntRange, val message: String) {
     companion object {
         fun getMessageForProgress(progress: Int): String =
             requireNotNull(entries.find { progress in it.range }?.message) { "유효하지 않은 progress : $progress" }
+
+        fun convertDisplayPercent(actual: Float): Int = (actual * 100).toInt()
     }
 }
 
@@ -130,7 +134,7 @@ enum class ProgressMessage(val range: IntRange, val message: String) {
 private fun ArcProgressBarPreview() {
     GoalMateTheme {
         TodayProgress(
-            progressPercent = 0,
+            actualPercent = 0.5f,
         )
     }
 }
