@@ -6,6 +6,7 @@ import cmc.goalmate.data.mapper.toDomain
 import cmc.goalmate.data.model.toDomain
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
+import cmc.goalmate.domain.model.DailyTodos
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoals
 import cmc.goalmate.domain.model.WeeklyProgress
@@ -53,6 +54,21 @@ class MenteeGoalRepositoryImpl
             menteeGoalDataSource.getWeeklyProgress(menteeGoalId, targetDate).fold(
                 onSuccess = { weeklyProgress ->
                     DomainResult.Success(weeklyProgress.toDomain())
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
+
+        override suspend fun getDailyTodos(
+            menteeGoalId: Int,
+            targetDate: LocalDate,
+        ): DomainResult<DailyTodos, DataError.Network> =
+            menteeGoalDataSource.getDailyTodo(menteeGoalId, targetDate).fold(
+                onSuccess = { dailyTodoDto ->
+                    val result = DailyTodos(dailyTodoDto.todos.map { it.toDomain() })
+                    // TODO: 목표 정보는 캐싱하기
+                    DomainResult.Success(result)
                 },
                 onFailure = {
                     DomainResult.Error(it.toDataError())

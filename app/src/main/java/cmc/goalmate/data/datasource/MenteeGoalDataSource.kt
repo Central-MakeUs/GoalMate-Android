@@ -1,6 +1,7 @@
 package cmc.goalmate.data.datasource
 
 import cmc.goalmate.data.mapper.toData
+import cmc.goalmate.data.model.DailyTodoDto
 import cmc.goalmate.data.model.MenteeGoalsDto
 import cmc.goalmate.data.model.WeeklyProgressDto
 import cmc.goalmate.data.model.toData
@@ -28,6 +29,17 @@ class MenteeGoalDataSource
                 val formattedDate = date.format(formatter)
                 menteeGoalService
                     .getWeeklyProgress(menteeGoalId, date = formattedDate)
+                    .getOrThrow()
+                    .toData()
+            }
+
+        suspend fun getDailyTodo(
+            menteeGoalId: Int,
+            date: LocalDate,
+        ): Result<DailyTodoDto> =
+            runCatching {
+                val formattedDate = date.format(formatter)
+                menteeGoalService.getDailyTodo(menteeGoalId, date = formattedDate)
                     .getOrThrow()
                     .toData()
             }

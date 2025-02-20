@@ -2,6 +2,7 @@ package cmc.goalmate.domain.repository
 
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
+import cmc.goalmate.domain.model.DailyTodos
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoals
 import cmc.goalmate.domain.model.WeeklyProgress
@@ -16,4 +17,9 @@ interface MenteeGoalRepository {
         menteeGoalId: Int,
         targetDate: LocalDate,
     ): DomainResult<WeeklyProgress, DataError.Network>
+
+    suspend fun getDailyTodos(
+        menteeGoalId: Int,
+        targetDate: LocalDate,
+    ): DomainResult<DailyTodos, DataError.Network>
 }
