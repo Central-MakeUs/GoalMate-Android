@@ -16,6 +16,7 @@ import cmc.goalmate.domain.repository.MenteeGoalRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -68,13 +69,21 @@ class MenteeGoalRepositoryImpl
             menteeGoalDataSource.getDailyTodo(menteeGoalId, targetDate).fold(
                 onSuccess = { dailyTodoDto ->
                     val result = DailyTodos(dailyTodoDto.todos.map { it.toDomain() })
-                    // TODO: 목표 정보는 캐싱하기
+                    updateGoalCache(dailyTodoDto.menteeGoal.toDomain().toInfo())
                     DomainResult.Success(result)
                 },
                 onFailure = {
                     DomainResult.Error(it.toDataError())
                 },
             )
+
+        private fun updateGoalCache(menteeGoal: MenteeGoalInfo) {
+            _goalInfo.update { currentCache ->
+                currentCache.toMutableMap().apply {
+                    put(menteeGoal.id, menteeGoal)
+                }
+            }
+        }
 
         override suspend fun updateTodoStatus(
             menteeGoalId: Int,

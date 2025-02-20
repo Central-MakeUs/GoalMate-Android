@@ -7,7 +7,6 @@ import cmc.goalmate.remote.dto.response.DailyTodoResponse
 import cmc.goalmate.remote.dto.response.MenteeGoalsResponse
 import cmc.goalmate.remote.dto.response.TodoResponse
 import cmc.goalmate.remote.dto.response.WeeklyProgressResponse
-import cmc.goalmate.remote.service.MenteeGoalService.Companion.BASE_URL
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
