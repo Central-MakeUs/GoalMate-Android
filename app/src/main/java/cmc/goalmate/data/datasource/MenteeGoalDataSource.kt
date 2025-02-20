@@ -3,9 +3,12 @@ package cmc.goalmate.data.datasource
 import cmc.goalmate.data.mapper.toData
 import cmc.goalmate.data.model.DailyTodoDto
 import cmc.goalmate.data.model.MenteeGoalsDto
+import cmc.goalmate.data.model.TodoDto
 import cmc.goalmate.data.model.WeeklyProgressDto
 import cmc.goalmate.data.model.toData
 import cmc.goalmate.data.util.getOrThrow
+import cmc.goalmate.domain.model.TodoStatus
+import cmc.goalmate.remote.dto.request.TodoRequest
 import cmc.goalmate.remote.service.MenteeGoalService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -42,5 +45,15 @@ class MenteeGoalDataSource
                 menteeGoalService.getDailyTodo(menteeGoalId, date = formattedDate)
                     .getOrThrow()
                     .toData()
+            }
+
+        suspend fun updateTodoStatus(
+            menteeGoalId: Int,
+            todoId: Int,
+            updatedStatus: TodoStatus,
+        ): Result<TodoDto> =
+            runCatching {
+                val request = TodoRequest(todoStatus = updatedStatus.toData())
+                menteeGoalService.updateTodo(menteeGoalId, todoId, request).getOrThrow().toData()
             }
     }

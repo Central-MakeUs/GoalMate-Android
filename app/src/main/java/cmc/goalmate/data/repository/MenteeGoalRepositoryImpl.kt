@@ -9,6 +9,7 @@ import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.model.DailyTodos
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoals
+import cmc.goalmate.domain.model.TodoStatus
 import cmc.goalmate.domain.model.WeeklyProgress
 import cmc.goalmate.domain.model.toInfo
 import cmc.goalmate.domain.repository.MenteeGoalRepository
@@ -69,6 +70,20 @@ class MenteeGoalRepositoryImpl
                     val result = DailyTodos(dailyTodoDto.todos.map { it.toDomain() })
                     // TODO: 목표 정보는 캐싱하기
                     DomainResult.Success(result)
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
+
+        override suspend fun updateTodoStatus(
+            menteeGoalId: Int,
+            todoId: Int,
+            updatedStatus: TodoStatus,
+        ): DomainResult<Unit, DataError.Network> =
+            menteeGoalDataSource.updateTodoStatus(menteeGoalId, todoId, updatedStatus).fold(
+                onSuccess = {
+                    DomainResult.Success(Unit)
                 },
                 onFailure = {
                     DomainResult.Error(it.toDataError())
