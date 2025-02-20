@@ -3,15 +3,18 @@ package cmc.goalmate.data.repository
 import cmc.goalmate.data.datasource.MenteeGoalDataSource
 import cmc.goalmate.data.mapper.toDataError
 import cmc.goalmate.data.mapper.toDomain
+import cmc.goalmate.data.model.toDomain
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoals
+import cmc.goalmate.domain.model.WeeklyProgress
 import cmc.goalmate.domain.model.toInfo
 import cmc.goalmate.domain.repository.MenteeGoalRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.time.LocalDate
 import javax.inject.Inject
 
 class MenteeGoalRepositoryImpl
@@ -42,4 +45,17 @@ class MenteeGoalRepositoryImpl
                 DomainResult.Error(DataError.Local.NOT_FOUND)
             }
         }
+
+        override suspend fun getWeeklyProgress(
+            menteeGoalId: Int,
+            targetDate: LocalDate,
+        ): DomainResult<WeeklyProgress, DataError.Network> =
+            menteeGoalDataSource.getWeeklyProgress(menteeGoalId, targetDate).fold(
+                onSuccess = { weeklyProgress ->
+                    DomainResult.Success(weeklyProgress.toDomain())
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
     }
