@@ -1,6 +1,7 @@
 package cmc.goalmate.presentation.ui.comments.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,22 +13,30 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.color.Primary10
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.comments.detail.CommentAction
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
 import cmc.goalmate.presentation.ui.comments.detail.model.SenderUiModel
 
 @Composable
 fun DailyComment(
     comment: CommentUiModel,
+    onAction: (CommentAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -45,8 +54,10 @@ fun DailyComment(
 
         comment.messages.forEach { message ->
             DailyCommentItem(
+                id = message.id,
                 content = message.content,
                 sender = message.sender,
+                onAction = onAction,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -55,24 +66,44 @@ fun DailyComment(
 
 @Composable
 private fun DailyCommentItem(
+    id: Int,
     content: String,
     sender: SenderUiModel,
-    modifier: Modifier,
+    onAction: (CommentAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    var isDropDownMenuExpanded by remember { mutableStateOf(false) }
     Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
         if (sender == SenderUiModel.MENTEE) Spacer(Modifier.width(80.dp))
 
-        Text(
-            text = content,
-            style = MaterialTheme.goalMateTypography.bodySmallMedium,
-            color = MaterialTheme.goalMateColors.textButton,
-            modifier = Modifier
-                .background(
-                    color = sender.backgroundColor(),
-                    shape = RoundedCornerShape(24.dp),
-                )
-                .padding(GoalMateDimens.HorizontalPadding),
-        )
+        Column {
+            Text(
+                text = content,
+                style = MaterialTheme.goalMateTypography.bodySmallMedium,
+                color = MaterialTheme.goalMateColors.textButton,
+                modifier = Modifier
+                    .background(
+                        color = sender.backgroundColor(),
+                        shape = RoundedCornerShape(24.dp),
+                    )
+                    .padding(GoalMateDimens.HorizontalPadding)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onLongPress = {
+                                if (sender == SenderUiModel.MENTEE) {
+                                    isDropDownMenuExpanded = !isDropDownMenuExpanded
+                                }
+                            },
+                        )
+                    },
+            )
+            GoalMateDropDownMenu(
+                isDropDownMenuExpanded = isDropDownMenuExpanded,
+                onDismissRequest = { isDropDownMenuExpanded = false },
+                onEditClicked = { onAction(CommentAction.EditComment(commentId = id)) },
+                onDeleteClicked = { onAction(CommentAction.DeleteComment(commentId = id)) },
+            )
+        }
 
         if (sender == SenderUiModel.MENTOR) Spacer(Modifier.width(80.dp))
     }
@@ -81,7 +112,7 @@ private fun DailyCommentItem(
 @Composable
 fun SenderUiModel.backgroundColor(): Color =
     when (this) {
-        SenderUiModel.MENTEE -> MaterialTheme.goalMateColors.completed
+        SenderUiModel.MENTEE -> Primary10
         SenderUiModel.MENTOR -> MaterialTheme.goalMateColors.surfaceVariant
     }
 
@@ -89,6 +120,6 @@ fun SenderUiModel.backgroundColor(): Color =
 @Preview
 private fun DailyCommentPreview() {
     GoalMateTheme {
-        DailyComment(comment = CommentUiModel.DUMMY)
+        DailyComment(comment = CommentUiModel.DUMMY, onAction = {})
     }
 }
