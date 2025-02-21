@@ -14,7 +14,7 @@ hilt = "2.50"
 hilt-navigation-compose = "1.0.0"
 lifecycle = "2.8.7"
 activity = "1.9.1"
-composeBom = "2024.04.01"
+composeBom = "2024.11.00"
 viewmodel = "2.7.0"
 datastore = "1.0.0"
 navigation = "2.8.5"
@@ -62,7 +62,6 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
