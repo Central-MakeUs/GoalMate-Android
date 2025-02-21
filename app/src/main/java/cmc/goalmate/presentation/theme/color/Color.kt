@@ -12,6 +12,7 @@ val Green = Color(0xFF34C759)
 val Yellow = Color(0xFFFFCC00)
 val Blue = Color(0xFF007AFF)
 
+val Primary10 = Color(0xFFFBFFF5)
 val Primary400 = Color(0xFFAEFF23)
 val Primary700 = Color(0xFF8BD300)
 val Primary900 = Color(0xFF709100)

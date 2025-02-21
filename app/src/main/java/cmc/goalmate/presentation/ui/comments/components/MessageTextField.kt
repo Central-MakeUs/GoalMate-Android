@@ -68,7 +68,7 @@ fun MessageTextField(
                     Text(
                         text = stringResource(R.string.comments_detail_placeholder),
                         color = Grey400,
-                        style = MaterialTheme.goalMateTypography.body,
+                        style = MaterialTheme.goalMateTypography.bodySmall,
                     )
                 }
                 innerTextField()
