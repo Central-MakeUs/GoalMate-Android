@@ -20,7 +20,7 @@ data class Goal(
 )
 
 enum class GoalStatus {
-    NOT_STARTED,
-    IN_PROGRESS,
+    UP_COMING,
+    OPEN,
     CLOSED,
 }

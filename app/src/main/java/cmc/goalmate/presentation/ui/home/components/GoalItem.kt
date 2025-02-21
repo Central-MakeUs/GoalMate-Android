@@ -29,6 +29,7 @@ import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.home.GoalUiModel
 import cmc.goalmate.presentation.ui.home.GoalUiStatus
+import cmc.goalmate.presentation.ui.home.dummyGoals
 
 @Composable
 fun GoalItem(
@@ -56,7 +57,9 @@ fun GoalItem(
             goalUiStatus = goal.state,
             modifier = Modifier.align(Alignment.Start),
         )
-        ClosingSoonLabel(modifier = Modifier.align(Alignment.Start))
+        if (goal.isClosingSoon) {
+            ClosingSoonLabel(modifier = Modifier.align(Alignment.Start))
+        }
     }
 }
 
@@ -114,17 +117,7 @@ private fun GoalThumbnail(
 @Preview(showBackground = true)
 private fun GoalItemPreview() {
     GoalMateTheme {
-        val dummyGoal = GoalUiModel(
-            id = 12,
-            title = "(멘토명)과 함께하는 (목표명) 목표",
-            imageUrl = "",
-            price = "20,000원",
-            discount = "100%",
-            totalPrice = "0원",
-            currentMembers = 0,
-            maxMembers = 10,
-            state = GoalUiStatus.AVAILABLE,
-        )
+        val dummyGoal = dummyGoals[0]
         GoalItem(
             goal = dummyGoal,
             navigateToDetail = {},

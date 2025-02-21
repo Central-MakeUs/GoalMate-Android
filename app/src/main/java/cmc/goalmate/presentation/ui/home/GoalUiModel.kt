@@ -10,6 +10,7 @@ data class GoalUiModel(
     val price: String = PLACEHOLDER_PRICE,
     val discount: String = PLACEHOLDER_PRICE,
     val totalPrice: String = PLACEHOLDER_PRICE,
+    val isClosingSoon: Boolean,
     val currentMembers: Int,
     val maxMembers: Int,
     val state: GoalUiStatus,
@@ -32,6 +33,7 @@ fun Goal.toUi(): GoalUiModel =
         currentMembers = this.currentParticipants,
         maxMembers = this.participantsLimit,
         state = this.goalStatus.toUi(),
+        isClosingSoon = if (this.goalStatus == GoalStatus.CLOSED) false else isClosingSoon,
     )
 
 fun GoalStatus.toUi(): GoalUiStatus =
@@ -51,6 +53,7 @@ val dummyGoals = listOf(
         currentMembers = 5,
         maxMembers = 20,
         state = GoalUiStatus.AVAILABLE,
+        isClosingSoon = true,
     ),
     GoalUiModel(
         id = 1,
@@ -62,6 +65,7 @@ val dummyGoals = listOf(
         currentMembers = 10,
         maxMembers = 30,
         state = GoalUiStatus.AVAILABLE,
+        isClosingSoon = false,
     ),
     GoalUiModel(
         id = 2,
@@ -73,6 +77,7 @@ val dummyGoals = listOf(
         currentMembers = 8,
         maxMembers = 15,
         state = GoalUiStatus.AVAILABLE,
+        isClosingSoon = false,
     ),
     GoalUiModel(
         id = 3,
@@ -84,5 +89,6 @@ val dummyGoals = listOf(
         currentMembers = 15,
         maxMembers = 50,
         state = GoalUiStatus.SOLD_OUT,
+        isClosingSoon = false,
     ),
 )

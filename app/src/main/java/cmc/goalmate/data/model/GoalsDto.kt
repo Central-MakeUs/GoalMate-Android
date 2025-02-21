@@ -69,8 +69,8 @@ fun GoalDto.toDomain(): Goal =
 
 fun convertGoalStatus(status: String): GoalStatus =
     when (status) {
-        "UPCOMING" -> GoalStatus.NOT_STARTED
-        "OPEN" -> GoalStatus.IN_PROGRESS
+        "UPCOMING" -> GoalStatus.UP_COMING
+        "OPEN" -> GoalStatus.OPEN
         "CLOSED" -> GoalStatus.CLOSED
         else -> throw IllegalArgumentException("알 수 없는 상태: $status")
     }
