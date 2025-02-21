@@ -1,6 +1,5 @@
 package cmc.goalmate.remote.di
 
-import cmc.goalmate.remote.service.AuthService
 import cmc.goalmate.remote.service.CommentService
 import cmc.goalmate.remote.service.GoalService
 import cmc.goalmate.remote.service.MenteeGoalService
@@ -15,10 +14,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {
-    @Provides
-    @Singleton
-    fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
-
     @Provides
     @Singleton
     fun provideMenteeService(retrofit: Retrofit): MenteeService = retrofit.create(MenteeService::class.java)

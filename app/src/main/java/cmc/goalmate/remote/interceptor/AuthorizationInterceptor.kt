@@ -4,6 +4,7 @@ import cmc.goalmate.local.TokenDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 import javax.inject.Inject
 
@@ -26,5 +27,14 @@ class AuthorizationInterceptor
 
         companion object {
             private const val AUTHORIZATION = "authorization"
+
+            fun addBearerTokenToRequest(
+                request: Request,
+                newAccessToken: String,
+            ): Request =
+                request.newBuilder()
+                    .removeHeader(AUTHORIZATION)
+                    .addHeader(AUTHORIZATION, newAccessToken)
+                    .build()
         }
     }
