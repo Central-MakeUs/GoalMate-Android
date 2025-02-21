@@ -11,6 +11,7 @@ import cmc.goalmate.domain.model.Token
 import cmc.goalmate.domain.model.toData
 import cmc.goalmate.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -48,4 +49,32 @@ class AuthRepositoryImpl
                 onSuccess = { DomainResult.Success(Unit) },
                 onFailure = { DomainResult.Error(DataError.Local.IO_ERROR) },
             )
+
+        override suspend fun validateToken(): DomainResult<Unit, DataError> =
+            authDataSource.validateToken()
+                .fold(
+                    onSuccess = {
+                        DomainResult.Success(Unit)
+                    },
+                    onFailure = {
+                        if (it.toDataError() == DataError.Network.UNAUTHORIZED) {
+                            handleTokenReissue()
+                        } else {
+                            DomainResult.Error(it.toDataError())
+                        }
+                    },
+                )
+
+        private suspend fun handleTokenReissue(): DomainResult<Unit, DataError> {
+            val refreshToken = tokenDataSource.getToken().first().refreshToken
+            return authDataSource.postReissue(refreshToken)
+                .fold(
+                    onSuccess = { tokenDto ->
+                        saveToken(tokenDto.toDomain())
+                    },
+                    onFailure = {
+                        DomainResult.Error(DataError.Network.UNAUTHORIZED)
+                    },
+                )
+        }
     }
