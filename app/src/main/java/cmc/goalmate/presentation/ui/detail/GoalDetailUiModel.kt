@@ -29,6 +29,7 @@ data class GoalDetailUiModel(
     val weeklyGoal: List<MilestoneUiModel>,
     val milestones: List<MilestoneUiModel>,
     val detailImageUrls: List<String>,
+    val isParticipated: Boolean,
 ) {
     val isAvailable: Boolean
         get() = this.state == GoalUiStatus.AVAILABLE
@@ -58,6 +59,7 @@ data class GoalDetailUiModel(
             weeklyGoal = listOf(MilestoneUiModel("1주차", "간단한 단어부터 시작하기"), MilestoneUiModel("2주차", "기본 문장 읽기")),
             milestones = listOf(MilestoneUiModel("1", "간단한 단어부터 시작하기"), MilestoneUiModel("2", "기본 문장 읽기")),
             detailImageUrls = listOf(""),
+            isParticipated = false,
         )
     }
 }
@@ -93,6 +95,7 @@ fun GoalDetail.toUi(dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPatte
         weeklyGoal = this.weeklyObjectives.map { it.toUi() },
         milestones = this.midObjectives.map { it.toUi() },
         detailImageUrls = this.contentImages,
+        isParticipated = this.isParticipated,
     )
 }
 

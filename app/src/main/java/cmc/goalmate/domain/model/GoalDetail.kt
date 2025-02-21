@@ -18,6 +18,7 @@ data class GoalDetail(
     val midObjectives: List<MidObjective>,
     val thumbnailImages: List<String>,
     val contentImages: List<String>,
+    val isParticipated: Boolean,
 )
 
 data class WeeklyObjective(

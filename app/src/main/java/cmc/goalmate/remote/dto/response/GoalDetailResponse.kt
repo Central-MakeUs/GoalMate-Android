@@ -22,6 +22,7 @@ data class GoalDetailResponse(
     @SerialName("mid_objectives") val midObjectives: List<MidObjectiveResponse>,
     @SerialName("thumbnail_images") val thumbnailImages: List<ImageResponse>,
     @SerialName("content_images") val contentImages: List<ImageResponse>,
+    @SerialName("is_participated") val isParticipated: Boolean,
 )
 
 @Serializable

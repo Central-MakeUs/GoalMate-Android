@@ -32,6 +32,7 @@ fun GoalDetailResponse.toData(): GoalDetailDto =
         midObjectives = this.midObjectives.map { it.toData() },
         thumbnailImages = this.thumbnailImages.map { it.toData() },
         contentImages = this.contentImages.map { it.toData() },
+        isParticipated = this.isParticipated,
     )
 
 fun WeeklyObjectiveResponse.toData(): WeeklyObjectiveDto =
@@ -71,6 +72,7 @@ fun GoalDetailDto.toDomain(): GoalDetail =
         midObjectives = this.midObjectives.map { it.toDomain() },
         thumbnailImages = this.thumbnailImages.sortedBy { it.sequence }.map { it.imageUrl },
         contentImages = this.contentImages.sortedBy { it.sequence }.map { it.imageUrl },
+        isParticipated = this.isParticipated,
     )
 
 fun WeeklyObjectiveDto.toDomain(): WeeklyObjective =

@@ -116,14 +116,16 @@ private fun GoalDetailScreenContent(
             modifier = modifier.verticalScroll(rememberScrollState()),
         )
 
-        GoalStartButton(
-            isLoggedIn = isLoggedIn,
-            isEnabled = goal.isAvailable,
-            availableSeatCount = goal.remainingCount,
-            onClicked = onButtonClicked,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = GoalMateDimens.BottomMargin),
-        )
+        if (!goal.isParticipated) {
+            GoalStartButton(
+                isLoggedIn = isLoggedIn,
+                isEnabled = goal.isAvailable,
+                availableSeatCount = goal.remainingCount,
+                onClicked = onButtonClicked,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = GoalMateDimens.BottomMargin),
+            )
+        }
     }
 }
