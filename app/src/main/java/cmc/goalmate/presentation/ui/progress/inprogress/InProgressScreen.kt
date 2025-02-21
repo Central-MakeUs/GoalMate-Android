@@ -13,6 +13,7 @@ import cmc.goalmate.presentation.components.AppBarWithBackButton
 
 @Composable
 fun InProgressScreen(
+    goalTitle: String,
     navigateToComments: NavigateToCommentDetail,
     navigateToGoalDetail: NavigateToGoal,
     navigateBack: () -> Unit,
@@ -26,7 +27,7 @@ fun InProgressScreen(
     ) {
         AppBarWithBackButton(
             onBackButtonClicked = navigateBack,
-//            title = state.goalInfoState.title,
+            title = goalTitle,
         )
 
         InProgressScreenContent(

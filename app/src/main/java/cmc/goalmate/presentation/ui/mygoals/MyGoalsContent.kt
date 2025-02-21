@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import cmc.goalmate.app.navigation.NavigateToGoal
+import cmc.goalmate.app.navigation.NavigateToInProgress
 import cmc.goalmate.presentation.components.ThickDivider
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.White
@@ -16,7 +17,7 @@ import cmc.goalmate.presentation.theme.color.White
 fun MyGoalsContent(
     myGoals: List<MyGoalUiModel>,
     navigateToCompletedGoal: NavigateToGoal,
-    navigateToProgressGoal: NavigateToGoal,
+    navigateToProgressGoal: NavigateToInProgress,
     navigateToGoalDetail: NavigateToGoal,
     modifier: Modifier = Modifier,
 ) {
@@ -28,7 +29,7 @@ fun MyGoalsContent(
                 when (myGoal.goalState) {
                     MyGoalUiState.IN_PROGRESS -> InProgressGoalItem(
                         myGoal = myGoal,
-                        onStartButtonClicked = { navigateToProgressGoal(myGoal.goalId) },
+                        onStartButtonClicked = { navigateToProgressGoal(myGoal.goalId, myGoal.title) },
                         modifier = Modifier,
                     )
 
@@ -52,7 +53,7 @@ private fun MyGoalContentPreview() {
         MyGoalsContent(
             myGoals = listOf(MyGoalUiModel.DUMMY, MyGoalUiModel.DUMMY2),
             {},
-            {},
+            { a, b -> },
             {},
             modifier = Modifier.background(White),
         )

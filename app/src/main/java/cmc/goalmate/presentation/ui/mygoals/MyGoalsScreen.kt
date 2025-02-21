@@ -12,13 +12,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.app.navigation.NavigateToGoal
+import cmc.goalmate.app.navigation.NavigateToInProgress
 import cmc.goalmate.presentation.components.EmptyGoalContents
 import cmc.goalmate.presentation.components.HeaderTitle
 
 @Composable
 fun MyGoalsScreen(
     navigateToCompletedGoal: NavigateToGoal,
-    navigateToProgressGoal: NavigateToGoal,
+    navigateToProgressGoal: NavigateToInProgress,
     navigateToGoalDetail: NavigateToGoal,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
@@ -63,7 +64,7 @@ fun MyGoalsScreen(
 private fun HandleLoggedInState(
     myGoals: List<MyGoalUiModel>,
     navigateToCompletedGoal: NavigateToGoal,
-    navigateToProgressGoal: NavigateToGoal,
+    navigateToProgressGoal: NavigateToInProgress,
     navigateToGoalDetail: NavigateToGoal,
     navigateToHome: () -> Unit,
 ) {

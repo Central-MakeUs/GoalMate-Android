@@ -25,8 +25,10 @@ fun GoalMateNavHost(navController: NavHostController) {
         mainNavGraph(navController)
         detailNavGraph(navController)
 
-        composable<Screen.InProgressGoal> {
+        composable<Screen.InProgressGoal> { backStackEntry ->
+            val content = backStackEntry.toRoute<Screen.InProgressGoal>()
             InProgressScreen(
+                goalTitle = content.goalTitle,
                 navigateToGoalDetail = navController::navigateToDetail,
                 navigateToComments = navController::navigateToCommentDetail,
                 navigateBack = {},
@@ -52,8 +54,11 @@ fun GoalMateNavHost(navController: NavHostController) {
     }
 }
 
-fun NavController.navigateToInProgress(goalId: Int) {
-    navigate(Screen.InProgressGoal(goalId = goalId))
+fun NavController.navigateToInProgress(
+    goalId: Int,
+    title: String,
+) {
+    navigate(Screen.InProgressGoal(goalId = goalId, goalTitle = title))
 }
 
 fun NavController.navigateToCompleted(goalId: Int) {
