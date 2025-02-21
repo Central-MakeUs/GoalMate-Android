@@ -53,16 +53,14 @@ fun InProgressScreenContent(
 
             GoalInfoSection(
                 goalInfoState = state.goalInfoState,
-                navigateToDetail = {},
+                navigateToDetail = { onAction(InProgressAction.NavigateToGoalDetail) },
                 modifier = Modifier.padding(bottom = 86.dp),
             )
         }
 
         GoalMateButton(
             content = "멘토 코멘트 받으러 가기",
-            onClick = {
-                // TODO: 코멘트 화면 이동
-            },
+            onClick = { onAction(InProgressAction.NavigateToComment) },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()

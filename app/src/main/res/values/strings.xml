@@ -28,6 +28,7 @@
     <string name="my_goals_in_progress_start_button">오늘 해야 할 일 %d개 완료하기</string>
     <string name="my_goals_completed_restart_button">다시 시작하기</string>
     <string name="my_goals_completed_detail_button">보러가기</string>
+    <string name="goal_in_progress_uneditable_warning_message">이미 지나간 날짜는\n완료 표시할 수 없어요 :(</string>
 
     <string name="goal_detail_title">목표</string>
     <string name="goal_detail_subject_title">목표 주제</string>

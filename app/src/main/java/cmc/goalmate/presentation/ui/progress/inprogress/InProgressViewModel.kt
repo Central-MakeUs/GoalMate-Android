@@ -21,11 +21,13 @@ import cmc.goalmate.presentation.ui.progress.inprogress.model.convertToDomain
 import cmc.goalmate.presentation.ui.progress.inprogress.model.successData
 import cmc.goalmate.presentation.ui.progress.inprogress.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -39,6 +41,9 @@ class InProgressViewModel
         savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
         private val goalId = savedStateHandle.toRoute<Screen.InProgressGoal>().goalId
+
+        private val _event = Channel<InProgressEvent>()
+        val event = _event.receiveAsFlow()
 
         private val selectedDate = MutableStateFlow(LocalDate.now())
         private val weeklyProgressState = MutableStateFlow<UiState<CalendarUiModel>>(UiState.Loading)
@@ -108,7 +113,14 @@ class InProgressViewModel
                 is InProgressAction.SelectDate -> updateTodoList(action.selectedDate)
                 is InProgressAction.UpdateNextMonth -> updateNextMonth()
                 is InProgressAction.UpdatePreviousMonth -> updatePreviousMonth()
-                else -> return
+                InProgressAction.NavigateToComment -> {} // TODO: 룸 아이디 구해서 넘겨주기
+                InProgressAction.NavigateToGoalDetail -> sendEvent(InProgressEvent.NavigateToGoalDetail(goalId))
+            }
+        }
+
+        private fun sendEvent(event: InProgressEvent) {
+            viewModelScope.launch {
+                _event.send(event)
             }
         }
 
@@ -118,7 +130,7 @@ class InProgressViewModel
         ) {
             val dailyProgress = selectedDateTodoState.successData()
             if (!dailyProgress.canModifyTodo()) {
-                // TODO: 에러 모달 이벤트
+                sendEvent(InProgressEvent.TodoModificationNotAllowed)
                 return
             }
             val updatedState = !currentState
