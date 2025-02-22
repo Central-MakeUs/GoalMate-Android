@@ -17,6 +17,7 @@ data class MenteeGoal(
     val todayRemainingCount: Int,
     val totalTodoCount: Int,
     val totalCompletedCount: Int,
+    val commentRoomId: Int,
     val menteeGoalStatus: MenteeGoalStatus,
 )
 

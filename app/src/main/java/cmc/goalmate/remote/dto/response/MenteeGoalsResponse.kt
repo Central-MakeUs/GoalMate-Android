@@ -24,6 +24,7 @@ data class MenteeGoalResponse(
     @SerialName("today_remaining_count") val todayRemainingCount: Int,
     @SerialName("total_todo_count") val totalTodoCount: Int,
     @SerialName("total_completed_count") val totalCompletedCount: Int,
+    @SerialName("comment_room_id") val commentRoomId: Int,
     @SerialName("mentee_goal_status") val menteeGoalStatus: String,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String,

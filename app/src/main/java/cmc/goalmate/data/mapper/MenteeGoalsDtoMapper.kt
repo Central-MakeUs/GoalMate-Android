@@ -29,6 +29,7 @@ fun MenteeGoalResponse.toData(): MenteeGoalDto =
         todayRemainingCount = todayRemainingCount,
         totalTodoCount = totalTodoCount,
         totalCompletedCount = totalCompletedCount,
+        commentRoomId = commentRoomId,
         menteeGoalStatus = menteeGoalStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
@@ -51,6 +52,7 @@ fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = goalMateDateFormat
         totalTodoCount = totalTodoCount,
         totalCompletedCount = totalCompletedCount,
         menteeGoalStatus = convertMenteeGoalStatus(),
+        commentRoomId = commentRoomId,
     )
 
 private fun MenteeGoalDto.convertMenteeGoalStatus(): MenteeGoalStatus =

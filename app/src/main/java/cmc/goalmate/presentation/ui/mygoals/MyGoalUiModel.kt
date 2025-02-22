@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter
 
 data class MyGoalUiModel(
     val goalId: Int,
+    val roomId: Int,
     val title: String,
     val thumbnailUrl: String,
     val mentorName: String,
@@ -22,6 +23,7 @@ data class MyGoalUiModel(
     companion object {
         val DUMMY = MyGoalUiModel(
             goalId = 0,
+            roomId = 0,
             title = "다온과 함께하는 영어 완전 정복",
             thumbnailUrl = "",
             mentorName = "다온",
@@ -33,6 +35,7 @@ data class MyGoalUiModel(
         )
         val DUMMY2 = MyGoalUiModel(
             goalId = 0,
+            roomId = 0,
             title = "마루와 함께하는 백앤드 서버 찐천재 목표",
             thumbnailUrl = "",
             mentorName = "마루",
@@ -70,6 +73,7 @@ fun MenteeGoal.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("
         goalProgress = calculateProgress(totalCompletedCount, totalTodoCount),
         goalState = menteeGoalStatus.toUi(),
         remainGoals = todayRemainingCount,
+        roomId = commentRoomId,
     )
 
 fun MenteeGoalStatus.toUi(): MyGoalUiState =
