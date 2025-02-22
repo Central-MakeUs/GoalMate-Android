@@ -7,6 +7,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import cmc.goalmate.app.navigation.CompletedGoalParams
+import cmc.goalmate.app.navigation.InProgressGoalParams
+import cmc.goalmate.app.navigation.NavigateToCompleted
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.app.navigation.NavigateToInProgress
 import cmc.goalmate.presentation.components.ThickDivider
@@ -16,7 +19,7 @@ import cmc.goalmate.presentation.theme.color.White
 @Composable
 fun MyGoalsContent(
     myGoals: List<MyGoalUiModel>,
-    navigateToCompletedGoal: NavigateToGoal,
+    navigateToCompletedGoal: NavigateToCompleted,
     navigateToProgressGoal: NavigateToInProgress,
     navigateToGoalDetail: NavigateToGoal,
     modifier: Modifier = Modifier,
@@ -29,13 +32,25 @@ fun MyGoalsContent(
                 when (myGoal.goalState) {
                     MyGoalUiState.IN_PROGRESS -> InProgressGoalItem(
                         myGoal = myGoal,
-                        onStartButtonClicked = { navigateToProgressGoal(myGoal.goalId, myGoal.title) },
+                        onStartButtonClicked = {
+                            navigateToProgressGoal(
+                                InProgressGoalParams(
+                                    goalId = myGoal.goalId,
+                                    myGoal.title,
+                                    myGoal.roomId,
+                                ),
+                            )
+                        },
                         modifier = Modifier,
                     )
 
                     MyGoalUiState.COMPLETED -> CompletedGoalItem(
                         myGoal = myGoal,
-                        onCompletedButtonClicked = { navigateToCompletedGoal(myGoal.goalId) },
+                        onCompletedButtonClicked = {
+                            navigateToCompletedGoal(
+                                CompletedGoalParams(goalId = myGoal.goalId, roomId = myGoal.roomId),
+                            )
+                        },
                         onRestartButtonClicked = { navigateToGoalDetail(myGoal.goalId) },
                         modifier = Modifier,
                     )
@@ -53,7 +68,7 @@ private fun MyGoalContentPreview() {
         MyGoalsContent(
             myGoals = listOf(MyGoalUiModel.DUMMY, MyGoalUiModel.DUMMY2),
             {},
-            { a, b -> },
+            {},
             {},
             modifier = Modifier.background(White),
         )

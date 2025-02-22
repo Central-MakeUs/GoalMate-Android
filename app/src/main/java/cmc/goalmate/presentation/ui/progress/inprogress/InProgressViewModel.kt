@@ -40,14 +40,17 @@ class InProgressViewModel
         private val menteeGoalRepository: MenteeGoalRepository,
         savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
-        private val goalId = savedStateHandle.toRoute<Screen.InProgressGoal>().goalId
+        private val route = savedStateHandle.toRoute<Screen.InProgressGoal>()
+        private val goalId = route.goalId
+        private val commentRoomId = route.roomId
 
         private val _event = Channel<InProgressEvent>()
         val event = _event.receiveAsFlow()
 
         private val selectedDate = MutableStateFlow(LocalDate.now())
         private val weeklyProgressState = MutableStateFlow<UiState<CalendarUiModel>>(UiState.Loading)
-        private val selectedDateTodoState = MutableStateFlow<UiState<DailyProgressDetailUiModel>>(UiState.Loading)
+        private val selectedDateTodoState =
+            MutableStateFlow<UiState<DailyProgressDetailUiModel>>(UiState.Loading)
         private val goalInfoState = MutableStateFlow<UiState<GoalOverViewUiModel>>(UiState.Loading)
 
         val state: StateFlow<InProgressUiState> = combine(
@@ -60,7 +63,7 @@ class InProgressViewModel
                 weeklyProgressState = weekly,
                 selectedDailyState = daily,
                 goalInfoState = goal,
-                selectedDate = date.dayOfMonth,
+                selectedDate = date,
             )
         }.stateIn(
             viewModelScope,
@@ -113,8 +116,20 @@ class InProgressViewModel
                 is InProgressAction.SelectDate -> updateTodoList(action.selectedDate)
                 is InProgressAction.UpdateNextMonth -> updateNextMonth()
                 is InProgressAction.UpdatePreviousMonth -> updatePreviousMonth()
-                InProgressAction.NavigateToComment -> {} // TODO: 룸 아이디 구해서 넘겨주기
-                InProgressAction.NavigateToGoalDetail -> sendEvent(InProgressEvent.NavigateToGoalDetail(goalId))
+                InProgressAction.NavigateToComment -> {
+                    sendEvent(
+                        InProgressEvent.NavigateToComment(
+                            commentRoomId,
+                            startDate = goalInfoState.successData().startDate.toString(),
+                        ),
+                    )
+                }
+
+                InProgressAction.NavigateToGoalDetail -> sendEvent(
+                    InProgressEvent.NavigateToGoalDetail(
+                        goalId,
+                    ),
+                )
             }
         }
 
@@ -142,7 +157,11 @@ class InProgressViewModel
                     todoId = todoId,
                     updatedStatus = convertToDomain(updatedState),
                 ).onFailure {
-                    updateTodosUi(dailyProgress = dailyProgress, todoId = todoId, updatedState = currentState)
+                    updateTodosUi(
+                        dailyProgress = dailyProgress,
+                        todoId = todoId,
+                        updatedState = currentState,
+                    )
                     // 에러 처리
                 }
             }

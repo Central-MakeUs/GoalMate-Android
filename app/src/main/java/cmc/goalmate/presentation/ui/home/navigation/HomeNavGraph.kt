@@ -27,7 +27,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
 
         composable<Screen.Main.MyGoal> {
             MyGoalsScreen(
-                navigateToCompletedGoal = { id -> navController.navigateToCompleted(id) },
+                navigateToCompletedGoal = navController::navigateToCompleted,
                 navigateToProgressGoal = navController::navigateToInProgress,
                 navigateToGoalDetail = { id -> navController.navigateToDetail(id) },
                 navigateToHome = { navController.navigateToHome(Screen.Main.MyGoal) },

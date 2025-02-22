@@ -1,7 +1,6 @@
 package cmc.goalmate.app.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,22 +51,4 @@ fun GoalMateNavHost(navController: NavHostController) {
             )
         }
     }
-}
-
-fun NavController.navigateToInProgress(
-    goalId: Int,
-    title: String,
-) {
-    navigate(Screen.InProgressGoal(goalId = goalId, goalTitle = title))
-}
-
-fun NavController.navigateToCompleted(goalId: Int) {
-    navigate(Screen.CompletedGoal(goalId = goalId))
-}
-
-fun NavController.navigateToCommentDetail(
-    id: Int,
-    title: String,
-) {
-    navigate(Screen.CommentsDetail(roomId = id, goalTitle = title))
 }

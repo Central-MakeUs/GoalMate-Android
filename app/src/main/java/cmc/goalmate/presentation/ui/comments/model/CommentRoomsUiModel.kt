@@ -11,6 +11,7 @@ data class CommentRoomsUiModel(
     val imageUrl: String,
     val mentorName: String,
     val title: String,
+    val startDate: String,
     val remainingDays: Int,
     val goalState: MyGoalUiState,
     val hasNewComment: Boolean = false,
@@ -20,18 +21,9 @@ data class CommentRoomsUiModel(
             roomId = 0,
             imageUrl = "",
             mentorName = "ANNA",
+            startDate = "",
             title = "ANNA와 함께하는 영어 완전 정복 30일 목표입니다 블라블라블라",
             remainingDays = 23,
-            goalState = MyGoalUiState.IN_PROGRESS,
-            hasNewComment = true,
-        )
-
-        val DUMMY2 = CommentRoomsUiModel(
-            roomId = 1,
-            imageUrl = "",
-            mentorName = "ANNA",
-            title = "ANNA와 함께하는 영어 완전 정복 30일 목표",
-            remainingDays = 0,
             goalState = MyGoalUiState.IN_PROGRESS,
             hasNewComment = true,
         )
@@ -47,6 +39,7 @@ fun CommentRoom.toUi(): CommentRoomsUiModel {
         imageUrl = "",
         mentorName = mentorName,
         title = menteeGoalTitle,
+        startDate = startDate.toString(),
         remainingDays = daysFromStart,
         goalState = MyGoalUiState.IN_PROGRESS,
         hasNewComment = newCommentsCount > 0,

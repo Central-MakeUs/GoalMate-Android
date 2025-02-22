@@ -5,9 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmc.goalmate.app.navigation.CommentDetailParams
 import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.AppBarWithBackButton
+import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
 fun CompletedScreen(
@@ -18,6 +20,23 @@ fun CompletedScreen(
     viewModel: CompletedGoalViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvent(viewModel.event) { event ->
+        when (event) {
+            is CompletedGoalEvent.NavigateToCommentDetail -> {
+                navigateToComments(
+                    CommentDetailParams(
+                        roomId = event.roomId,
+                        goalTitle = event.goalTitle,
+                        startDate = event.startDate,
+                    ),
+                )
+            }
+            is CompletedGoalEvent.NavigateToGoalDetail -> {
+                navigateToGoalDetail(event.goalId)
+            }
+        }
+    }
 
     Column {
         AppBarWithBackButton(

@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
+import cmc.goalmate.app.navigation.CommentDetailParams
 import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.AppBarWithBackButton
@@ -38,7 +39,7 @@ fun InProgressScreen(
     ObserveAsEvent(viewModel.event) { event ->
         when (event) {
             is InProgressEvent.NavigateToComment -> {
-                navigateToComments(event.commentRoomId, goalTitle)
+                navigateToComments(CommentDetailParams(event.commentRoomId, goalTitle, event.startDate))
             }
             is InProgressEvent.NavigateToGoalDetail -> {
                 navigateToGoalDetail(event.goalId)
