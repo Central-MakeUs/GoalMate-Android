@@ -5,14 +5,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -36,9 +35,11 @@ fun GoalMateProgressBar(
             color = myGoalState.progressIndicatorColor(),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(thickness)
-                .clip(RoundedCornerShape(14.dp)),
+                .height(thickness),
+            strokeCap = StrokeCap.Round,
+            gapSize = (-15).dp,
             trackColor = myGoalState.progressBackgroundColor(),
+            drawStopIndicator = {},
         )
         Spacer(Modifier.size(8.dp))
         Text(
