@@ -5,6 +5,8 @@ import cmc.goalmate.domain.model.Comments
 import cmc.goalmate.domain.model.Writer
 import cmc.goalmate.presentation.ui.comments.detail.model.MessageUiModel.Companion.DUMMY_MENTEE
 import cmc.goalmate.presentation.ui.comments.detail.model.MessageUiModel.Companion.DUMMY_MENTOR
+import cmc.goalmate.presentation.ui.util.calculateDaysFromStart
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 enum class SenderUiModel {
@@ -23,24 +25,32 @@ data class MessageUiModel(val id: Int, val content: String, val sender: SenderUi
     }
 }
 
-data class CommentUiModel(val date: String, val messages: List<MessageUiModel>) {
+data class CommentUiModel(val date: String, val daysFromStart: Int, val messages: List<MessageUiModel>) {
     companion object {
         val DUMMY =
-            CommentUiModel(date = "2024년 11월 25일", messages = listOf(DUMMY_MENTEE, DUMMY_MENTOR))
+            CommentUiModel(date = "2024년 11월 25일", daysFromStart = 3, messages = listOf(DUMMY_MENTEE, DUMMY_MENTOR))
     }
 }
 
-fun Comments.toUi(dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): List<CommentUiModel> {
-    val groupedComments = mutableMapOf<String, MutableList<MessageUiModel>>()
+fun Comments.toUi(
+    goalStartDate: LocalDate,
+    dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"),
+): List<CommentUiModel> {
+    val groupedComments = mutableMapOf<LocalDate, MutableList<MessageUiModel>>()
 
     for (comment in this.comments) {
-        val formattedDate = comment.commentedAt.toLocalDate().format(dateFormatter)
+        val formattedDate = comment.commentedAt.toLocalDate()
         groupedComments.getOrPut(formattedDate) { mutableListOf() }.add(comment.toUi())
     }
 
     return groupedComments.map { (date, messages) ->
+        val daysFromStart = calculateDaysFromStart(
+            endDate = date,
+            startDate = goalStartDate,
+        )
         CommentUiModel(
-            date = date,
+            date = date.format(dateFormatter),
+            daysFromStart = daysFromStart,
             messages = messages,
         )
     }

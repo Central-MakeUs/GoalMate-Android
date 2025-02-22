@@ -19,7 +19,7 @@ sealed interface InProgressAction {
 sealed interface InProgressEvent {
     data object TodoModificationNotAllowed : InProgressEvent
 
-    data class NavigateToComment(val commentRoomId: Int) : InProgressEvent
+    data class NavigateToComment(val commentRoomId: Int, val startDate: String) : InProgressEvent
 
     data class NavigateToGoalDetail(val goalId: Int) : InProgressEvent
 }

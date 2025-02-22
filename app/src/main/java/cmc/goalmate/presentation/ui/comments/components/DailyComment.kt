@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -24,9 +25,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.Primary10
+import cmc.goalmate.presentation.theme.color.Primary700
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.comments.detail.CommentAction
@@ -44,14 +47,11 @@ fun DailyComment(
         verticalArrangement = Arrangement.spacedBy(GoalMateDimens.VerticalArrangementSpaceMedium),
         modifier = modifier,
     ) {
-        Text(
-            text = comment.date,
-            style = MaterialTheme.goalMateTypography.bodySmallMedium,
-            color = MaterialTheme.goalMateColors.textButton,
-            textAlign = TextAlign.Center,
+        CommentDateHeader(
+            commentDate = comment.date,
+            daysFromStart = "4",
             modifier = Modifier.fillMaxWidth(),
         )
-
         comment.messages.forEach { message ->
             DailyCommentItem(
                 id = message.id,
@@ -61,6 +61,32 @@ fun DailyComment(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+    }
+}
+
+@Composable
+private fun CommentDateHeader(
+    commentDate: String,
+    daysFromStart: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier,
+    ) {
+        Text(
+            text = commentDate,
+            style = MaterialTheme.goalMateTypography.bodySmallMedium,
+            color = MaterialTheme.goalMateColors.textButton,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.size(6.dp))
+        TextTag(
+            text = "D+$daysFromStart",
+            textColor = MaterialTheme.goalMateColors.background,
+            backgroundColor = Primary700,
+        )
     }
 }
 
