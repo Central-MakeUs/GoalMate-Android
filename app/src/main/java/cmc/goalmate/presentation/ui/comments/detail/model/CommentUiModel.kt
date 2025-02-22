@@ -32,9 +32,11 @@ data class CommentUiModel(val date: String, val daysFromStart: Int, val messages
     }
 }
 
+val commentDateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+
 fun Comments.toUi(
     goalStartDate: LocalDate,
-    dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"),
+    dateFormatter: DateTimeFormatter = commentDateFormatter,
 ): List<CommentUiModel> {
     val groupedComments = mutableMapOf<LocalDate, MutableList<MessageUiModel>>()
 

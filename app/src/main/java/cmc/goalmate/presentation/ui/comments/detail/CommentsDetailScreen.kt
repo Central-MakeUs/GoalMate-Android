@@ -21,7 +21,7 @@ import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 fun CommentsDetailScreen(
     goalTitle: String,
     navigateBack: () -> Unit,
-    viewModel: CommentsViewModel = hiltViewModel(),
+    viewModel: CommentsDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var commentText by rememberSaveable { mutableStateOf("") }
@@ -41,6 +41,11 @@ fun CommentsDetailScreen(
             CommentEvent.CancelEdit -> {
                 showCancelButton = false
                 commentText = ""
+            }
+
+            CommentEvent.SuccessSending -> {
+                commentText = ""
+                showCancelButton = false
             }
         }
     }
