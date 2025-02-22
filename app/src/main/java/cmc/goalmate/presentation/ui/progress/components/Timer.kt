@@ -12,6 +12,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +26,13 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.progress.components.TimerStatus.EXPIRED
+import cmc.goalmate.presentation.ui.progress.components.TimerStatus.RUNNING
 import cmc.goalmate.presentation.ui.progress.components.TimerStatus.URGENT
+import kotlinx.coroutines.delay
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 enum class TimerStatus {
     RUNNING,
@@ -52,10 +63,20 @@ private fun TimerStatus.borderColor(): Color =
 
 @Composable
 fun GoalMateTimer(
-    time: String,
     timerStatus: TimerStatus,
     modifier: Modifier = Modifier,
 ) {
+    var remainingTime by remember { mutableLongStateOf(getTimeUntilMidnight()) }
+
+    LaunchedEffect(timerStatus) {
+        if (timerStatus == RUNNING) {
+            while (remainingTime > 0) {
+                delay(1000L)
+                remainingTime = getTimeUntilMidnight()
+            }
+        }
+    }
+
     Row(
         modifier = modifier
             .border(
@@ -63,7 +84,10 @@ fun GoalMateTimer(
                 color = timerStatus.borderColor(),
                 shape = RoundedCornerShape(12.dp),
             )
-            .background(timerStatus.backgroundColor(), shape = RoundedCornerShape(12.dp))
+            .background(
+                color = timerStatus.backgroundColor(),
+                shape = RoundedCornerShape(12.dp),
+            )
             .padding(vertical = 6.dp, horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
@@ -77,7 +101,7 @@ fun GoalMateTimer(
             return
         }
         Text(
-            text = time,
+            text = formatDuration(remainingTime),
             style = MaterialTheme.goalMateTypography.bodySmallMedium,
             color = timerStatus.textColor(),
         )
@@ -90,13 +114,25 @@ fun GoalMateTimer(
     }
 }
 
+fun getTimeUntilMidnight(): Long {
+    val now = LocalDateTime.now()
+    val midnight = LocalDate.now().atStartOfDay().plusDays(1)
+    return ChronoUnit.SECONDS.between(now, midnight).coerceAtLeast(0)
+}
+
+fun formatDuration(seconds: Long): String {
+    val hours = seconds / 3600
+    val minutes = (seconds % 3600) / 60
+    val secs = seconds % 60
+    return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, secs)
+}
+
 @Composable
 @Preview
 private fun GoalMateTimerPreview() {
     GoalMateTheme {
         GoalMateTimer(
-            "23:59:59",
-            timerStatus = EXPIRED,
+            timerStatus = RUNNING,
         )
     }
 }

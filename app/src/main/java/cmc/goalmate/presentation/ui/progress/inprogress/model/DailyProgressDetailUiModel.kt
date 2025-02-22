@@ -3,6 +3,8 @@ package cmc.goalmate.presentation.ui.progress.inprogress.model
 import cmc.goalmate.domain.model.DailyTodos
 import cmc.goalmate.domain.model.Todo
 import cmc.goalmate.domain.model.TodoStatus
+import cmc.goalmate.presentation.ui.progress.components.TimerStatus
+import cmc.goalmate.presentation.ui.progress.components.getTimeUntilMidnight
 import cmc.goalmate.presentation.ui.util.calculateProgress
 import java.time.LocalDate
 
@@ -19,11 +21,23 @@ data class DailyProgressDetailUiModel(
         totalCompletedCount = completedTodayTodoCount,
     )
 
+    val timerStatus: TimerStatus
+        get() = if (selectedDate == LocalDate.now()) {
+            val remainingSeconds = getTimeUntilMidnight()
+            when {
+                remainingSeconds <= 0 -> TimerStatus.EXPIRED
+                remainingSeconds <= 1800 -> TimerStatus.URGENT
+                else -> TimerStatus.RUNNING
+            }
+        } else {
+            TimerStatus.EXPIRED
+        }
+
     fun canModifyTodo(comparedDate: LocalDate = LocalDate.now()): Boolean = selectedDate == comparedDate
 
     companion object {
         val DUMMY = DailyProgressDetailUiModel(
-            selectedDate = LocalDate.of(2025, 2, 20),
+            selectedDate = LocalDate.of(2025, 2, 22),
             todos = TodoGoalUiModel.DUMMY,
         )
     }
