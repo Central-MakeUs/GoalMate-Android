@@ -69,7 +69,7 @@ fun GoalMateTimer(
     var remainingTime by remember { mutableLongStateOf(getTimeUntilMidnight()) }
 
     LaunchedEffect(timerStatus) {
-        if (timerStatus == RUNNING) {
+        if (timerStatus == RUNNING || timerStatus == URGENT) {
             while (remainingTime > 0) {
                 delay(1000L)
                 remainingTime = getTimeUntilMidnight()
@@ -92,7 +92,7 @@ fun GoalMateTimer(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
-        if (timerStatus == EXPIRED) {
+        if (timerStatus == EXPIRED || remainingTime == 0L) {
             Text(
                 text = "time over",
                 style = MaterialTheme.goalMateTypography.bodySmallMedium,
