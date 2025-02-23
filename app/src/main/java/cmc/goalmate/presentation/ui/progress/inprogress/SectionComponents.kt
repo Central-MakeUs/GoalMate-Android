@@ -72,7 +72,6 @@ fun DailyTodoSection(
             Column(modifier = modifier) {
                 GoalTasks(
                     dailyProgress = dailyProgress,
-                    isEnabled = dailyProgress.canModifyTodo(),
                     onAction = onAction,
                     modifier = Modifier
                         .background(MaterialTheme.goalMateColors.thickDivider)
@@ -98,7 +97,6 @@ fun DailyTodoSection(
 @Composable
 private fun GoalTasks(
     dailyProgress: DailyProgressDetailUiModel,
-    isEnabled: Boolean,
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -122,7 +120,6 @@ private fun GoalTasks(
         dailyProgress.todos.forEachIndexed { index, todo ->
             ToDoItem(
                 todo = todo,
-                isEnabled = isEnabled,
                 onCheckedChange = { onAction(InProgressAction.CheckTodo(todoId = todo.id, currentState = todo.isCompleted)) },
             )
             if (index != dailyProgress.todos.lastIndex) {

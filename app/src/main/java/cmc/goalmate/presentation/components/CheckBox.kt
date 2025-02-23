@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +43,9 @@ fun GoalMateCheckBox(
     Box(
         modifier = modifier
             .size(GoalMateDimens.CheckBoxSize)
-            .background(color = contentColor, RoundedCornerShape(4.dp))
+            .padding(3.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .background(color = contentColor, )
             .clickable(enabled = isEnabled, onClick = { onCheckedChange() }),
     ) {
         Column(
@@ -52,6 +56,7 @@ fun GoalMateCheckBox(
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.icon_checkbox_check),
                     contentDescription = null,
+                    modifier = Modifier.size(width = 10.dp, height = 7.dp),
                 )
             }
         }

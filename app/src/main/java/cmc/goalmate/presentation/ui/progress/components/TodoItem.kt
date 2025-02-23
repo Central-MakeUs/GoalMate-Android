@@ -36,7 +36,6 @@ import cmc.goalmate.presentation.ui.progress.inprogress.model.TodoGoalUiModel
 @Composable
 fun ToDoItem(
     todo: TodoGoalUiModel,
-    isEnabled: Boolean,
     onCheckedChange: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -49,7 +48,6 @@ fun ToDoItem(
         GoalMateCheckBox(
             isChecked = todo.isCompleted,
             onCheckedChange = onCheckedChange,
-            isEnabled = isEnabled,
         )
         Column(
             modifier = Modifier.weight(1f),
@@ -176,7 +174,6 @@ private fun ToDoItemPreview() {
                 false,
                 tip = "영어 단어 보카 암기 할 때는 이렇게 하는 게 좋아요 블라블라",
             ),
-            isEnabled = true,
             onCheckedChange = {},
             modifier = Modifier.background(White),
         )

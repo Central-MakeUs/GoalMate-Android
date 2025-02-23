@@ -134,6 +134,7 @@ class InProgressViewModel
                 )
 
                 is InProgressAction.SwipeLeft -> {
+                    // TODO: 스와이프 시 이전 데이터 로드
                 }
             }
         }
