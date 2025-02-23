@@ -16,4 +16,6 @@ interface AuthRepository {
     suspend fun deleteToken(): DomainResult<Unit, DataError.Local>
 
     suspend fun validateToken(): DomainResult<Unit, DataError>
+
+    suspend fun logout(): DomainResult<Unit, DataError>
 }

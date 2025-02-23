@@ -1,5 +1,6 @@
 package cmc.goalmate.data.repository
 
+import android.util.Log
 import cmc.goalmate.data.datasource.AuthDataSource
 import cmc.goalmate.data.datasource.TokenDataSource
 import cmc.goalmate.data.mapper.toDataError
@@ -33,6 +34,7 @@ class AuthRepositoryImpl
 
         override suspend fun isLogin(): Flow<Boolean> =
             tokenDataSource.getToken().map { token ->
+                Log.d("yenny", "$token")
                 token.accessToken.isNotBlank() && token.refreshToken.isNotBlank()
             }
 
@@ -77,4 +79,6 @@ class AuthRepositoryImpl
                     },
                 )
         }
+
+        override suspend fun logout(): DomainResult<Unit, DataError> = deleteToken()
     }
