@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -89,8 +91,14 @@ fun GoalDetailContent(
             )
         }
 
-        // TODO: 상세이미지 위치
-        Spacer(Modifier.size(120.dp))
+        goal.detailImageUrls.forEach {
+            GoalMateImage(
+                image = it,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Spacer(Modifier.size(123.dp))
     }
 }
 
@@ -101,7 +109,7 @@ private fun ThumbnailsSlider(
 ) {
     if (imageUrls.isEmpty()) {
         GoalMateImage(
-            modifier = modifier
+            modifier = modifier,
         )
         return
     }
@@ -258,10 +266,11 @@ fun GoalList(
 @Composable
 @Preview(showBackground = true)
 private fun GoalDetailScreenPreview() {
+    var scrollState = rememberScrollState()
     GoalMateTheme {
         GoalDetailContent(
             goal = GoalDetailUiModel.DUMMY,
-            modifier = Modifier.background(White),
+            modifier = Modifier.background(White).verticalScroll(scrollState),
         )
     }
 }
