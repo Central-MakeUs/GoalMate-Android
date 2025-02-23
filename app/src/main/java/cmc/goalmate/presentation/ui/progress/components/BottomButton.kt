@@ -1,49 +1,38 @@
-package cmc.goalmate.presentation.ui.detail.components
+package cmc.goalmate.presentation.ui.progress.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cmc.goalmate.R
 import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 
 @Composable
-fun GoalStartButton(
-    isLoggedIn: Boolean,
-    isEnabled: Boolean,
-    availableSeatCount: Int,
+fun ProgressBottomButton(
+    buttonText: String,
     onClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val buttonText =
-        if (!isLoggedIn && isEnabled) {
-            stringResource(R.string.goal_detail_start_login_button)
-        } else {
-            stringResource(
-                R.string.goal_detail_start_button,
-            )
-        }
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box(
+        Spacer(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(20.dp)
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
@@ -53,21 +42,11 @@ fun GoalStartButton(
                         startY = 0f,
                     ),
                 )
-                .padding(bottom = 10.dp)
-                .heightIn(min = 20.dp),
-        ) {
-            if (isEnabled) {
-                FreeEntryCountTag(
-                    availableSeatCount = availableSeatCount,
-                    modifier = Modifier.align(Alignment.Center),
-                )
-            }
-        }
+        )
 
         GoalMateButton(
             content = buttonText,
             onClick = onClicked,
-            enabled = isEnabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.goalMateColors.background)
@@ -79,12 +58,10 @@ fun GoalStartButton(
 
 @Composable
 @Preview
-private fun GoalStartButtonPreview() {
+private fun ProgressBottomButtonPreview() {
     GoalMateTheme {
-        GoalStartButton(
-            availableSeatCount = 2,
-            isLoggedIn = true,
-            isEnabled = false,
+        ProgressBottomButton(
+            buttonText = "멘토 코멘트 받으러 가기",
             onClicked = {},
             modifier = Modifier,
         )

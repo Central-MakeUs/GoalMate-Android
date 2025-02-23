@@ -56,7 +56,7 @@ data class GoalDetailUiModel(
             maxMembers = 23,
             state = GoalUiStatus.AVAILABLE,
             description = "“영어를 하고 싶었지만 어떤 방법으로 해야 할 지, 루틴을 세우지만 어떤 방법이 효율적일지 고민이 많지 않았나요?”",
-            weeklyGoal = listOf(MilestoneUiModel("1주차", "간단한 단어부터 시작하기"), MilestoneUiModel("2주차", "기본 문장 읽기")),
+            weeklyGoal = listOf(MilestoneUiModel("1주", "간단한 단어부터 시작하기"), MilestoneUiModel("2주", "기본 문장 읽기")),
             milestones = listOf(MilestoneUiModel("1", "간단한 단어부터 시작하기"), MilestoneUiModel("2", "기본 문장 읽기")),
             detailImageUrls = listOf(""),
             isParticipated = false,

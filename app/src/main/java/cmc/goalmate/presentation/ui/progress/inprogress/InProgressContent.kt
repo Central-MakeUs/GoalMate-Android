@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.ui.progress.components.ProgressBottomButton
 
 @Composable
 fun InProgressScreenContent(
@@ -58,16 +59,10 @@ fun InProgressScreenContent(
             )
         }
 
-        GoalMateButton(
-            content = "멘토 코멘트 받으러 가기",
-            onClick = { onAction(InProgressAction.NavigateToComment) },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(
-                    horizontal = GoalMateDimens.HorizontalPadding,
-                    vertical = GoalMateDimens.BottomMargin,
-                ),
+        ProgressBottomButton(
+            buttonText = "멘토 코멘트 받으러 가기",
+            onClicked = { onAction(InProgressAction.NavigateToComment) },
+            modifier = Modifier.align(Alignment.BottomCenter),
         )
     }
 }

@@ -1,14 +1,23 @@
 package cmc.goalmate.presentation.ui.progress.completed
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.app.navigation.CommentDetailParams
 import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.AppBarWithBackButton
+import cmc.goalmate.presentation.theme.GoalMateDimens
+import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiModel
+import cmc.goalmate.presentation.ui.progress.components.ProgressBottomButton
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
@@ -45,8 +54,7 @@ fun CompletedScreen(
         )
         CompletedScreenContent(
             state = state,
-            navigateToComments = navigateToComments,
-            navigateToGoalDetail = navigateToGoalDetail,
+            onAction = viewModel::onAction,
             navigateToHome = navigateToHome,
         )
     }
@@ -55,22 +63,42 @@ fun CompletedScreen(
 @Composable
 private fun CompletedScreenContent(
     state: CompletedGoalUiState,
-    navigateToComments: NavigateToCommentDetail,
-    navigateToGoalDetail: NavigateToGoal,
+    onAction: (CompletedGoalAction) -> Unit,
     navigateToHome: () -> Unit,
 ) {
     when (state) {
         CompletedGoalUiState.Error -> {}
         CompletedGoalUiState.Loading -> {}
         is CompletedGoalUiState.Success -> {
-            MyGoalCompletedContent(
-                completedGoal = state.goal,
-                navigateToHome = { navigateToHome() },
-                navigateToGoalDetail = { navigateToGoalDetail(state.goal.id) },
-                navigateToCommentDetail = {
-                    // ROOM ID랑 Title 넘기기
-                },
-            )
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = GoalMateDimens.HorizontalPadding),
+            ) {
+                MyGoalCompletedContent(
+                    completedGoal = state.goal,
+                    navigateToGoalDetail = { onAction(CompletedGoalAction.NavigateToGoalDetail) },
+                    navigateToCommentDetail = {
+                        onAction(CompletedGoalAction.NavigateToCommentDetail)
+                    },
+                )
+                ProgressBottomButton(
+                    buttonText = "다음 목표 시작하기",
+                    onClicked = { navigateToHome() },
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                )
+            }
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun CompletedScreenContentPreview() {
+    GoalMateTheme {
+        CompletedScreenContent(
+            state = CompletedGoalUiState.Success(CompletedGoalUiModel.DUMMY),
+            onAction = {},
+            navigateToHome = {},
+        )
     }
 }

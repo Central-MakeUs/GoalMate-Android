@@ -1,6 +1,7 @@
 package cmc.goalmate.presentation.ui.detail
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -19,12 +20,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
+import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.detail.components.GoalStartButton
 import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
@@ -56,6 +59,7 @@ fun GoalDetailScreen(
                     navigateToCompleted(event.newGoalId, event.goalSummary)
                 }
             }
+
             GoalDetailEvent.NavigateToLogin -> navigateToLogin()
             GoalDetailEvent.ShowGoalStartConfirmation -> {
                 showBottomSheet = true
@@ -122,10 +126,20 @@ private fun GoalDetailScreenContent(
                 isEnabled = goal.isAvailable,
                 availableSeatCount = goal.remainingCount,
                 onClicked = onButtonClicked,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = GoalMateDimens.BottomMargin),
+                modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun GoalDetailScreenContentPreview() {
+    GoalMateTheme {
+        GoalDetailScreenContent(
+            isLoggedIn = false,
+            goal = GoalDetailUiModel.DUMMY,
+            onButtonClicked = {},
+        )
     }
 }

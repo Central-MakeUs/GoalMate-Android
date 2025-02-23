@@ -2,7 +2,6 @@ package cmc.goalmate.presentation.ui.progress.completed
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,9 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
-import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalDateRange
-import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.GoalMateProgressBar
 import cmc.goalmate.presentation.components.MoreOptionButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
@@ -41,49 +38,36 @@ import cmc.goalmate.presentation.ui.progress.components.Subtitle
 fun MyGoalCompletedContent(
     completedGoal: CompletedGoalUiModel,
     navigateToGoalDetail: () -> Unit,
-    navigateToHome: () -> Unit,
     navigateToCommentDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding)) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(30.dp),
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(
-                    top = GoalMateDimens.BottomMargin,
-                )
-                .verticalScroll(rememberScrollState()),
-        ) {
-            MoreOptionButton(
-                label = "목표 상세보기",
-                onClick = navigateToGoalDetail,
-                modifier = Modifier.align(Alignment.End),
+    Column(
+        verticalArrangement = Arrangement.spacedBy(30.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                top = GoalMateDimens.BottomMargin,
             )
-            GoalInfoOverview(
-                goal = completedGoal,
-            )
-            CompletedAchievementProgress(
-                achievementProgress = completedGoal.achievementProgress,
-            )
-            CommentSection(
-                nickName = "마루",
-                mentor = "다온",
-                comment = completedGoal.finalComment,
-                navigateToMoreComments = {
-                    // TODO: 코멘트 화면 이동
-                },
-            )
-            Spacer(Modifier.size(156.dp))
-        }
-        GoalMateButton(
-            content = "다음 목표 시작하기",
-            onClick = navigateToHome,
-            buttonSize = ButtonSize.LARGE,
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = GoalMateDimens.BottomMargin)
-                .align(Alignment.BottomCenter),
+            .verticalScroll(rememberScrollState()),
+    ) {
+        MoreOptionButton(
+            label = "목표 상세보기",
+            onClick = navigateToGoalDetail,
+            modifier = Modifier.align(Alignment.End),
         )
+        GoalInfoOverview(
+            goal = completedGoal,
+        )
+        CompletedAchievementProgress(
+            achievementProgress = completedGoal.achievementProgress,
+        )
+        CommentSection(
+            nickName = "마루",
+            mentor = "다온",
+            comment = completedGoal.finalComment,
+            navigateToMoreComments = navigateToCommentDetail,
+        )
+        Spacer(Modifier.size(156.dp))
     }
 }
 
@@ -185,7 +169,6 @@ private fun MyGoalCompletedContentPreview() {
     GoalMateTheme {
         MyGoalCompletedContent(
             completedGoal = CompletedGoalUiModel.DUMMY,
-            {},
             {},
             {},
             modifier = Modifier.background(White),
