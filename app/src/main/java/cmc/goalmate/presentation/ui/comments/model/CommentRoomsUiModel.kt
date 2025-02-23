@@ -36,12 +36,12 @@ fun CommentRoom.toUi(): CommentRoomsUiModel {
     val daysFromStart = ChronoUnit.DAYS.between(LocalDate.now(), endDate).toInt().coerceAtLeast(0)
     return CommentRoomsUiModel(
         roomId = commentRoomId,
-        imageUrl = "",
+        imageUrl = mentorProfileImage ?: "",
         mentorName = mentorName,
         title = menteeGoalTitle,
         startDate = startDate.toString(),
         remainingDays = daysFromStart,
-        goalState = MyGoalUiState.IN_PROGRESS,
+        goalState = if (endDate >= LocalDate.now()) MyGoalUiState.IN_PROGRESS else MyGoalUiState.COMPLETED,
         hasNewComment = newCommentsCount > 0,
     )
 }

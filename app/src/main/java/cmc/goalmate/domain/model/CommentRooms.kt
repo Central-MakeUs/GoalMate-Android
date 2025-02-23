@@ -12,4 +12,5 @@ data class CommentRoom(
     val endDate: LocalDate,
     val mentorName: String,
     val newCommentsCount: Int,
+    val mentorProfileImage: String?,
 )

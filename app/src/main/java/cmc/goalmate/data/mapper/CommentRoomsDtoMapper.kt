@@ -18,6 +18,7 @@ fun CommentRoomResponse.toData(): CommentRoomDto =
         endDate = endDate,
         mentorName = mentorName,
         newCommentsCount = newCommentsCount,
+        mentorProfileImage = mentorProfileImage,
     )
 
 fun CommentRoomsResponse.toData(): CommentRoomsDto = CommentRoomsDto(rooms = this.commentRooms.map { it.toData() })
@@ -33,4 +34,5 @@ fun CommentRoomDto.toDomain(formatter: DateTimeFormatter = goalMateDateFormatter
         endDate = LocalDate.parse(endDate, formatter),
         mentorName = mentorName,
         newCommentsCount = newCommentsCount,
+        mentorProfileImage = mentorProfileImage,
     )

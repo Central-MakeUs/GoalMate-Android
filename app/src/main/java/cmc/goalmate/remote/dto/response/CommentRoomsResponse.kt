@@ -18,4 +18,5 @@ data class CommentRoomResponse(
     @SerialName("end_date") val endDate: String,
     @SerialName("mentor_name") val mentorName: String,
     @SerialName("new_comments_count") val newCommentsCount: Int,
+    @SerialName("mentor_profile_image") val mentorProfileImage: String?,
 )
