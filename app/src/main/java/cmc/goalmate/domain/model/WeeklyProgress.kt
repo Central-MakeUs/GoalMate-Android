@@ -10,13 +10,13 @@ data class WeeklyProgress(
     val hasNextWeek: Boolean,
 )
 
-sealed class DailyProgress {
+sealed class DailyProgress(open val date: LocalDate) {
     data class ValidProgress(
-        val date: LocalDate,
+        override val date: LocalDate,
         val dayOfWeek: Weekday,
-        val dailyTodoCount: Int,
-        val completedDailyTodoCount: Int,
-    ) : DailyProgress() {
+        val dailyTodoCount: Int = 0,
+        val completedDailyTodoCount: Int = 0,
+    ) : DailyProgress(date) {
         fun getStatus(compared: LocalDate = LocalDate.now()): ProgressStatus =
             when {
                 date < compared -> ProgressStatus.Completed
@@ -26,9 +26,9 @@ sealed class DailyProgress {
     }
 
     data class InvalidProgress(
-        val date: LocalDate,
+        override val date: LocalDate,
         val dayOfWeek: Weekday,
-    ) : DailyProgress()
+    ) : DailyProgress(date)
 }
 
 enum class Weekday {

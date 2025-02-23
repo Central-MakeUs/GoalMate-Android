@@ -6,13 +6,16 @@ import cmc.goalmate.data.mapper.toDomain
 import cmc.goalmate.data.model.toDomain
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
+import cmc.goalmate.domain.generateWeeklyCalendar
 import cmc.goalmate.domain.model.DailyTodos
+import cmc.goalmate.domain.model.GoalMateCalendar
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoals
 import cmc.goalmate.domain.model.TodoStatus
 import cmc.goalmate.domain.model.WeeklyProgress
 import cmc.goalmate.domain.model.toInfo
 import cmc.goalmate.domain.repository.MenteeGoalRepository
+import cmc.goalmate.domain.updateProgressForWeeks
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -98,4 +101,41 @@ class MenteeGoalRepositoryImpl
                     DomainResult.Error(it.toDataError())
                 },
             )
+
+        override suspend fun loadGoalMateCalendar(
+            menteeGoalId: Int,
+            startDate: LocalDate,
+            endDate: LocalDate,
+            targetDate: LocalDate,
+        ): DomainResult<GoalMateCalendar, DataError.Network> {
+            val weeklyProgressDto = menteeGoalDataSource.getWeeklyProgress(menteeGoalId, targetDate)
+                .getOrElse { return DomainResult.Error(it.toDataError()) }
+            val initialCalendar =
+                generateWeeklyCalendar(startDate = startDate, endDate = endDate, target = targetDate)
+
+            val updatedWeekData = updateProgressForWeeks(
+                weeks = initialCalendar.weeklyData,
+                updatedWeeklyDataDto = weeklyProgressDto,
+            )
+            val updatedCalendar = initialCalendar.copy(weeklyData = updatedWeekData)
+
+            if (!weeklyProgressDto.hasLastWeek) { // targetDate가 첫 주 일 경우
+                return DomainResult.Success(updatedCalendar.copy(shouldLoadPrevious = false))
+            }
+            // 이전 주차로 한 번 더 매핑
+            val newTargetDate = targetDate.minusWeeks(1)
+            val newWeeklyProgressDto =
+                menteeGoalDataSource.getWeeklyProgress(menteeGoalId, newTargetDate)
+                    .getOrElse { return DomainResult.Error(it.toDataError()) }
+            val newUpdatedWeekData = updateProgressForWeeks(
+                weeks = updatedCalendar.weeklyData,
+                updatedWeeklyDataDto = newWeeklyProgressDto,
+            )
+            return DomainResult.Success(
+                updatedCalendar.copy(
+                    weeklyData = newUpdatedWeekData,
+                    shouldLoadPrevious = newWeeklyProgressDto.hasLastWeek,
+                ),
+            )
+        }
     }

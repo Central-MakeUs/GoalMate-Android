@@ -3,6 +3,7 @@ package cmc.goalmate.domain.repository
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.model.DailyTodos
+import cmc.goalmate.domain.model.GoalMateCalendar
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoals
 import cmc.goalmate.domain.model.TodoStatus
@@ -29,4 +30,11 @@ interface MenteeGoalRepository {
         todoId: Int,
         updatedStatus: TodoStatus,
     ): DomainResult<Unit, DataError.Network>
+
+    suspend fun loadGoalMateCalendar(
+        menteeGoalId: Int,
+        startDate: LocalDate,
+        endDate: LocalDate,
+        targetDate: LocalDate,
+    ): DomainResult<GoalMateCalendar, DataError.Network>
 }
