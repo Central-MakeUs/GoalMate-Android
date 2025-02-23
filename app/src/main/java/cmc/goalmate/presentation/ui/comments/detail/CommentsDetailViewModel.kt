@@ -142,19 +142,14 @@ class CommentsDetailViewModel
             commentContent: String,
         ) {
             val beforeData = state.successData().comments
-
-            _state.update { state ->
-                state.success().copy(
-                    comments = state.success().comments.replaceContentMessage(
-                        targetId = targetId,
-                        updatedComment = commentContent,
-                    ),
-                )
-            }
-
+            val updated = state.successData().comments.replaceContentMessage(
+                targetId = targetId,
+                updatedComment = commentContent,
+            )
+            _state.value = state.value.success().copy(comments = updated)
             viewModelScope.launch {
                 commentRepository.updateComment(
-                    commentId = roomId,
+                    commentId = targetId,
                     content = commentContent,
                 ).onSuccess {
                     _event.send(CommentEvent.SuccessSending)

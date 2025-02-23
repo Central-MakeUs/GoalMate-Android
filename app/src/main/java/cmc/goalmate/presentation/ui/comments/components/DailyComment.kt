@@ -49,12 +49,12 @@ fun DailyComment(
     ) {
         CommentDateHeader(
             commentDate = comment.date,
-            daysFromStart = "4",
+            daysFromStart = "${comment.daysFromStart}",
             modifier = Modifier.fillMaxWidth(),
         )
         comment.messages.forEach { message ->
             DailyCommentItem(
-                id = message.id,
+                messageId = message.id,
                 content = message.content,
                 sender = message.sender,
                 onAction = onAction,
@@ -92,7 +92,7 @@ private fun CommentDateHeader(
 
 @Composable
 private fun DailyCommentItem(
-    id: Int,
+    messageId: Int,
     content: String,
     sender: SenderUiModel,
     onAction: (CommentAction) -> Unit,
@@ -126,8 +126,8 @@ private fun DailyCommentItem(
             GoalMateDropDownMenu(
                 isDropDownMenuExpanded = isDropDownMenuExpanded,
                 onDismissRequest = { isDropDownMenuExpanded = false },
-                onEditClicked = { onAction(CommentAction.EditComment(commentId = id)) },
-                onDeleteClicked = { onAction(CommentAction.DeleteComment(commentId = id)) },
+                onEditClicked = { onAction(CommentAction.EditComment(commentId = messageId)) },
+                onDeleteClicked = { onAction(CommentAction.DeleteComment(commentId = messageId)) },
             )
         }
 

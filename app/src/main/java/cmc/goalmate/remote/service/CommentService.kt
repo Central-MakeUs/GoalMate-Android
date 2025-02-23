@@ -9,8 +9,8 @@ import cmc.goalmate.remote.dto.response.CommentsResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface CommentService {
@@ -28,13 +28,13 @@ interface CommentService {
         @Body commentRequest: CommentRequest,
     ): ApiResponse<BaseResponse<CommentResponse>>
 
-    @PATCH("$COMMENT_ROOM/{commentId}")
+    @PUT("/comments/{commentId}")
     suspend fun updateComment(
         @Path("commentId") commentId: Int,
         @Body commentUpdatedRequest: CommentRequest,
     ): ApiResponse<BaseResponse<CommentResponse>>
 
-    @DELETE("$COMMENT_ROOM/{commentId}")
+    @DELETE("/comments/{commentId}")
     suspend fun deleteComment(
         @Path("commentId") commentId: Int,
     ): ApiResponse<BaseResponse<Unit>>

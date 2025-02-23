@@ -1,5 +1,6 @@
 package cmc.goalmate.data.util
 
+import android.util.Log
 import cmc.goalmate.data.exception.HttpException
 import cmc.goalmate.data.exception.NetworkException
 import cmc.goalmate.data.exception.UnknownException
@@ -10,6 +11,7 @@ fun <T> ApiResponse<BaseResponse<T>>.getOrThrow(): T =
     when (this) {
         is ApiResponse.Success -> data.data
         is ApiResponse.Failure -> {
+            Log.d("yenny", "getOrThrow error : $this")
             throw when (this) {
                 is ApiResponse.Failure.HttpException ->
                     HttpException(code = this.code, throwable = this.throwable)

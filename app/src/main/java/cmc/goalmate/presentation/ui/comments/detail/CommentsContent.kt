@@ -44,7 +44,7 @@ fun CommentsContent(
             verticalArrangement = Arrangement.spacedBy(44.dp),
             modifier = modifier,
         ) {
-            items(items = comments) { comment ->
+            items(items = comments, key = { it.date }) { comment ->
                 DailyComment(
                     comment = comment,
                     onAction = onAction,

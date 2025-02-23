@@ -46,12 +46,12 @@ fun CommentRoomsContent(
                 goal = goalComment,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = GoalMateDimens.HorizontalPadding)
                     .clickable {
                         navigateToCommentDetail(
                             CommentDetailParams(goalComment.roomId, goalComment.title, goalComment.startDate),
                         )
-                    },
+                    }
+                    .padding(horizontal = GoalMateDimens.HorizontalPadding),
             )
         }
     }

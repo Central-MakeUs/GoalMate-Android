@@ -34,6 +34,7 @@ fun CommentsDetailScreen(
                 showCancelButton = true
                 commentText = event.currentContent
             }
+
             CommentEvent.ShowSendingError -> {
                 isDialogVisible = true
             }
@@ -65,6 +66,7 @@ fun CommentsDetailScreen(
             CommentsDetailContent(
                 state = state,
                 onAction = viewModel::onAction,
+                modifier = Modifier.weight(1f),
             )
             CommentTextField(
                 commentText = commentText,
@@ -105,6 +107,7 @@ private fun CommentsDetailContent(
                 modifier = modifier,
             )
         }
+
         CommentsUiState.Error -> {}
         CommentsUiState.Loading -> {}
     }
