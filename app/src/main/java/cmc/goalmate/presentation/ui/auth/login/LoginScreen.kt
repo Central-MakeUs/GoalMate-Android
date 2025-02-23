@@ -43,7 +43,7 @@ import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.auth.AuthAction
 import cmc.goalmate.presentation.ui.auth.AuthEvent
-import cmc.goalmate.presentation.ui.auth.LoginViewModel
+import cmc.goalmate.presentation.ui.auth.AuthViewModel
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.firstStep
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
@@ -57,7 +57,7 @@ fun LoginScreen(
     navigateToHome: () -> Unit,
     navigateToNickNameSetting: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -71,7 +71,7 @@ fun LoginScreen(
             AuthEvent.GetAgreeWithTerms -> {
                 showBottomSheet = true
             }
-           else -> Unit
+            else -> Unit
         }
     }
 

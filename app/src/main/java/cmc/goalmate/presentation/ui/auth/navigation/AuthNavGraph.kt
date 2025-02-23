@@ -11,7 +11,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import cmc.goalmate.app.navigation.Screen
-import cmc.goalmate.presentation.ui.auth.LoginViewModel
+import cmc.goalmate.presentation.ui.auth.AuthViewModel
 import cmc.goalmate.presentation.ui.auth.login.LoginScreen
 import cmc.goalmate.presentation.ui.auth.nickname.NickNameSettingScreen
 import cmc.goalmate.presentation.ui.auth.welcome.WelcomeScreen
@@ -22,7 +22,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
         startDestination = Screen.Auth.Login::class,
     ) {
         composable<Screen.Auth.Login> { backStackEntry ->
-            val viewModel = backStackEntry.sharedViewModel<LoginViewModel>(navController)
+            val viewModel = backStackEntry.sharedViewModel<AuthViewModel>(navController)
             LoginScreen(
                 navigateBack = { navController.popBackStack() },
                 navigateToHome = { navController.navigateToHome(Screen.Auth.Login) },
@@ -32,7 +32,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
         }
 
         composable<Screen.Auth.NickNameSetting> { backStackEntry ->
-            val viewModel = backStackEntry.sharedViewModel<LoginViewModel>(navController)
+            val viewModel = backStackEntry.sharedViewModel<AuthViewModel>(navController)
             NickNameSettingScreen(
                 navigateNextPage = {
                     navController.navigate(Screen.Auth.Welcome)
@@ -43,7 +43,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
         }
 
         composable<Screen.Auth.Welcome> { backStackEntry ->
-            val viewModel = backStackEntry.sharedViewModel<LoginViewModel>(navController)
+            val viewModel = backStackEntry.sharedViewModel<AuthViewModel>(navController)
             WelcomeScreen(
                 nickName = viewModel.nickName,
                 navigateToNextPage = { navController.navigateToHome(Screen.Auth.Login) },

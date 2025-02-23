@@ -26,7 +26,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 
 @HiltViewModel
-class LoginViewModel
+class AuthViewModel
     @Inject
     constructor(
         private val validateNickName: ValidateNickName,
@@ -184,4 +184,5 @@ fun DataError.asUiText(): String =
         DataError.Network.CONFLICT -> "Conflict"
         DataError.Network.UNKNOWN -> "Unknown error"
         DataError.Local.IO_ERROR -> "DataStore error"
+        DataError.Local.NOT_FOUND -> "Caching error"
     }
