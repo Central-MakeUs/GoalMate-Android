@@ -92,11 +92,12 @@ class GoalDetailViewModel
         private fun startGoal() {
             viewModelScope.launch {
                 goalsRepository.startGoal(goalId)
-                    .onSuccess {
+                    .onSuccess { startedGoal ->
                         _event.send(
                             GoalDetailEvent.NavigateToGoalStart(
-                                newGoalId = it.id,
+                                newGoalId = startedGoal.newGoalId,
                                 goalSummary = state.value.goalSummary(),
+                                newCommentRoomId = startedGoal.newCommentRoomId,
                             ),
                         )
                     }

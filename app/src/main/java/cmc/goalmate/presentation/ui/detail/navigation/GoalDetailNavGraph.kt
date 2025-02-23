@@ -5,7 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import cmc.goalmate.app.navigation.InProgressGoalParams
 import cmc.goalmate.app.navigation.Screen
+import cmc.goalmate.app.navigation.navigateToInProgress
 import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
 import cmc.goalmate.presentation.ui.detail.GoalDetailScreen
 import cmc.goalmate.presentation.ui.detail.finish.PaymentCompletedScreen
@@ -19,9 +21,7 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
             GoalDetailScreen(
                 navigateBack = { navController.navigateUp() },
                 navigateToLogin = { navController.navigateToLogin() },
-                navigateToCompleted = { goaId, goalInfo ->
-                    navController.navigateToPaymentCompleted(goaId, goalInfo)
-                },
+                navigateToCompleted = navController::navigateToPaymentCompleted,
             )
         }
 
@@ -32,7 +32,16 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
             PaymentCompletedScreen(
                 goal = content.goalSummary,
                 navigateToAchievingGoal = {
-                    // TODO: 목표 시작 화면 -> content.newGoalId로 연결!
+                    navController.navigateToInProgress(
+                        params = InProgressGoalParams(
+                            goalId = content.newGoalId,
+                            goalTitle = content.goalSummary.title,
+                            roomId = content.newCommentRoomId,
+                        ),
+                    ) {
+                        popUpTo<Screen.GoalDetail> { inclusive = true }
+                        launchSingleTop = true
+                    }
                 },
             )
         }
@@ -43,9 +52,18 @@ fun NavController.navigateToDetail(goalId: Int) {
     navigate(Screen.GoalDetail.Detail(goalId = goalId))
 }
 
-fun NavController.navigateToPaymentCompleted(
-    goalId: Int,
-    goalSummary: GoalSummary,
-) {
-    navigate(Screen.GoalDetail.PaymentCompleted(newGoalId = goalId, goalSummary = goalSummary))
+data class PaymentCompletedParams(
+    val goalId: Int,
+    val commentRoomId: Int,
+    val goalSummary: GoalSummary,
+)
+
+fun NavController.navigateToPaymentCompleted(params: PaymentCompletedParams) {
+    navigate(
+        Screen.GoalDetail.PaymentCompleted(
+            newGoalId = params.goalId,
+            newCommentRoomId = params.commentRoomId,
+            goalSummary = params.goalSummary,
+        ),
+    )
 }

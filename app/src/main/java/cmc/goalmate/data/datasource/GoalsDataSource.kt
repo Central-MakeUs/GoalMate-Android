@@ -3,6 +3,7 @@ package cmc.goalmate.data.datasource
 import cmc.goalmate.data.mapper.toData
 import cmc.goalmate.data.model.GoalDetailDto
 import cmc.goalmate.data.model.GoalsDto
+import cmc.goalmate.data.model.StartedGoalDto
 import cmc.goalmate.data.model.toData
 import cmc.goalmate.data.util.getOrThrow
 import cmc.goalmate.remote.service.GoalService
@@ -21,8 +22,8 @@ class GoalsDataSource
                 goalService.getGoalDetail(goalId).getOrThrow().toData()
             }
 
-        suspend fun createGoalForMentee(goalId: Int): Result<Int> =
+        suspend fun createGoalForMentee(goalId: Int): Result<StartedGoalDto> =
             runCatching {
-                goalService.createGoalForMentee(goalId).getOrThrow()
+                goalService.createGoalForMentee(goalId).getOrThrow().toData()
             }
     }

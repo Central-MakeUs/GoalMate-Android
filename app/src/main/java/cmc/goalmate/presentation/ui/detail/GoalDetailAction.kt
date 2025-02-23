@@ -9,7 +9,7 @@ sealed interface GoalDetailAction {
 }
 
 sealed interface GoalDetailEvent {
-    data class NavigateToGoalStart(val newGoalId: Int, val goalSummary: GoalSummary) : GoalDetailEvent
+    data class NavigateToGoalStart(val newGoalId: Int, val goalSummary: GoalSummary, val newCommentRoomId: Int) : GoalDetailEvent
 
     data object NavigateToLogin : GoalDetailEvent
 

@@ -1,11 +1,15 @@
 package cmc.goalmate.app.navigation
 
 import androidx.navigation.NavController
+import androidx.navigation.NavOptionsBuilder
 
 data class InProgressGoalParams(val goalId: Int, val goalTitle: String, val roomId: Int)
 
-fun NavController.navigateToInProgress(params: InProgressGoalParams) {
-    navigate(Screen.InProgressGoal(goalId = params.goalId, goalTitle = params.goalTitle, roomId = params.roomId))
+fun NavController.navigateToInProgress(
+    params: InProgressGoalParams,
+    navOptions: NavOptionsBuilder.() -> Unit = {},
+) {
+    navigate(Screen.InProgressGoal(goalId = params.goalId, goalTitle = params.goalTitle, roomId = params.roomId), navOptions)
 }
 
 data class CompletedGoalParams(val goalId: Int, val roomId: Int)

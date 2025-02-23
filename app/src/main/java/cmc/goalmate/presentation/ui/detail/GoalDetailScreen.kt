@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,11 +25,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.AppBarWithBackButton
-import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.detail.components.GoalStartButton
-import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
+import cmc.goalmate.presentation.ui.detail.navigation.PaymentCompletedParams
 import cmc.goalmate.presentation.ui.detail.start.GoalStartScreen
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 import kotlinx.coroutines.launch
@@ -40,7 +38,7 @@ import kotlinx.coroutines.launch
 fun GoalDetailScreen(
     navigateBack: () -> Unit,
     navigateToLogin: () -> Unit,
-    navigateToCompleted: (goalId: Int, goalInfo: GoalSummary) -> Unit,
+    navigateToCompleted: (PaymentCompletedParams) -> Unit,
     viewModel: GoalDetailViewModel = hiltViewModel(),
 ) {
     val goalDetailUiState by viewModel.state.collectAsStateWithLifecycle()
@@ -56,7 +54,8 @@ fun GoalDetailScreen(
                     if (!sheetState.isVisible) {
                         showBottomSheet = false
                     }
-                    navigateToCompleted(event.newGoalId, event.goalSummary)
+                    val params = PaymentCompletedParams(goalId = event.newGoalId, commentRoomId = 0, goalSummary = event.goalSummary)
+                    navigateToCompleted(params)
                 }
             }
 
