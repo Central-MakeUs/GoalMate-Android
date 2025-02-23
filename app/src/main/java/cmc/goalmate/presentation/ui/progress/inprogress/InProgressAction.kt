@@ -5,10 +5,6 @@ import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiMod
 sealed interface InProgressAction {
     data class CheckTodo(val todoId: Int, val currentState: Boolean) : InProgressAction
 
-    data object UpdateNextMonth : InProgressAction
-
-    data object UpdatePreviousMonth : InProgressAction
-
     data class SelectDate(val selectedDate: DailyProgressUiModel) : InProgressAction
 
     data class SwipeLeft(val weekNumber: Int) : InProgressAction

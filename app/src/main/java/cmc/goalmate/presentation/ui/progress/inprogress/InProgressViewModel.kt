@@ -116,8 +116,6 @@ class InProgressViewModel
             when (action) {
                 is InProgressAction.CheckTodo -> updateTodoItem(action.todoId, action.currentState)
                 is InProgressAction.SelectDate -> updateTodoList(action.selectedDate)
-                is InProgressAction.UpdateNextMonth -> updateNextMonth()
-                is InProgressAction.UpdatePreviousMonth -> updatePreviousMonth()
                 InProgressAction.NavigateToComment -> {
                     sendEvent(
                         InProgressEvent.NavigateToComment(
@@ -157,6 +155,9 @@ class InProgressViewModel
             val updatedState = !currentState
             updateTodosUi(dailyProgress = dailyProgress, todoId = todoId, updatedState = updatedState)
 
+            val beforeGoalInfo = goalInfoState.successData()
+            calculateTotalTodoCount(beforeGoalInfo.completedTodoCount, isAdded = updatedState)
+
             viewModelScope.launch {
                 menteeGoalRepository.updateTodoStatus(
                     menteeGoalId = goalId,
@@ -168,9 +169,18 @@ class InProgressViewModel
                         todoId = todoId,
                         updatedState = currentState,
                     )
-                    // 에러 처리
+                    goalInfoState.value = UiState.Success(beforeGoalInfo)
                 }
             }
+        }
+
+        private fun calculateTotalTodoCount(
+            beforeCount: Int,
+            isAdded: Boolean,
+        ) {
+            val updated = if (isAdded) beforeCount + 1 else beforeCount - 1
+            goalInfoState.value =
+                UiState.Success(goalInfoState.successData().copy(completedTodoCount = updated))
         }
 
         private fun updateTodosUi(
@@ -205,13 +215,5 @@ class InProgressViewModel
                     selectedDateTodoState.value = UiState.Error(it.asUiText())
                 }
             }
-        }
-
-        private fun updateNextMonth() {
-            // TODO: 다음 주 데이터 요청
-        }
-
-        private fun updatePreviousMonth() {
-            // TODO: 저번 주 데이터 요청
         }
     }
