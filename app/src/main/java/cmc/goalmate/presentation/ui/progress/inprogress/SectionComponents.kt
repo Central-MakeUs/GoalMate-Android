@@ -2,16 +2,23 @@ package cmc.goalmate.presentation.ui.progress.inprogress
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -120,7 +127,14 @@ private fun GoalTasks(
         dailyProgress.todos.forEachIndexed { index, todo ->
             ToDoItem(
                 todo = todo,
-                onCheckedChange = { onAction(InProgressAction.CheckTodo(todoId = todo.id, currentState = todo.isCompleted)) },
+                onCheckedChange = {
+                    onAction(
+                        InProgressAction.CheckTodo(
+                            todoId = todo.id,
+                            currentState = todo.isCompleted,
+                        ),
+                    )
+                },
             )
             if (index != dailyProgress.todos.lastIndex) {
                 Spacer(Modifier.size(16.dp))
@@ -139,6 +153,7 @@ fun GoalInfoSection(
         is UiState.Error -> {
             Log.d("yenny", "GoalInfoSection error")
         }
+
         UiState.Loading -> {}
         is UiState.Success -> {
             val goalInfo = goalInfoState.data
@@ -207,13 +222,15 @@ fun GoalInfoDetail(
         val cellPaddingModifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
         val cellTextStyle = MaterialTheme.goalMateTypography.bodySmallMedium
 
-        Column {
+        Column(
+            modifier = Modifier.border(width = 1.dp, color = MaterialTheme.goalMateColors.surface, shape = RoundedCornerShape(6.dp)),
+        ) {
             listOf(
                 stringResource(R.string.goal_detail_start_title) to goalInfo.title,
                 stringResource(R.string.goal_detail_start_mentor_title) to goalInfo.mentor,
             ).forEach { (label, value) ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
                 ) {
                     Text(
                         text = label,
@@ -221,12 +238,21 @@ fun GoalInfoDetail(
                         style = cellTextStyle,
                         color = MaterialTheme.goalMateColors.labelTitle,
                     )
+                    VerticalDivider(
+                        thickness = 1.dp,
+                        color = MaterialTheme.goalMateColors.surface,
+                        modifier = Modifier.fillMaxHeight(),
+                    )
                     Text(
                         text = value,
                         modifier = cellPaddingModifier,
                         style = cellTextStyle,
                         color = MaterialTheme.goalMateColors.onSurfaceVariant,
                     )
+                }
+
+                if (label == stringResource(R.string.goal_detail_start_title)) {
+                    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.goalMateColors.surface)
                 }
             }
         }
@@ -240,6 +266,17 @@ private fun MyGoalProgressContentPreview() {
         DailyTodoSection(
             dailyProgressState = UiState.Success(DailyProgressDetailUiModel.DUMMY),
             onAction = {},
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun GoalInfoDetailPreview() {
+    GoalMateTheme {
+        GoalInfoDetail(
+            goalInfo = GoalOverViewUiModel.DUMMY,
+            onDetailButtonClicked = {},
         )
     }
 }
