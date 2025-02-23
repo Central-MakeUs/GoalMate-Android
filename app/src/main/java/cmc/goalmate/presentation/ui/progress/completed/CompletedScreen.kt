@@ -71,8 +71,7 @@ private fun CompletedScreenContent(
         CompletedGoalUiState.Loading -> {}
         is CompletedGoalUiState.Success -> {
             Box(
-                modifier = Modifier
-                    .padding(horizontal = GoalMateDimens.HorizontalPadding),
+                modifier = Modifier,
             ) {
                 MyGoalCompletedContent(
                     completedGoal = state.goal,
@@ -80,6 +79,7 @@ private fun CompletedScreenContent(
                     navigateToCommentDetail = {
                         onAction(CompletedGoalAction.NavigateToCommentDetail)
                     },
+                    modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
                 )
                 ProgressBottomButton(
                     buttonText = "다음 목표 시작하기",

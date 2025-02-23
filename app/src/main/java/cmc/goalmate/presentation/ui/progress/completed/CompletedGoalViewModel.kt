@@ -71,7 +71,7 @@ class CompletedGoalViewModel
                     CompletedGoalEvent.NavigateToCommentDetail(
                         roomId = commentRoomId,
                         goalTitle = (state.value as CompletedGoalUiState.Success).goal.title,
-                        startDate = (state.value as CompletedGoalUiState.Success).goal.startDate,
+                        startDate = (state.value as CompletedGoalUiState.Success).goal.startDate.toString(),
                     ),
                 )
 

@@ -3,6 +3,7 @@ package cmc.goalmate.presentation.ui.progress.completed.model
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoalStatus
 import cmc.goalmate.presentation.ui.util.calculateProgress
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 data class CompletedGoalUiModel(
@@ -10,18 +11,20 @@ data class CompletedGoalUiModel(
     val title: String,
     val mentor: String,
     val period: String,
-    val startDate: String,
+    val startDate: LocalDate,
     val endDate: String,
     val achievementProgress: Float,
     val finalComment: String,
 ) {
+    val formattedStartDate: String = "${startDate.format(menteeGoalDateFormatter)} 부터"
+
     companion object {
         val DUMMY = CompletedGoalUiModel(
             id = 0,
             title = "마루와 함께하는 백엔드 서버 찐천재",
             mentor = "마루",
             period = "30일",
-            startDate = "2025년 10월 19일",
+            startDate = LocalDate.now(),
             endDate = "2025년 11월 19일",
             achievementProgress = 80f,
             finalComment = "김골메이트님!\n" +
@@ -36,14 +39,16 @@ data class CompletedGoalUiModel(
     }
 }
 
-internal fun MenteeGoalInfo.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): CompletedGoalUiModel {
+val menteeGoalDateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+
+internal fun MenteeGoalInfo.toUi(formatter: DateTimeFormatter = menteeGoalDateFormatter): CompletedGoalUiModel {
     require(menteeGoalStatus is MenteeGoalStatus.Completed) { "Goal status must be Completed : $menteeGoalStatus" }
     return CompletedGoalUiModel(
         id = id,
         title = title,
         mentor = mentorName,
         period = "${period}일",
-        startDate = "${startDate.format(formatter)} 부터",
+        startDate = startDate,
         endDate = "${endDate.format(formatter)} 까지",
         achievementProgress = calculateProgress(totalCompletedCount, totalTodoCount),
         finalComment = menteeGoalStatus.finalComment,
