@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import cmc.goalmate.app.navigation.Screen
-import cmc.goalmate.domain.fold
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.MenteeGoalRepository
@@ -26,9 +25,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -73,40 +72,43 @@ class InProgressViewModel
 
         init {
             loadInitialData()
+            loadTodayTodos()
         }
 
         private fun loadInitialData() {
             viewModelScope.launch {
-                combine(
-                    flow { emit(menteeGoalRepository.getWeeklyProgress(goalId, LocalDate.now())) },
-                    flow { emit(menteeGoalRepository.getDailyTodos(goalId, LocalDate.now())) },
-                    flow { emit(menteeGoalRepository.getGoalInfo(goalId)) },
-                ) { weeklyProgressResult, dailyTodosResult, goalInfoResult ->
-                    Triple(
-                        weeklyProgressResult.fold(
-                            onSuccess = { UiState.Success(it.toUi()) },
-                            onFailure = { UiState.Error(it.asUiText()) },
-                        ),
-                        dailyTodosResult.fold(
-                            onSuccess = {
-                                UiState.Success(
-                                    it.toUi(LocalDate.now()),
-                                )
-                            },
-                            onFailure = { UiState.Error(it.asUiText()) },
-                        ),
-                        goalInfoResult.fold(
-                            onSuccess = { UiState.Success(it.toUi()) },
-                            onFailure = {
-                                UiState.Error(it.asUiText())
-                            },
-                        ),
+                val goalInfoResult = menteeGoalRepository.getGoalInfo(goalId)
+
+                goalInfoResult.onSuccess { goalInfo ->
+                    goalInfoState.update {
+                        UiState.Success(goalInfo.toUi())
+                    }
+                    val goalMateCalendarResult = menteeGoalRepository.loadGoalMateCalendar(
+                        menteeGoalId = goalId,
+                        startDate = goalInfo.startDate,
+                        endDate = goalInfo.endDate,
+                        targetDate = LocalDate.now(),
                     )
-                }.collect { (weeklyProgressState, dailyTodosState, goalInfoState) ->
-                    this@InProgressViewModel.weeklyProgressState.value = weeklyProgressState
-                    selectedDateTodoState.value = dailyTodosState
-                    this@InProgressViewModel.goalInfoState.value = goalInfoState
+                    goalMateCalendarResult.onSuccess { goalMateCalendar ->
+                        weeklyProgressState.value = UiState.Success(goalMateCalendar.toUi())
+                    }.onFailure { error ->
+                        weeklyProgressState.value = UiState.Error(error.asUiText())
+                    }
+                }.onFailure { error ->
+                    goalInfoState.update { UiState.Error(error.asUiText()) }
                 }
+            }
+        }
+
+        private fun loadTodayTodos() {
+            viewModelScope.launch {
+                menteeGoalRepository.getDailyTodos(goalId, LocalDate.now())
+                    .onSuccess {
+                        selectedDateTodoState.value = UiState.Success(it.toUi(LocalDate.now()))
+                    }
+                    .onFailure {
+                        selectedDateTodoState.value = UiState.Error(it.asUiText())
+                    }
             }
         }
 
@@ -130,6 +132,9 @@ class InProgressViewModel
                         goalId,
                     ),
                 )
+
+                is InProgressAction.SwipeLeft -> {
+                }
             }
         }
 

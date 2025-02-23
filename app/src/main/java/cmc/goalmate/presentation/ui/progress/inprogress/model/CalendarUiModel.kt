@@ -3,17 +3,15 @@ package cmc.goalmate.presentation.ui.progress.inprogress.model
 import java.time.LocalDate
 
 data class CalendarUiModel(
-    val yearMonth: String,
-    val hasNext: Boolean,
-    val hasPrevious: Boolean,
-    val progressByDate: List<DailyProgressUiModel>,
+    val todayWeekNumber: Int,
+    val weeklyData: List<List<DailyProgressUiModel>>,
+    val hasMorePreviousData: Boolean,
 ) {
     companion object {
         val DUMMY = CalendarUiModel(
-            yearMonth = "2025년 1월",
-            hasNext = true,
-            hasPrevious = false,
-            progressByDate = DailyProgressUiModel.DUMMY_LIST,
+            todayWeekNumber = 2,
+            weeklyData = listOf(DailyProgressUiModel.DUMMY_LIST, DailyProgressUiModel.DUMMY_LIST_2),
+            hasMorePreviousData = false,
         )
     }
 }
@@ -29,7 +27,16 @@ data class DailyProgressUiModel(val actualDate: LocalDate, val status: ProgressU
             DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 24), status = ProgressUiState.InProgress),
             DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 25), status = ProgressUiState.NotStart),
             DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 26), status = ProgressUiState.NotStart),
-            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 27), status = ProgressUiState.NotInProgress),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 27), status = ProgressUiState.NotStart),
+        )
+        val DUMMY_LIST_2 = listOf(
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 2, 28), status = ProgressUiState.NotStart),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 3, 1), status = ProgressUiState.NotStart),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 3, 2), status = ProgressUiState.NotStart),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 3, 3), status = ProgressUiState.NotInProgress),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 3, 4), status = ProgressUiState.NotInProgress),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 3, 5), status = ProgressUiState.NotInProgress),
+            DailyProgressUiModel(actualDate = LocalDate.of(2025, 3, 6), status = ProgressUiState.NotInProgress),
         )
     }
 }

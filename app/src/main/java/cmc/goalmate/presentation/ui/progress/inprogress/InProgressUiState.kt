@@ -10,7 +10,7 @@ data class InProgressUiState(
     val weeklyProgressState: UiState<CalendarUiModel>,
     val selectedDailyState: UiState<DailyProgressDetailUiModel>,
     val goalInfoState: UiState<GoalOverViewUiModel>,
-    val selectedDate: Int = LocalDate.now().dayOfMonth,
+    val selectedDate: LocalDate = LocalDate.now(),
 ) {
     companion object {
         val initialState = InProgressUiState(

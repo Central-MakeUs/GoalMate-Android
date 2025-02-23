@@ -11,6 +11,8 @@ sealed interface InProgressAction {
 
     data class SelectDate(val selectedDate: DailyProgressUiModel) : InProgressAction
 
+    data class SwipeLeft(val weekNumber: Int) : InProgressAction
+
     data object NavigateToGoalDetail : InProgressAction
 
     data object NavigateToComment : InProgressAction

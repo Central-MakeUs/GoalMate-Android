@@ -29,19 +29,18 @@ import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
 import cmc.goalmate.presentation.ui.progress.components.GoalMateTimer
 import cmc.goalmate.presentation.ui.progress.components.Subtitle
-import cmc.goalmate.presentation.ui.progress.components.TimerStatus
 import cmc.goalmate.presentation.ui.progress.components.ToDoItem
 import cmc.goalmate.presentation.ui.progress.components.TodayProgress
 import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressDetailUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.GoalOverViewUiModel
-import cmc.goalmate.presentation.ui.progress.inprogress.model.TodoGoalUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.UiState
+import java.time.LocalDate
 
 @Composable
 fun CalendarSection(
     weeklyProgressState: UiState<CalendarUiModel>,
-    selectedDate: Int,
+    selectedDate: LocalDate,
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -72,7 +71,7 @@ fun DailyTodoSection(
             val dailyProgress = dailyProgressState.data
             Column(modifier = modifier) {
                 GoalTasks(
-                    todos = dailyProgress.todos,
+                    dailyProgress = dailyProgress,
                     isEnabled = dailyProgress.canModifyTodo(),
                     onAction = onAction,
                     modifier = Modifier
@@ -98,7 +97,7 @@ fun DailyTodoSection(
 
 @Composable
 private fun GoalTasks(
-    todos: List<TodoGoalUiModel>,
+    dailyProgress: DailyProgressDetailUiModel,
     isEnabled: Boolean,
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
@@ -113,21 +112,20 @@ private fun GoalTasks(
         ) {
             Subtitle(title = "오늘 해야 할 일")
             GoalMateTimer(
-                time = "23:00:00",
-                timerStatus = TimerStatus.RUNNING,
+                timerStatus = dailyProgress.timerStatus,
                 modifier = Modifier.width(136.dp),
             )
         }
 
         Spacer(Modifier.size(GoalMateDimens.ItemVerticalPaddingLarge))
 
-        todos.forEachIndexed { index, todo ->
+        dailyProgress.todos.forEachIndexed { index, todo ->
             ToDoItem(
                 todo = todo,
                 isEnabled = isEnabled,
                 onCheckedChange = { onAction(InProgressAction.CheckTodo(todoId = todo.id, currentState = todo.isCompleted)) },
             )
-            if (index != todos.lastIndex) {
+            if (index != dailyProgress.todos.lastIndex) {
                 Spacer(Modifier.size(16.dp))
             }
         }
@@ -242,5 +240,9 @@ fun GoalInfoDetail(
 @Preview(showBackground = true)
 private fun MyGoalProgressContentPreview() {
     GoalMateTheme {
+        DailyTodoSection(
+            dailyProgressState = UiState.Success(DailyProgressDetailUiModel.DUMMY),
+            onAction = {},
+        )
     }
 }

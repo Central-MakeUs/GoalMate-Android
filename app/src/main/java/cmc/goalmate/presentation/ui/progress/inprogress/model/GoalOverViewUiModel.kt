@@ -2,11 +2,14 @@ package cmc.goalmate.presentation.ui.progress.inprogress.model
 
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.presentation.ui.util.calculateProgress
+import java.time.LocalDate
 
 data class GoalOverViewUiModel(
     val goalId: Int,
     val title: String,
     val mentor: String,
+    val startDate: LocalDate,
+    val endDate: LocalDate,
     val totalTodoCount: Int,
     val completedTodoCount: Int,
 ) {
@@ -23,6 +26,8 @@ data class GoalOverViewUiModel(
             "다온",
             totalTodoCount = 20,
             completedTodoCount = 10,
+            startDate = LocalDate.of(2025, 2, 22),
+            endDate = LocalDate.of(2025, 3, 22),
         )
     }
 }
@@ -34,4 +39,6 @@ fun MenteeGoalInfo.toUi(): GoalOverViewUiModel =
         mentor = mentorName,
         totalTodoCount = totalTodoCount,
         completedTodoCount = totalCompletedCount,
+        startDate = startDate,
+        endDate = endDate,
     )
