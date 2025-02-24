@@ -19,7 +19,7 @@ val Primary900 = Color(0xFF709100)
 val Primary50 = Color(0xFFF4FFE5)
 val Primary100 = Color(0xFFE5FFBE)
 
-val Secondary03 = Color(0xFFF7FEFF)
+val Secondary03 = Color(0xFFF7F2FF)
 
 val Secondary01_400 = Color(0xFF8D4EFF)
 val Secondary01_500 = Color(0xFF7423FF)

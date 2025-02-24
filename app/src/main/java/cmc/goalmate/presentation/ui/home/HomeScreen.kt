@@ -3,7 +3,6 @@ package cmc.goalmate.presentation.ui.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -39,6 +38,7 @@ fun HomeScreen(
                 HomeContent(
                     goals = homeState.goals,
                     navigateToDetail = navigateToDetail,
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -53,8 +53,12 @@ private fun HomeContent(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = GoalMateDimens.HorizontalPadding),
+        modifier = modifier,
+        contentPadding = PaddingValues(
+            start = GoalMateDimens.HorizontalPadding,
+            end = GoalMateDimens.HorizontalPadding,
+            bottom = 105.dp,
+        ),
         horizontalArrangement = Arrangement.spacedBy(30.dp),
         verticalArrangement = Arrangement.spacedBy(30.dp),
     ) {

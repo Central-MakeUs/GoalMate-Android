@@ -83,7 +83,7 @@ private fun GoalThumbnail(
 ) {
     val imageModifier = Modifier.run {
         if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
-            this.alpha(0.2f)
+            this.alpha(0.5f)
         } else {
             this
         }
@@ -93,15 +93,6 @@ private fun GoalThumbnail(
         modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
-        if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
-            GoalMateImage(
-                image = R.drawable.image_sold_out,
-                modifier = Modifier.size(
-                    width = GoalMateDimens.GoalItemWidth,
-                    height = GoalMateDimens.GoalItemImageHeight,
-                ),
-            )
-        }
         GoalMateImage(
             image = goalImage,
             modifier = imageModifier.size(
@@ -110,6 +101,15 @@ private fun GoalThumbnail(
             ),
             shape = RoundedCornerShape(4.dp),
         )
+        if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
+            GoalMateImage(
+                image = R.drawable.icon_sold_out,
+                modifier = Modifier.size(
+                    width = GoalMateDimens.GoalItemWidth,
+                    height = GoalMateDimens.GoalItemImageHeight,
+                ),
+            )
+        }
     }
 }
 

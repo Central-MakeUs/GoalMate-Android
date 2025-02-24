@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -23,6 +24,7 @@ import cmc.goalmate.app.navigation.GoalMateNavHost
 import cmc.goalmate.presentation.components.BottomNavItem.Companion.bottomNavItemScreens
 import cmc.goalmate.presentation.components.BottomNavigationBar
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.goalMateColors
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -57,6 +59,7 @@ private fun GoalMateScreen(navController: NavHostController = rememberNavControl
     }
 
     Scaffold(
+        containerColor = MaterialTheme.goalMateColors.background,
         modifier = Modifier.imePadding(),
         bottomBar = {
             if (isBottomBarVisible) {

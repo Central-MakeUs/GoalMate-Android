@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,7 @@ import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.auth.AuthAction
 import cmc.goalmate.presentation.ui.auth.AuthEvent
 import cmc.goalmate.presentation.ui.auth.AuthUiState
-import cmc.goalmate.presentation.ui.auth.LoginViewModel
+import cmc.goalmate.presentation.ui.auth.AuthViewModel
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.secondStep
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
@@ -45,7 +46,7 @@ import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 fun NickNameSettingScreen(
     navigateNextPage: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -96,7 +97,9 @@ fun NickNameSettingContent(
         modifier = modifier,
     ) {
         StepProgressBar(steps = secondStep)
-        Spacer(modifier = Modifier.weight(1f))
+
+        Spacer(modifier = Modifier.size(68.dp))
+
         Text(
             text = stringResource(R.string.login_nick_name_setting_title),
             style = MaterialTheme.goalMateTypography.subtitleMedium,
@@ -142,7 +145,7 @@ private fun NickNameSettingScreenPreview() {
             onCompletedButtonClicked = { },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = GoalMateDimens.HorizontalPadding),
+                .padding(horizontal = GoalMateDimens.HorizontalPadding).navigationBarsPadding(),
         )
     }
 }

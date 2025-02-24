@@ -43,10 +43,10 @@ fun GoalMateCheckBox(
     Box(
         modifier = modifier
             .size(GoalMateDimens.CheckBoxSize)
+            .clickable(enabled = isEnabled, onClick = { onCheckedChange() })
             .padding(3.dp)
             .clip(RoundedCornerShape(4.dp))
-            .background(color = contentColor, )
-            .clickable(enabled = isEnabled, onClick = { onCheckedChange() }),
+            .background(color = contentColor)
     ) {
         Column(
             modifier = Modifier

@@ -52,8 +52,6 @@ fun CalendarSection(
     modifier: Modifier = Modifier,
 ) {
     when (weeklyProgressState) {
-        is UiState.Error -> {}
-        UiState.Loading -> {}
         is UiState.Success -> {
             GoalMateCalendar(
                 calendarData = weeklyProgressState.data,
@@ -62,6 +60,8 @@ fun CalendarSection(
                 modifier = modifier,
             )
         }
+        is UiState.Error -> {}
+        UiState.Loading -> {}
     }
 }
 
@@ -175,7 +175,8 @@ fun GoalInfoSection(
                 GoalInfoDetail(
                     goalInfo = goalInfo,
                     onDetailButtonClicked = { navigateToDetail(goalInfo.goalId) },
-                    modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+                    modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding)
+                        .padding(bottom = GoalMateDimens.VerticalSpacerLarge),
                 )
             }
         }
@@ -223,7 +224,11 @@ fun GoalInfoDetail(
         val cellTextStyle = MaterialTheme.goalMateTypography.bodySmallMedium
 
         Column(
-            modifier = Modifier.border(width = 1.dp, color = MaterialTheme.goalMateColors.surface, shape = RoundedCornerShape(6.dp)),
+            modifier = Modifier.border(
+                width = 1.dp,
+                color = MaterialTheme.goalMateColors.surface,
+                shape = RoundedCornerShape(6.dp),
+            ),
         ) {
             listOf(
                 stringResource(R.string.goal_detail_start_title) to goalInfo.title,
@@ -252,7 +257,10 @@ fun GoalInfoDetail(
                 }
 
                 if (label == stringResource(R.string.goal_detail_start_title)) {
-                    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.goalMateColors.surface)
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = MaterialTheme.goalMateColors.surface,
+                    )
                 }
             }
         }
@@ -274,9 +282,9 @@ private fun MyGoalProgressContentPreview() {
 @Preview(showBackground = true)
 private fun GoalInfoDetailPreview() {
     GoalMateTheme {
-        GoalInfoDetail(
-            goalInfo = GoalOverViewUiModel.DUMMY,
-            onDetailButtonClicked = {},
+        GoalInfoSection(
+            goalInfoState = UiState.Success(GoalOverViewUiModel.DUMMY),
+            {},
         )
     }
 }

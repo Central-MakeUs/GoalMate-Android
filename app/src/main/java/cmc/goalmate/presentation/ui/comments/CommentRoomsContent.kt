@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,12 +47,17 @@ fun CommentRoomsContent(
                 goal = goalComment,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
                     .clickable {
                         navigateToCommentDetail(
-                            CommentDetailParams(goalComment.roomId, goalComment.title, goalComment.startDate),
+                            CommentDetailParams(
+                                goalComment.roomId,
+                                goalComment.title,
+                                goalComment.startDate,
+                            ),
                         )
                     }
-                    .padding(horizontal = GoalMateDimens.HorizontalPadding),
+                    .padding(horizontal = GoalMateDimens.HorizontalPadding, vertical = 4.dp),
             )
         }
     }
