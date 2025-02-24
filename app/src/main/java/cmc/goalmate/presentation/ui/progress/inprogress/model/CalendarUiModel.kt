@@ -4,14 +4,31 @@ import java.time.LocalDate
 
 data class CalendarUiModel(
     val todayWeekNumber: Int,
-    val weeklyData: List<List<DailyProgressUiModel>>,
-    val hasMorePreviousData: Boolean,
+    val weeklyData: List<WeekUiModel>,
 ) {
     companion object {
         val DUMMY = CalendarUiModel(
             todayWeekNumber = 2,
-            weeklyData = listOf(DailyProgressUiModel.DUMMY_LIST, DailyProgressUiModel.DUMMY_LIST_2),
-            hasMorePreviousData = false,
+            weeklyData = listOf(WeekUiModel.DUMMY, WeekUiModel.DUMMY_2),
+        )
+    }
+}
+
+data class WeekUiModel(
+    val id: Int,
+    val dailyProgresses: List<DailyProgressUiModel>,
+    val shouldLoadPrevious: Boolean,
+) {
+    companion object {
+        val DUMMY = WeekUiModel(
+            id = 1,
+            dailyProgresses = DailyProgressUiModel.DUMMY_LIST,
+            shouldLoadPrevious = false,
+        )
+        val DUMMY_2 = WeekUiModel(
+            id = 2,
+            dailyProgresses = DailyProgressUiModel.DUMMY_LIST_2,
+            shouldLoadPrevious = false,
         )
     }
 }

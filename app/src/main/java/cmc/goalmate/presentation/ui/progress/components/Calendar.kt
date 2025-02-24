@@ -17,8 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,8 +30,8 @@ import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.progress.inprogress.InProgressAction
 import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
-import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressUiState
+import cmc.goalmate.presentation.ui.progress.inprogress.model.WeekUiModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -88,8 +88,6 @@ fun GoalMateCalendar(
             onAction = onAction,
             modifier = Modifier.fillMaxWidth(),
         )
-
-        Spacer(Modifier.size(16.dp))
     }
 }
 
@@ -110,50 +108,39 @@ fun WeekRow(
 @Composable
 private fun WeeklyCalendar(
     initialWeekNumber: Int,
-    weeklyData: List<List<DailyProgressUiModel>>,
+    weeklyData: List<WeekUiModel>,
     selectedDate: LocalDate,
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val pagerState = rememberPagerState(pageCount = { weeklyData.size }, initialPage = initialWeekNumber)
-    var previousPage by remember { mutableStateOf(pagerState.currentPage) }
+    val pagerState =
+        rememberPagerState(pageCount = { weeklyData.size }, initialPage = initialWeekNumber)
+    var previousPage by rememberSaveable { mutableIntStateOf(pagerState.currentPage) }
 
     LaunchedEffect(pagerState.currentPage) {
         if (pagerState.currentPage < previousPage) {
-            onAction(InProgressAction.SwipeLeft(pagerState.currentPage))
+            onAction(InProgressAction.ViewPreviousWeek(pagerState.currentPage))
         }
         previousPage = pagerState.currentPage
     }
 
     HorizontalPager(
         state = pagerState,
+        beyondViewportPageCount = 2,
+        key = { weeklyData[it].id },
         modifier = modifier,
-    ) {
-        WeeklyProgressItem(
-            progressByDate = weeklyData[pagerState.currentPage],
-            selectedDate = selectedDate,
-            onDateClicked = { onAction(InProgressAction.SelectDate(it)) },
-            modifier = Modifier.fillMaxWidth(),
-        )
-    }
-}
-
-@Composable
-private fun WeeklyProgressItem(
-    progressByDate: List<DailyProgressUiModel>,
-    selectedDate: LocalDate,
-    onDateClicked: (DailyProgressUiModel) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    WeekRow(modifier = modifier) {
-        progressByDate.forEach { progressByDate ->
-            CircleProgressBar(
-                date = progressByDate.displayedDate,
-                status = progressByDate.status,
-                onClick = { onDateClicked(progressByDate) },
-                isSelected = progressByDate.actualDate == selectedDate,
-                isEnabled = progressByDate.status != ProgressUiState.NotInProgress,
-            )
+    ) { pageIndex ->
+        WeekRow(modifier = modifier) {
+            weeklyData[pageIndex].dailyProgresses
+                .forEach { progressByDate ->
+                    CircleProgressBar(
+                        date = progressByDate.displayedDate,
+                        status = progressByDate.status,
+                        onClick = { onAction(InProgressAction.SelectDate(progressByDate)) },
+                        isSelected = progressByDate.actualDate == selectedDate,
+                        isEnabled = progressByDate.status != ProgressUiState.NotInProgress,
+                    )
+                }
         }
     }
 }

@@ -31,13 +31,13 @@ class CalendarTest {
 
 val weeklyProgress2 = WeeklyProgressDto(
     progressList = listOf(
-        ProgressDto("2025-02-16", "SUNDAY", 3, 2, true), // ✅ 시작 날짜 (Valid)
+        ProgressDto("2025-02-16", "SUNDAY", 3, 2, true),
         ProgressDto("2025-02-17", "MONDAY", 5, 3, true),
         ProgressDto("2025-02-18", "TUESDAY", 2, 1, true),
         ProgressDto("2025-02-19", "WEDNESDAY", 4, 3, true),
         ProgressDto("2025-02-20", "THURSDAY", 3, 2, true),
         ProgressDto("2025-02-21", "FRIDAY", 4, 3, true),
-        ProgressDto("2025-02-22", "SATURDAY", 2, 1, true), // ✅ 종료 날짜 (Valid)
+        ProgressDto("2025-02-22", "SATURDAY", 2, 1, true),
     ),
     hasLastWeek = true,
     hasNextWeek = true,

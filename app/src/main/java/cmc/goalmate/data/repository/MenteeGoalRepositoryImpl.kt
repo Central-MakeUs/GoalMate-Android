@@ -120,7 +120,7 @@ class MenteeGoalRepositoryImpl
             val updatedCalendar = initialCalendar.copy(weeklyData = updatedWeekData)
 
             if (!weeklyProgressDto.hasLastWeek) { // targetDate가 첫 주 일 경우
-                return DomainResult.Success(updatedCalendar.copy(shouldLoadPrevious = false))
+                return DomainResult.Success(updatedCalendar)
             }
             // 이전 주차로 한 번 더 매핑
             val newTargetDate = targetDate.minusWeeks(1)
@@ -134,7 +134,6 @@ class MenteeGoalRepositoryImpl
             return DomainResult.Success(
                 updatedCalendar.copy(
                     weeklyData = newUpdatedWeekData,
-                    shouldLoadPrevious = newWeeklyProgressDto.hasLastWeek,
                 ),
             )
         }

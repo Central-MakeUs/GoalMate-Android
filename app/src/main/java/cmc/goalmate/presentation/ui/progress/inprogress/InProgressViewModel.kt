@@ -131,7 +131,8 @@ class InProgressViewModel
                     ),
                 )
 
-                is InProgressAction.SwipeLeft -> {
+                is InProgressAction.ViewPreviousWeek -> {
+                    val targetWeek = action.targetWeek
                     // TODO: 스와이프 시 이전 데이터 로드
                 }
             }
