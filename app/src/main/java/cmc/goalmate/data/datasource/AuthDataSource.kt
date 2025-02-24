@@ -27,4 +27,14 @@ class AuthDataSource
             runCatching {
                 authService.validateToken().getOrThrow()
             }
+
+        suspend fun logout(): Result<Unit> =
+            runCatching {
+                authService.logout().getOrThrow()
+            }
+
+        suspend fun deleteAccount(): Result<Unit> =
+            runCatching {
+                authService.deleteAccount().getOrThrow()
+            }
     }

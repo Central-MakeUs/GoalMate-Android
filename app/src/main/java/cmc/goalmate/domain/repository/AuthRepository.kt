@@ -18,4 +18,6 @@ interface AuthRepository {
     suspend fun validateToken(): DomainResult<Unit, DataError>
 
     suspend fun logout(): DomainResult<Unit, DataError>
+
+    suspend fun deleteAccount(): DomainResult<Unit, DataError>
 }

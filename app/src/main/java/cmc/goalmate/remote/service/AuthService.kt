@@ -7,6 +7,7 @@ import cmc.goalmate.remote.dto.response.BaseResponse
 import cmc.goalmate.remote.dto.response.LoginResponse
 import cmc.goalmate.remote.dto.response.TokenResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -24,6 +25,12 @@ interface AuthService {
 
     @GET("$BASE_PATH/validate")
     suspend fun validateToken(): ApiResponse<BaseResponse<Unit>>
+
+    @POST("$BASE_PATH/logout")
+    suspend fun logout(): ApiResponse<BaseResponse<Unit>>
+
+    @DELETE("$BASE_PATH/withdraw")
+    suspend fun deleteAccount(): ApiResponse<BaseResponse<Unit>>
 
     companion object {
         private const val BASE_PATH = "/auth"

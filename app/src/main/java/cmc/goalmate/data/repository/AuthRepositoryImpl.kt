@@ -80,5 +80,19 @@ class AuthRepositoryImpl
                 )
         }
 
-        override suspend fun logout(): DomainResult<Unit, DataError> = deleteToken()
+        override suspend fun logout(): DomainResult<Unit, DataError> =
+            authDataSource.logout().fold(
+                onSuccess = { deleteToken() },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
+
+        override suspend fun deleteAccount(): DomainResult<Unit, DataError> =
+            authDataSource.deleteAccount().fold(
+                onSuccess = { deleteToken() },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
     }

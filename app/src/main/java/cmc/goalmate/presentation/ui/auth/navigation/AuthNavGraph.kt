@@ -11,6 +11,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import cmc.goalmate.app.navigation.Screen
+import cmc.goalmate.app.navigation.navigateToWebScreen
 import cmc.goalmate.presentation.ui.auth.AuthViewModel
 import cmc.goalmate.presentation.ui.auth.login.LoginScreen
 import cmc.goalmate.presentation.ui.auth.nickname.NickNameSettingScreen
@@ -27,6 +28,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
                 navigateBack = { navController.popBackStack() },
                 navigateToHome = { navController.navigateToHome(Screen.Auth.Login) },
                 navigateToNickNameSetting = { navController.navigate(Screen.Auth.NickNameSetting) },
+                navigateToWebScreen = { navController.navigateToWebScreen(it) },
                 viewModel = viewModel,
             )
         }
