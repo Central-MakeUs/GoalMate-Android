@@ -56,6 +56,7 @@ fun LoginScreen(
     navigateBack: () -> Unit,
     navigateToHome: () -> Unit,
     navigateToNickNameSetting: () -> Unit,
+    navigateToWebScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
@@ -92,6 +93,7 @@ fun LoginScreen(
         LoginTermBottomSheet(
             sheetState = sheetState,
             onDismissRequest = { showBottomSheet = false },
+            navigateToWebScreen = navigateToWebScreen,
         ) {
             coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
                 if (!sheetState.isVisible) {
@@ -150,6 +152,7 @@ private fun LoginContent(
 private fun LoginTermBottomSheet(
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
+    navigateToWebScreen: (String) -> Unit,
     onCompletedButtonClicked: () -> Unit,
 ) {
     ModalBottomSheet(
@@ -159,6 +162,7 @@ private fun LoginTermBottomSheet(
         tonalElevation = 0.dp,
     ) {
         TermsOfServiceScreen(
+            navigateToWebScreen = navigateToWebScreen,
             onCompletedButtonClicked = onCompletedButtonClicked,
         )
     }

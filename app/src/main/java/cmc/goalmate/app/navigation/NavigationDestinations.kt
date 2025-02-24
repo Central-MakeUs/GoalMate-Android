@@ -23,3 +23,7 @@ data class CommentDetailParams(val roomId: Int, val goalTitle: String, val start
 fun NavController.navigateToCommentDetail(params: CommentDetailParams) {
     navigate(Screen.CommentsDetail(roomId = params.roomId, goalTitle = params.goalTitle, startDate = params.startDate))
 }
+
+fun NavController.navigateToWebScreen(targetUrl: String) {
+    navigate(Screen.WebScreen(targetUrl))
+}

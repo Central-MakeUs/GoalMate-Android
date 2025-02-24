@@ -14,6 +14,7 @@
     <string name="login_term_of_service_options">모두 동의합니다.</string>
     <string name="login_term_of_service_option_1">이용약관에 동의합니다. (필수)</string>
     <string name="login_term_of_service_option_2">개인정보 처리 방침에 동의합니다. (필수)</string>
+    <string name="login_term_of_service_option_3">만 14세 이상입니다. (필수)</string>
     <string name="login_term_of_service_btn">목표 시작하기</string>
     <string name="login_greeting_message">환영해요 %1$s님,\n이제 첫 목표를 시작해보세요!</string>
 

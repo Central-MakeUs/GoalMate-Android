@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmc.goalmate.presentation.ui.auth.navigation.authNavGraph
 import cmc.goalmate.presentation.ui.comments.detail.CommentsDetailScreen
+import cmc.goalmate.presentation.ui.common.GoalMateWebScreen
 import cmc.goalmate.presentation.ui.detail.navigation.detailNavGraph
 import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
 import cmc.goalmate.presentation.ui.home.navigation.mainNavGraph

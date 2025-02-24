@@ -1,6 +1,5 @@
 package cmc.goalmate.presentation.ui.auth.login
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,38 +30,13 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.auth.login.TermOptionState.Companion.isAllChecked
-
-enum class TermOption(
-    @StringRes val contentResId: Int,
-    val termUrl: String,
-) {
-    OPTION_1(
-        R.string.login_term_of_service_option_1,
-        "https://www.notion.so/997827990f694f63a60b06c06beb1468?pvs=4",
-    ),
-    OPTION_2(
-        R.string.login_term_of_service_option_2,
-        "https://ash-oregano-9dc.notion.site/f97185c23c5444b4ae3796928ae7f646?pvs=4",
-    ),
-}
-
-data class TermOptionState(
-    val termOption: TermOption,
-    val isChecked: Boolean = false,
-) {
-    companion object {
-        val DEFAULT = listOf(
-            TermOptionState(TermOption.OPTION_1),
-            TermOptionState(TermOption.OPTION_2),
-        )
-
-        fun List<TermOptionState>.isAllChecked(): Boolean = this.all { it.isChecked }
-    }
-}
+import cmc.goalmate.presentation.ui.auth.login.model.TermOption
+import cmc.goalmate.presentation.ui.auth.login.model.TermOptionState
+import cmc.goalmate.presentation.ui.auth.login.model.TermOptionState.Companion.isAllChecked
 
 @Composable
 fun TermsOfServiceScreen(
+    navigateToWebScreen: (String) -> Unit,
     onCompletedButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -81,11 +55,14 @@ fun TermsOfServiceScreen(
         TermCheck(
             termOptions = termOptions,
             allCheckButtonChecked = isButtonEnabled,
-            onAllCheckChange = { toggleAllCheckItems(newCheckedState = !isButtonEnabled, termOptions) },
-            onCheckedChange = { index -> toggleCheckItem(index, termOptions) },
-            onDetailButtonClicked = {
-                // TODO: 링크 연결
+            onAllCheckChange = {
+                toggleAllCheckItems(
+                    newCheckedState = !isButtonEnabled,
+                    termOptions,
+                )
             },
+            onCheckedChange = { index -> toggleCheckItem(index, termOptions) },
+            onDetailButtonClicked = { termUrl -> navigateToWebScreen(termUrl) },
         )
 
         Spacer(modifier = Modifier.size(41.dp))
@@ -125,7 +102,7 @@ private fun TermCheck(
     allCheckButtonChecked: Boolean,
     onAllCheckChange: () -> Unit,
     onCheckedChange: (index: Int) -> Unit,
-    onDetailButtonClicked: (TermOption) -> Unit,
+    onDetailButtonClicked: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -160,18 +137,16 @@ private fun LabeledCheckbox(
     termOption: TermOption,
     isChecked: Boolean,
     onCheckedChange: () -> Unit,
-    onDetailButtonClicked: (TermOption) -> Unit,
+    onDetailButtonClicked: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = modifier.clickable(onClick = onCheckedChange),
+        modifier = modifier,
     ) {
         Box(
-            modifier = Modifier.size(
-                GoalMateDimens.CheckBoxSize,
-            ),
+            modifier = Modifier.size(GoalMateDimens.CheckBoxSize).clickable(onClick = onCheckedChange),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -186,11 +161,13 @@ private fun LabeledCheckbox(
             modifier = Modifier.weight(1f),
         )
 
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_forward),
-            contentDescription = null,
-            modifier = Modifier.clickable { onDetailButtonClicked(termOption) },
-        )
+        if (termOption.termUrl != null) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_forward),
+                contentDescription = null,
+                modifier = Modifier.clickable { onDetailButtonClicked(termOption.termUrl) },
+            )
+        }
     }
 }
 
@@ -199,6 +176,7 @@ private fun LabeledCheckbox(
 private fun TermsOfServiceScreenPreview() {
     GoalMateTheme {
         TermsOfServiceScreen(
+            navigateToWebScreen = {},
             onCompletedButtonClicked = {},
         )
     }

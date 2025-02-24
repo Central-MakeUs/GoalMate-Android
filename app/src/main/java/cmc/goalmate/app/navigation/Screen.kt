@@ -49,4 +49,7 @@ sealed interface Screen {
 
     @Serializable
     data class CommentsDetail(val roomId: Int, val goalTitle: String, val startDate: String) : Screen
+
+    @Serializable
+    data class WebScreen(val targetUrl: String) : Screen
 }
