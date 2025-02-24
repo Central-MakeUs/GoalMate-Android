@@ -2,7 +2,8 @@ package cmc.goalmate.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmc.goalmate.domain.onFailure
+import cmc.goalmate.domain.DomainResult
+import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,13 +25,22 @@ class MainViewModel
         fun checkLoginStatus() {
             viewModelScope.launch {
                 val hasToken = authRepository.isLogin().first()
-                if (hasToken) {
-                    authRepository.validateToken()
-                        .onFailure {
-                            authRepository.deleteToken()
-                        }
+
+                if (!hasToken) {
+                    _isReady.value = true
+                    return@launch
                 }
-                _isReady.value = true
+
+                when (authRepository.validateToken()) {
+                    is DomainResult.Error -> {
+                        authRepository.deleteToken().onSuccess {
+                            _isReady.value = true
+                        }
+                    }
+                    is DomainResult.Success -> {
+                        _isReady.value = true
+                    }
+                }
             }
         }
     }
