@@ -44,7 +44,8 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         composable<Screen.Main.MyPage> {
             MyPageScreen(
                 navigateToLogin = { navController.navigateToLogin() },
-                navigateToMyGoal = {},
+                navigateToMyGoal = { navController.navigate(Screen.Main.MyGoal) },
+                navigateToHome = { navController.navigateToHome(Screen.Main.MyPage) },
             )
         }
     }

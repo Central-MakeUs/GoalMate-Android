@@ -27,56 +27,27 @@ import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.mypage.components.GoalCountItem
-import cmc.goalmate.presentation.ui.mypage.components.LoginSection
 import cmc.goalmate.presentation.ui.mypage.components.MenuItem
-import cmc.goalmate.presentation.ui.mypage.components.NickNameSection
-import cmc.goalmate.presentation.ui.mypage.model.MenuItemData
+import cmc.goalmate.presentation.ui.mypage.components.ProfileHeaderSection
+import cmc.goalmate.presentation.ui.mypage.model.MenuItemUiModel
 import cmc.goalmate.presentation.ui.mypage.model.MyPageUiModel
 
 @Composable
 fun MyPageContent(
     userState: MyPageUiState,
-    menuItems: List<MenuItemData>,
-    editNickName: () -> Unit,
+    menuItems: List<MenuItemUiModel>,
     navigateToMyGoals: () -> Unit,
-    navigateToLogin: () -> Unit,
+    onAction: (MenuAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Spacer(Modifier.size(16.dp))
 
-        when (userState) {
-            is MyPageUiState.LoggedIn -> {
-                NickNameSection(
-                    nickName = userState.userInfo.nickName,
-                    onEditButtonClicked = editNickName,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = GoalMateDimens.HorizontalPadding),
-                )
-            }
-
-            MyPageUiState.LoggedOut -> {
-                LoginSection(
-                    onLoginButtonClicked = navigateToLogin,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = GoalMateDimens.HorizontalPadding),
-                )
-            }
-
-            MyPageUiState.Error -> {}
-            MyPageUiState.Loading -> {}
-        }
-
-        Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
-
-        GoalStatusSummary(
-            onGoingGoalCount = userState.loggedInOrDefault { it.onGoingGoalCount },
-            completedGoalCount = userState.loggedInOrDefault { it.completedGoalCount },
-            onSectionClicked = navigateToMyGoals,
-            modifier = Modifier
-                .fillMaxWidth()
+        UserInfoSection(
+            state = userState,
+            editNickName = { onAction(MenuAction.EditNickName) },
+            onGoalSummaryClicked = { navigateToMyGoals() },
+            modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = GoalMateDimens.HorizontalPadding),
         )
 
@@ -84,20 +55,55 @@ fun MyPageContent(
         ThickDivider()
         Spacer(Modifier.size(GoalMateDimens.HorizontalPadding))
 
-        menuItems.forEach { (title, onClick) ->
+        menuItems.forEach { menuItem ->
             MenuItem(
-                title = title,
-                onClick = onClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = GoalMateDimens.HorizontalPadding),
+                title = menuItem.title,
+                onClick = { onAction(menuItem.menuAction) },
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
 }
 
-private inline fun MyPageUiState.loggedInOrDefault(defaultValue: (MyPageUiModel) -> Int): Int =
-    if (this is MyPageUiState.LoggedIn) defaultValue(this.userInfo) else MyPageUiModel.DEFAULT_COUNT
+@Composable
+private fun UserInfoSection(
+    state: MyPageUiState,
+    editNickName: () -> Unit,
+    onGoalSummaryClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (state) {
+        is MyPageUiState.Success -> {
+            val userInfo = state.userInfo
+            Column(modifier = modifier) {
+                ProfileHeaderSection(
+                    title = userInfo.nickName,
+                    subtitle = userInfo.welcomeMessage,
+                    targetIcon = userInfo.icon,
+                    iconBackground = if (state.isLoggedIn) {
+                        MaterialTheme.goalMateColors.completed
+                    } else {
+                        MaterialTheme.goalMateColors.primary
+                    },
+                    onIconClicked = editNickName,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
+
+                GoalStatusSummary(
+                    onGoingGoalCount = userInfo.onGoingGoalCount,
+                    completedGoalCount = userInfo.completedGoalCount,
+                    onSectionClicked = onGoalSummaryClicked,
+                    modifier = Modifier,
+                )
+            }
+        }
+
+        MyPageUiState.Error -> {}
+        MyPageUiState.Loading -> {}
+    }
+}
 
 @Composable
 private fun GoalStatusSummary(
@@ -123,7 +129,11 @@ private fun GoalStatusSummary(
                 .background(
                     color = MaterialTheme.goalMateColors.primaryVariant,
                 )
-                .border(width = 1.dp, color = MaterialTheme.goalMateColors.completed,RoundedCornerShape(20.dp))
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.goalMateColors.completed,
+                    RoundedCornerShape(20.dp),
+                )
                 .padding(vertical = GoalMateDimens.BoxContentVerticalPadding),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
@@ -145,11 +155,13 @@ private fun GoalStatusSummary(
 private fun MyPageContentPreview() {
     GoalMateTheme {
         MyPageContent(
-            userState = MyPageUiState.LoggedOut,
-            menuItems = listOf(),
-            editNickName = {},
+            userState = MyPageUiState.Success(
+                userInfo = MyPageUiModel.DEFAULT_INFO,
+                isLoggedIn = false,
+            ),
+            menuItems = MenuItemUiModel.entries,
             navigateToMyGoals = {},
-            navigateToLogin = {},
+            onAction = {},
             modifier = Modifier.background(White),
         )
     }

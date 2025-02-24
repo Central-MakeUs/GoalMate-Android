@@ -1,7 +1,6 @@
 package cmc.goalmate.presentation.ui.mypage
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,28 +10,35 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.HeaderTitle
-import cmc.goalmate.presentation.ui.mypage.model.MenuItemData
+import cmc.goalmate.presentation.ui.mypage.model.MenuItemUiModel
+import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
 fun MyPageScreen(
+    navigateToHome: () -> Unit,
     navigateToLogin: () -> Unit,
     navigateToMyGoal: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val commonMenuItems = listOf(
-        MenuItemData("자주 묻는 질문") { },
-        MenuItemData("개인 정보 처리 방침") { },
-        MenuItemData("이용약관") { },
-    )
-
-    val loggedInMenuItems = listOf(
-        MenuItemData("탈퇴하기") { },
-        MenuItemData("로그아웃") { },
-    )
-
-    val menuItems = commonMenuItems + if (state.isLoggedIn()) loggedInMenuItems else emptyList()
+    ObserveAsEvent(viewModel.event) { event ->
+        when (event) {
+            MyPageEvent.ShowFAQ -> {}
+            MyPageEvent.ShowPrivacyPolicy -> {}
+            MyPageEvent.ShowTermsOfService -> {}
+            MyPageEvent.SuccessDeleteAccount -> {
+                navigateToHome()
+            }
+            MyPageEvent.SuccessLogout -> {
+                navigateToHome()
+            }
+            MyPageEvent.EditNickName -> {}
+            MyPageEvent.NeedLogin -> {
+                navigateToLogin()
+            }
+        }
+    }
 
     Column {
         HeaderTitle(
@@ -41,11 +47,10 @@ fun MyPageScreen(
         )
         MyPageContent(
             userState = state,
-            menuItems = menuItems,
-            editNickName = {},
+            menuItems = MenuItemUiModel.getMenuItems(state.isLoggedIn()),
             navigateToMyGoals = navigateToMyGoal,
-            navigateToLogin = navigateToLogin,
-            modifier = Modifier.fillMaxSize(),
+            onAction = viewModel::onAction,
+            modifier = Modifier.weight(1f),
         )
     }
 }

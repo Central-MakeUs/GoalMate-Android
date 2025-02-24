@@ -17,21 +17,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.GoalMateDimens
-import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
 @Composable
-private fun ProfileHeaderSectionBackGround(
+fun ProfileHeaderSection(
     title: String,
     subtitle: String,
-    icon: @Composable () -> Unit,
+    targetIcon: Int,
+    iconBackground: Color,
+    onIconClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -54,69 +54,22 @@ private fun ProfileHeaderSectionBackGround(
                 style = MaterialTheme.goalMateTypography.subtitleSmall,
                 color = MaterialTheme.goalMateColors.onBackground,
             )
-            icon()
+            Icon(
+                imageVector = ImageVector.vectorResource(targetIcon),
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(color = iconBackground)
+                    .clickable { onIconClicked() }
+                    .padding(5.dp),
+                tint = MaterialTheme.goalMateColors.onBackground,
+            )
         }
         Spacer(Modifier.size(GoalMateDimens.VerticalArrangementSpaceSmall))
         Text(
             text = subtitle,
             style = MaterialTheme.goalMateTypography.body,
             color = MaterialTheme.goalMateColors.onBackground,
-        )
-    }
-}
-
-@Composable
-fun NickNameSection(
-    nickName: String,
-    onEditButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    ProfileHeaderSectionBackGround(
-        title = "$nickName 님",
-        subtitle = "안녕하세요!\n" + "골메이트에 오신 것을 환영해요",
-        icon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.icon_edit),
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(
-                        color = MaterialTheme.goalMateColors.completed,
-                    )
-                    .clickable { onEditButtonClicked() }
-                    .padding(5.dp),
-            )
-        },
-        modifier = modifier,
-    )
-}
-
-@Composable
-fun LoginSection(
-    onLoginButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    ProfileHeaderSectionBackGround(
-        title = "로그인 회원가입",
-        subtitle = "회원가입하고 무료 목표 참여권 받으세요.\n",
-        icon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_forward),
-                contentDescription = null,
-                tint = MaterialTheme.goalMateColors.onBackground,
-                modifier = Modifier.clickable { onLoginButtonClicked() },
-            )
-        },
-        modifier = modifier,
-    )
-}
-
-@Composable
-@Preview
-private fun ProfileHeaderSectionPreview() {
-    GoalMateTheme {
-        LoginSection(
-            onLoginButtonClicked = {},
         )
     }
 }
