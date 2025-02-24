@@ -1,12 +1,15 @@
 package cmc.goalmate.presentation.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.app.Activity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import cmc.goalmate.presentation.theme.color.ColorSet
 import cmc.goalmate.presentation.theme.color.GoalMateColors
 
@@ -17,11 +20,19 @@ private val LocalColors = staticCompositionLocalOf<GoalMateColors> { error("No G
 fun GoalMateTheme(
     colorSet: ColorSet = ColorSet.GoalMateColor,
     typography: GoalMateTypography = goalMateTypography,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colors = remember(darkTheme) {
         if (darkTheme) colorSet.darkColors else colorSet.lightColors
+    }
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+        }
     }
 
     CompositionLocalProvider(
