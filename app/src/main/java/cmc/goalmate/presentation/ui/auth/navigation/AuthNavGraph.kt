@@ -28,7 +28,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
                 navigateBack = { navController.popBackStack() },
                 navigateToHome = { navController.navigateToHome(Screen.Auth.Login) },
                 navigateToNickNameSetting = { navController.navigate(Screen.Auth.NickNameSetting) },
-                navigateToWebScreen = { navController.navigateToWebScreen(it) },
+                navigateToWebScreen = navController::navigateToWebScreen,
                 viewModel = viewModel,
             )
         }

@@ -31,7 +31,7 @@ fun GoalMateNavHost(navController: NavHostController) {
                 goalTitle = content.goalTitle,
                 navigateToGoalDetail = navController::navigateToDetail,
                 navigateToComments = navController::navigateToCommentDetail,
-                navigateBack = {},
+                navigateBack = { navController.popBackStack() },
             )
         }
 
@@ -40,7 +40,7 @@ fun GoalMateNavHost(navController: NavHostController) {
                 navigateToGoalDetail = navController::navigateToDetail,
                 navigateToComments = navController::navigateToCommentDetail,
                 navigateToHome = { navController.navigateToHome(navBackStackEntry.toRoute<Screen.CompletedGoal>()) },
-                navigateBack = {},
+                navigateBack = { navController.popBackStack() },
             )
         }
 
@@ -48,7 +48,14 @@ fun GoalMateNavHost(navController: NavHostController) {
             val content = backStackEntry.toRoute<Screen.CommentsDetail>()
             CommentsDetailScreen(
                 goalTitle = content.goalTitle,
-                navigateBack = {},
+                navigateBack = { navController.popBackStack() },
+            )
+        }
+
+        composable<Screen.WebScreen> { backStackEntry ->
+            val content = backStackEntry.toRoute<Screen.WebScreen>()
+            GoalMateWebScreen(
+                targetUrl = content.targetUrl,
             )
         }
     }

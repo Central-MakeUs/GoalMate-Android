@@ -46,6 +46,7 @@ import cmc.goalmate.presentation.ui.auth.AuthEvent
 import cmc.goalmate.presentation.ui.auth.AuthViewModel
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.firstStep
+import cmc.goalmate.presentation.ui.common.WebScreenUrl
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.launch
@@ -56,7 +57,7 @@ fun LoginScreen(
     navigateBack: () -> Unit,
     navigateToHome: () -> Unit,
     navigateToNickNameSetting: () -> Unit,
-    navigateToWebScreen: (String) -> Unit,
+    navigateToWebScreen: (WebScreenUrl) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
@@ -152,7 +153,7 @@ private fun LoginContent(
 private fun LoginTermBottomSheet(
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
-    navigateToWebScreen: (String) -> Unit,
+    navigateToWebScreen: (WebScreenUrl) -> Unit,
     onCompletedButtonClicked: () -> Unit,
 ) {
     ModalBottomSheet(

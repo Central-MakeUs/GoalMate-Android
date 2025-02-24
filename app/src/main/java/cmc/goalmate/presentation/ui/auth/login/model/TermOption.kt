@@ -2,18 +2,19 @@ package cmc.goalmate.presentation.ui.auth.login.model
 
 import androidx.annotation.StringRes
 import cmc.goalmate.R
+import cmc.goalmate.presentation.ui.common.WebScreenUrl
 
 enum class TermOption(
     @StringRes val contentResId: Int,
-    val termUrl: String?,
+    val termUrl: WebScreenUrl?,
 ) {
     OPTION_1(
         R.string.login_term_of_service_option_1,
-        "https://ash-oregano-9dc.notion.site/f97185c23c5444b4ae3796928ae7f646?pvs=4",
+        WebScreenUrl.TermsOfService,
     ),
     OPTION_2(
         R.string.login_term_of_service_option_2,
-        "https://www.notion.so/997827990f694f63a60b06c06beb1468?pvs=4",
+        WebScreenUrl.PrivacyPolicy,
     ),
     OPTION_3(R.string.login_term_of_service_option_3, null),
 }

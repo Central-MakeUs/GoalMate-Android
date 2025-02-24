@@ -8,6 +8,7 @@ import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.app.navigation.navigateToCommentDetail
 import cmc.goalmate.app.navigation.navigateToCompleted
 import cmc.goalmate.app.navigation.navigateToInProgress
+import cmc.goalmate.app.navigation.navigateToWebScreen
 import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
 import cmc.goalmate.presentation.ui.comments.CommentRoomsScreen
 import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
@@ -46,6 +47,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
                 navigateToLogin = { navController.navigateToLogin() },
                 navigateToMyGoal = { navController.navigate(Screen.Main.MyGoal) },
                 navigateToHome = { navController.navigateToHome(Screen.Main.MyPage) },
+                navigateToWebScreen = navController::navigateToWebScreen,
             )
         }
     }

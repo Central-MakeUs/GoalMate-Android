@@ -2,6 +2,7 @@ package cmc.goalmate.app.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
+import cmc.goalmate.presentation.ui.common.WebScreenUrl
 
 data class InProgressGoalParams(val goalId: Int, val goalTitle: String, val roomId: Int)
 
@@ -24,6 +25,6 @@ fun NavController.navigateToCommentDetail(params: CommentDetailParams) {
     navigate(Screen.CommentsDetail(roomId = params.roomId, goalTitle = params.goalTitle, startDate = params.startDate))
 }
 
-fun NavController.navigateToWebScreen(targetUrl: String) {
+fun NavController.navigateToWebScreen(targetUrl: WebScreenUrl) {
     navigate(Screen.WebScreen(targetUrl))
 }

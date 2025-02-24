@@ -33,10 +33,11 @@ import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.auth.login.model.TermOption
 import cmc.goalmate.presentation.ui.auth.login.model.TermOptionState
 import cmc.goalmate.presentation.ui.auth.login.model.TermOptionState.Companion.isAllChecked
+import cmc.goalmate.presentation.ui.common.WebScreenUrl
 
 @Composable
 fun TermsOfServiceScreen(
-    navigateToWebScreen: (String) -> Unit,
+    navigateToWebScreen: (WebScreenUrl) -> Unit,
     onCompletedButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -102,7 +103,7 @@ private fun TermCheck(
     allCheckButtonChecked: Boolean,
     onAllCheckChange: () -> Unit,
     onCheckedChange: (index: Int) -> Unit,
-    onDetailButtonClicked: (String) -> Unit,
+    onDetailButtonClicked: (WebScreenUrl) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -125,7 +126,11 @@ private fun TermCheck(
                     termOption = termOption.termOption,
                     isChecked = termOption.isChecked,
                     onCheckedChange = { onCheckedChange(index) },
-                    onDetailButtonClicked = onDetailButtonClicked,
+                    onDetailButtonClicked = {
+                        termOption.termOption.termUrl?.let { url ->
+                            onDetailButtonClicked(url)
+                        }
+                    },
                 )
             }
         }
@@ -137,7 +142,7 @@ private fun LabeledCheckbox(
     termOption: TermOption,
     isChecked: Boolean,
     onCheckedChange: () -> Unit,
-    onDetailButtonClicked: (String) -> Unit,
+    onDetailButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -146,7 +151,9 @@ private fun LabeledCheckbox(
         modifier = modifier,
     ) {
         Box(
-            modifier = Modifier.size(GoalMateDimens.CheckBoxSize).clickable(onClick = onCheckedChange),
+            modifier = Modifier
+                .size(GoalMateDimens.CheckBoxSize)
+                .clickable(onClick = onCheckedChange),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -165,7 +172,7 @@ private fun LabeledCheckbox(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_forward),
                 contentDescription = null,
-                modifier = Modifier.clickable { onDetailButtonClicked(termOption.termUrl) },
+                modifier = Modifier.clickable { onDetailButtonClicked() },
             )
         }
     }

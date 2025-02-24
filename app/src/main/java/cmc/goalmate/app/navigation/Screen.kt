@@ -1,5 +1,6 @@
 package cmc.goalmate.app.navigation
 
+import cmc.goalmate.presentation.ui.common.WebScreenUrl
 import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
 import kotlinx.serialization.Serializable
 
@@ -51,5 +52,5 @@ sealed interface Screen {
     data class CommentsDetail(val roomId: Int, val goalTitle: String, val startDate: String) : Screen
 
     @Serializable
-    data class WebScreen(val targetUrl: String) : Screen
+    data class WebScreen(val targetUrl: WebScreenUrl) : Screen
 }
