@@ -30,7 +30,7 @@ android {
         applicationId = "cmc.goalmate"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
+        versionCode = 2
         versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -43,6 +43,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".dev"
+            resValue("string", "app_name", "Dev.GoalMate")
+        }
         release {
             signingConfig = signingConfigs.getAt("release")
             isMinifyEnabled = true
