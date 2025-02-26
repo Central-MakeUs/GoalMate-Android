@@ -7,6 +7,7 @@ import cmc.goalmate.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 abstract class LoginStateViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -15,10 +16,12 @@ abstract class LoginStateViewModel(private val authRepository: AuthRepository) :
 
     init {
         viewModelScope.launch {
-            authRepository.isLogin().collect { isLogin ->
-                Log.d("yenny", "isLogin: $isLogin")
-                _isLoggedIn.value = isLogin
-            }
+            authRepository.isLogin()
+                .distinctUntilChanged()
+                .collect { isLogin ->
+                    Log.d("yenny", "isLogin: $isLogin")
+                    _isLoggedIn.value = isLogin
+                }
         }
     }
 }

@@ -5,20 +5,31 @@ import cmc.goalmate.data.mapper.toDataError
 import cmc.goalmate.data.model.toDomain
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
+import cmc.goalmate.domain.NickNameError
+import cmc.goalmate.domain.ValidateNickName
 import cmc.goalmate.domain.model.UserInfo
 import cmc.goalmate.domain.repository.UserRepository
 import javax.inject.Inject
 
 class UserRepositoryImpl
     @Inject
-    constructor(private val userDataSource: UserDataSource) : UserRepository {
-        override suspend fun isNicknameAvailable(nickName: String): DomainResult<Boolean, DataError.Network> =
+    constructor(
+        private val userDataSource: UserDataSource,
+        private val validateNickName: ValidateNickName,
+    ) : UserRepository {
+        override fun checkNicknameValidity(nickName: String): DomainResult<Unit, NickNameError> = validateNickName(nickName)
+
+        override suspend fun checkNicknameAvailable(nickName: String): DomainResult<Unit, NickNameError> =
             userDataSource.validateNickName(nickName).fold(
                 onSuccess = { result ->
-                    DomainResult.Success(result)
+                    if (result) {
+                        DomainResult.Success(Unit)
+                    } else {
+                        DomainResult.Error(NickNameError.DUPLICATED)
+                    }
                 },
-                onFailure = { error ->
-                    DomainResult.Error(error.toDataError())
+                onFailure = {
+                    DomainResult.Error(NickNameError.NETWORK_ERROR)
                 },
             )
 

@@ -6,15 +6,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
-import cmc.goalmate.domain.ValidateNickName
 import cmc.goalmate.domain.model.Token
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.UserRepository
 import cmc.goalmate.presentation.components.InputTextState
+import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +28,6 @@ import kotlin.coroutines.resume
 class AuthViewModel
     @Inject
     constructor(
-        private val validateNickName: ValidateNickName,
         private val authRepository: AuthRepository,
         private val userRepository: UserRepository,
     ) : ViewModel() {
@@ -100,46 +98,39 @@ class AuthViewModel
                 return
             }
 
-            val result = validateNickName(nickName = newNickName)
-            if (result is DomainResult.Success) {
-                _state.value = _state.value.copy(
-                    nickNameFormatValidationState = InputTextState.Success,
-                    helperText = "",
-                )
-            } else {
-                _state.value = _state.value.copy(
-                    nickNameFormatValidationState = InputTextState.Error,
-                    helperText = "2~5글자 닉네임을 입력해주세요.",
-                    duplicationCheckState = InputTextState.None,
-                )
-            }
+            userRepository.checkNicknameValidity(nickName = newNickName)
+                .onSuccess {
+                    _state.value = _state.value.copy(
+                        nickNameFormatValidationState = InputTextState.Success,
+                        helperText = "",
+                    )
+                }
+                .onFailure {
+                    _state.value = _state.value.copy(
+                        nickNameFormatValidationState = InputTextState.Error,
+                        helperText = it.asUiText(),
+                        duplicationCheckState = InputTextState.None,
+                    )
+                }
         }
 
         private fun checkNickNameDuplication() {
             viewModelScope.launch {
-                userRepository.isNicknameAvailable(nickName)
-                    .onSuccess { isAvailable ->
-                        updateNicknameDuplicationState(isAvailable)
+                userRepository.checkNicknameAvailable(nickName)
+                    .onSuccess {
+                        _state.value = _state.value.copy(
+                            nickNameFormatValidationState = InputTextState.Success,
+                            duplicationCheckState = InputTextState.Success,
+                            helperText = "사용 가능한 닉네임이에요 :)",
+                        )
                     }
                     .onFailure {
-                        Log.d("yenny", "checkNickNameDuplication error : ${it.asUiText()}")
+                        _state.value = _state.value.copy(
+                            duplicationCheckState = InputTextState.Error,
+                            helperText = it.asUiText(),
+                        )
                     }
             }
-        }
-
-        private fun updateNicknameDuplicationState(isAvailable: Boolean) {
-            if (isAvailable) {
-                _state.value = _state.value.copy(
-                    nickNameFormatValidationState = InputTextState.Success,
-                    duplicationCheckState = InputTextState.Success,
-                    helperText = "사용 가능한 닉네임이에요 :)",
-                )
-                return
-            }
-            _state.value = _state.value.copy(
-                duplicationCheckState = InputTextState.Error,
-                helperText = "이미 있는 닉네임이에요 :(",
-            )
         }
 
         private fun completeNickNameSetting() {
@@ -173,16 +164,4 @@ class AuthViewModel
             }
             super.onCleared()
         }
-    }
-
-fun DataError.asUiText(): String =
-    when (this) {
-        DataError.Network.NO_INTERNET -> "No internet connection"
-        DataError.Network.SERVER_ERROR -> "Server error"
-        DataError.Network.NOT_FOUND -> "Not found"
-        DataError.Network.UNAUTHORIZED -> "Unauthorized"
-        DataError.Network.CONFLICT -> "Conflict"
-        DataError.Network.UNKNOWN -> "Unknown error"
-        DataError.Local.IO_ERROR -> "DataStore error"
-        DataError.Local.NOT_FOUND -> "Caching error"
     }

@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.MenteeGoalRepository
-import cmc.goalmate.presentation.ui.auth.asUiText
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
+import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

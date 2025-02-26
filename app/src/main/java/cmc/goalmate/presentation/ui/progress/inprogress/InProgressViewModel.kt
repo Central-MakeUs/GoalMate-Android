@@ -8,7 +8,6 @@ import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.MenteeGoalRepository
-import cmc.goalmate.presentation.ui.auth.asUiText
 import cmc.goalmate.presentation.ui.progress.inprogress.mapper.toUi
 import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressDetailUiModel
@@ -19,6 +18,7 @@ import cmc.goalmate.presentation.ui.progress.inprogress.model.UiState
 import cmc.goalmate.presentation.ui.progress.inprogress.model.convertToDomain
 import cmc.goalmate.presentation.ui.progress.inprogress.model.successData
 import cmc.goalmate.presentation.ui.progress.inprogress.model.toUi
+import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -11,8 +11,10 @@ class ValidateNickName
             } else {
                 DomainResult.Error(NickNameError.INVALID_LENGTH)
             }
-
-        enum class NickNameError : Error {
-            INVALID_LENGTH,
-        }
     }
+
+enum class NickNameError : Error {
+    INVALID_LENGTH,
+    DUPLICATED,
+    NETWORK_ERROR,
+}
