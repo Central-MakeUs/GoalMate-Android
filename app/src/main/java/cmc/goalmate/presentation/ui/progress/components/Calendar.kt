@@ -119,7 +119,7 @@ private fun WeeklyCalendar(
 
     LaunchedEffect(pagerState.currentPage) {
         if (pagerState.currentPage < previousPage) {
-            onAction(InProgressAction.ViewPreviousWeek(pagerState.currentPage))
+            onAction(InProgressAction.ViewPreviousWeek(currentPageWeekIndex = pagerState.currentPage))
         }
         previousPage = pagerState.currentPage
     }

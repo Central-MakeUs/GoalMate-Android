@@ -14,14 +14,16 @@ class CalendarTest {
         val endDate = LocalDate.of(2025, 3, 14)
         val target = LocalDate.of(2025, 2, 20)
         val results = generateWeeklyCalendar(startDate, endDate, target)
-        println("target is on ${results.weekNumber}번째 week")
+
+        assert(results.weekNumber == 2)
+
         results.weeklyData.forEach {
             println(it)
             println()
         }
 
         println("updated!")
-        val result2 = updateProgressForWeeks(results.weeklyData, weeklyProgress2)
+        val result2 = updateProgressForWeeks(results.weeklyData, weeklyProgress2.progressList)
         result2.forEach {
             println(it)
             println()

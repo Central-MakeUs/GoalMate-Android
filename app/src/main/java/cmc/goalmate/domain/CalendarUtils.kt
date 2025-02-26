@@ -1,6 +1,6 @@
 package cmc.goalmate.domain
 
-import cmc.goalmate.data.model.WeeklyProgressDto
+import cmc.goalmate.data.model.ProgressDto
 import cmc.goalmate.data.model.toDomain
 import cmc.goalmate.domain.model.DailyProgress
 import cmc.goalmate.domain.model.GoalMateCalendar
@@ -117,86 +117,24 @@ fun generateWeeklyCalendar(
 
 fun updateProgressForWeeks(
     weeks: List<Week>,
-    updatedWeeklyDataDto: WeeklyProgressDto,
+    updatedWeekProgressDtos: List<ProgressDto>,
 ): List<Week> {
-    if (updatedWeeklyDataDto.progressList.isEmpty()) return weeks
+    if (updatedWeekProgressDtos.isEmpty()) return weeks
 
-    val updated = updatedWeeklyDataDto.toDomain()
-    val updatedStartDate = updated.progressData.first()
+    val updatedWeekProgress = updatedWeekProgressDtos.map { it.toDomain() }
+    val weekIndex = weeks.indexOfFirst { it.dailyProgresses.first().date == updatedWeekProgress.first().date }
 
-    val mutableWeeks = weeks.toMutableList()
-
-    val weekIndex = weeks.indexOfFirst { it.dailyProgresses.first().date == updatedStartDate.date }
-
+    val updatedCalendar = weeks.toMutableList()
     if (weekIndex != -1) {
-        val updatedWeek = updatedWeeklyDataDto.progressList.map { progress ->
-            val date = LocalDate.parse(progress.date)
-            val dayOfWeek = date.toDomain()
+        updatedCalendar[weekIndex] = Week(dailyProgresses = updatedWeekProgress, shouldLoadPrevious = true)
 
-            if (progress.isValid) {
-                DailyProgress.ValidProgress(
-                    date = date,
-                    dayOfWeek = dayOfWeek,
-                    dailyTodoCount = progress.dailyTodoCount,
-                    completedDailyTodoCount = progress.completedDailyTodoCount,
-                )
-            } else {
-                DailyProgress.InvalidProgress(
-                    date = date,
-                    dayOfWeek = dayOfWeek,
-                )
-            }
-        }
-
-        mutableWeeks[weekIndex] = Week(dailyProgresses = updatedWeek, shouldLoadPrevious = true)
-
-        if (weekIndex + 1 < mutableWeeks.size) {
-            val nextWeek = mutableWeeks[weekIndex + 1]
-            mutableWeeks[weekIndex + 1] = nextWeek.copy(shouldLoadPrevious = false)
+        if (weekIndex + 1 < updatedCalendar.size) {
+            val nextWeek = updatedCalendar[weekIndex + 1]
+            updatedCalendar[weekIndex + 1] = nextWeek.copy(shouldLoadPrevious = false)
         }
     }
-
-    return mutableWeeks
+    return updatedCalendar
 }
-
-// fun updateProgressForWeeks(
-//    weeks: List<List<DailyProgress>>,
-//    updatedWeeklyDataDto: WeeklyProgressDto,
-// ): List<List<DailyProgress>> {
-//    if (updatedWeeklyDataDto.progressList.isEmpty()) return weeks
-//
-//    val updated = updatedWeeklyDataDto.toDomain()
-//    val updatedStartDate = updated.progressData.first()
-//
-//    val mutableWeeks = weeks.toMutableList()
-//
-//    val weekIndex = weeks.indexOfFirst { it.first().date == updatedStartDate.date }
-//
-//    if (weekIndex != -1) {
-//        val updatedWeek = updatedWeeklyDataDto.progressList.map { progress ->
-//            val date = LocalDate.parse(progress.date)
-//            val dayOfWeek = date.toDomain()
-//
-//            if (progress.isValid) {
-//                DailyProgress.ValidProgress(
-//                    date = date,
-//                    dayOfWeek = dayOfWeek,
-//                    dailyTodoCount = progress.dailyTodoCount,
-//                    completedDailyTodoCount = progress.completedDailyTodoCount,
-//                )
-//            } else {
-//                DailyProgress.InvalidProgress(
-//                    date = date,
-//                    dayOfWeek = dayOfWeek,
-//                )
-//            }
-//        }
-//
-//        mutableWeeks[weekIndex] = updatedWeek
-//    }
-//
-//    return mutableWeeks
-// }
 
 fun LocalDate.toDomain(): Weekday =
     when (this.dayOfWeek) {
