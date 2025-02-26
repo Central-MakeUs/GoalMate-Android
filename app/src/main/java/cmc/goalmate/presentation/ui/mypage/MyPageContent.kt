@@ -37,7 +37,7 @@ fun MyPageContent(
     userState: MyPageUiState,
     menuItems: List<MenuItemUiModel>,
     navigateToMyGoals: () -> Unit,
-    onAction: (MenuAction) -> Unit,
+    onAction: (MyPageAction.MenuAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -45,7 +45,7 @@ fun MyPageContent(
 
         UserInfoSection(
             state = userState,
-            editNickName = { onAction(MenuAction.EditNickName) },
+            editNickName = { onAction(MyPageAction.MenuAction.EditNickName) },
             onGoalSummaryClicked = { navigateToMyGoals() },
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = GoalMateDimens.HorizontalPadding),

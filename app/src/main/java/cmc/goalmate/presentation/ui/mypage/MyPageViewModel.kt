@@ -1,32 +1,31 @@
 package cmc.goalmate.presentation.ui.mypage
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import cmc.goalmate.domain.DomainResult
+import cmc.goalmate.domain.fold
+import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.UserRepository
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import cmc.goalmate.presentation.ui.mypage.model.MyPageUiModel
+import cmc.goalmate.presentation.ui.mypage.model.NicknameState
 import cmc.goalmate.presentation.ui.mypage.model.toUi
+import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-sealed interface MyPageUiState {
-    data object Loading : MyPageUiState
-
-    data class Success(val userInfo: MyPageUiModel, val isLoggedIn: Boolean) : MyPageUiState
-
-    data object Error : MyPageUiState
-}
-
-fun MyPageUiState.isLoggedIn(): Boolean = (this as? MyPageUiState.Success)?.isLoggedIn == true
 
 @HiltViewModel
 class MyPageViewModel
@@ -34,27 +33,49 @@ class MyPageViewModel
     constructor(
         private val authRepository: AuthRepository,
         private val userRepository: UserRepository,
-    ) :
-    LoginStateViewModel(authRepository) {
-        val state: StateFlow<MyPageUiState> = isLoggedIn
-            .map { isLoggedIn ->
-                if (isLoggedIn) {
-                    when (val result = userRepository.getUserInfo()) {
-                        is DomainResult.Success -> MyPageUiState.Success(result.data.toUi(), true)
-                        is DomainResult.Error -> MyPageUiState.Error
-                    }
-                } else {
-                    MyPageUiState.Success(MyPageUiModel.DEFAULT_INFO, false)
-                }
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = MyPageUiState.Loading,
-            )
+    ) : LoginStateViewModel(authRepository) {
+        private val _state = MutableStateFlow<MyPageUiState>(MyPageUiState.Loading)
+        val state: StateFlow<MyPageUiState> =
+            _state
+                .onStart {
+                    checkLoginStatus()
+                }.stateIn(
+                    viewModelScope,
+                    SharingStarted.WhileSubscribed(5000),
+                    MyPageUiState.Loading,
+                )
 
         private val _event = Channel<MyPageEvent>()
         val event = _event.receiveAsFlow()
+
+        var nickName by mutableStateOf("")
+            private set
+
+        private suspend fun checkLoginStatus() {
+            if (isLoggedIn.value) {
+                when (val result = userRepository.getUserInfo()) {
+                    is DomainResult.Success -> {
+                        val userInfoUi = result.data.toUi()
+                        nickName = userInfoUi.nickName
+                        _state.value = MyPageUiState.Success(
+                            userInfo = userInfoUi,
+                            isLoggedIn = true,
+                            nicknameState = NicknameState.Unchanged,
+                        )
+                    }
+
+                    is DomainResult.Error -> {
+                        _state.value = MyPageUiState.Error
+                    }
+                }
+            } else {
+                _state.value = MyPageUiState.Success(
+                    userInfo = MyPageUiModel.DEFAULT_INFO,
+                    isLoggedIn = false,
+                    nicknameState = NicknameState.Idle,
+                )
+            }
+        }
 
         private fun sendEvent(event: MyPageEvent) {
             viewModelScope.launch {
@@ -62,28 +83,36 @@ class MyPageViewModel
             }
         }
 
-        fun onAction(menuAction: MenuAction) {
+        fun onAction(menuAction: MyPageAction) {
             when (menuAction) {
-                MenuAction.DeleteAccount -> deleteAccount()
-                MenuAction.Logout -> logout()
-                MenuAction.FAQ -> sendEvent(MyPageEvent.ShowFAQ)
-                MenuAction.PrivacyPolicy -> sendEvent(MyPageEvent.ShowPrivacyPolicy)
-                MenuAction.TermsOfService -> sendEvent(MyPageEvent.ShowTermsOfService)
-                is MenuAction.ConfirmNewNickName -> {}
-                MenuAction.EditNickName -> editNickName()
+                MyPageAction.MenuAction.DeleteAccount -> deleteAccount()
+                MyPageAction.MenuAction.Logout -> logout()
+                MyPageAction.MenuAction.FAQ -> sendEvent(MyPageEvent.ShowFAQ)
+                MyPageAction.MenuAction.PrivacyPolicy -> sendEvent(MyPageEvent.ShowPrivacyPolicy)
+                MyPageAction.MenuAction.TermsOfService -> sendEvent(MyPageEvent.ShowTermsOfService)
+                MyPageAction.MenuAction.EditNickName -> editNickName()
+
+                is MyPageAction.CheckDuplication -> checkDuplication(menuAction.updated)
+                is MyPageAction.ConfirmNickName -> confirmNewNickName(menuAction.updated)
+                is MyPageAction.SetNickName -> {
+                    nickName = menuAction.updated
+                    checkValidity(nickName)
+                }
             }
         }
 
         private fun logout() {
             viewModelScope.launch {
-                authRepository.logout()
+                authRepository
+                    .logout()
                     .onSuccess { _event.send(MyPageEvent.SuccessLogout) }
             }
         }
 
         private fun deleteAccount() {
             viewModelScope.launch {
-                authRepository.deleteToken()
+                authRepository
+                    .deleteToken()
                     .onSuccess { _event.send(MyPageEvent.SuccessDeleteAccount) }
             }
         }
@@ -92,36 +121,41 @@ class MyPageViewModel
             val event = if (isLoggedIn.value) MyPageEvent.EditNickName else MyPageEvent.NeedLogin
             sendEvent(event)
         }
+
+        private fun checkValidity(newNickName: String) {
+            if (newNickName == state.value.successData().userInfo.nickName) {
+                _state.update { current ->
+                    (current as MyPageUiState.Success).copy(nicknameState = NicknameState.Unchanged)
+                }
+                return
+            }
+
+            val updatedNicknameState = userRepository.checkNicknameValidity(newNickName)
+                .fold(
+                    onSuccess = { NicknameState.CanCheckDuplication },
+                    onFailure = { NicknameState.InValid(it.asUiText()) },
+                )
+            _state.update { current ->
+                (current as MyPageUiState.Success).copy(nicknameState = updatedNicknameState)
+            }
+        }
+
+        private fun checkDuplication(newNickName: String) {
+            viewModelScope.launch {
+                val updatedNicknameState = userRepository.checkNicknameAvailable(newNickName)
+                    .fold(
+                        onSuccess = { NicknameState.Available("사용 가능한 닉네임이에요 :)") },
+                        onFailure = { NicknameState.InValid(it.asUiText()) },
+                    )
+
+                _state.update { current ->
+                    (current as MyPageUiState.Success).copy(nicknameState = updatedNicknameState)
+                }
+            }
+        }
+
+        private fun confirmNewNickName(newNickName: String) {
+            viewModelScope.launch {
+            }
+        }
     }
-
-sealed interface MenuAction {
-    data object FAQ : MenuAction
-
-    data object PrivacyPolicy : MenuAction
-
-    data object TermsOfService : MenuAction
-
-    data object Logout : MenuAction
-
-    data object DeleteAccount : MenuAction
-
-    data object EditNickName : MenuAction
-
-    data class ConfirmNewNickName(val content: String) : MenuAction
-}
-
-sealed interface MyPageEvent {
-    data object ShowFAQ : MyPageEvent
-
-    data object ShowTermsOfService : MyPageEvent
-
-    data object ShowPrivacyPolicy : MyPageEvent
-
-    data object SuccessLogout : MyPageEvent
-
-    data object SuccessDeleteAccount : MyPageEvent
-
-    data object EditNickName : MyPageEvent
-
-    data object NeedLogin : MyPageEvent
-}

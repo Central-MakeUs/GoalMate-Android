@@ -3,7 +3,7 @@ package cmc.goalmate.presentation.ui.mypage.model
 import androidx.annotation.DrawableRes
 import cmc.goalmate.R
 import cmc.goalmate.domain.model.UserInfo
-import cmc.goalmate.presentation.ui.mypage.MenuAction
+import cmc.goalmate.presentation.ui.mypage.MyPageAction
 
 data class MyPageUiModel(
     val nickName: String,
@@ -27,13 +27,13 @@ data class MyPageUiModel(
 
 enum class MenuItemUiModel(
     val title: String,
-    val menuAction: MenuAction,
+    val menuAction: MyPageAction.MenuAction,
 ) {
-    FAQ("자주 묻는 질문", MenuAction.FAQ),
-    PrivacyPolicy("개인 정보 처리 방침", MenuAction.PrivacyPolicy),
-    TermsOfService("이용약관", MenuAction.TermsOfService),
-    Logout("로그아웃", MenuAction.Logout),
-    DeleteAccount("탈퇴하기", MenuAction.DeleteAccount),
+    FAQ("자주 묻는 질문", MyPageAction.MenuAction.FAQ),
+    PrivacyPolicy("개인 정보 처리 방침", MyPageAction.MenuAction.PrivacyPolicy),
+    TermsOfService("이용약관", MyPageAction.MenuAction.TermsOfService),
+    Logout("로그아웃", MyPageAction.MenuAction.Logout),
+    DeleteAccount("탈퇴하기", MyPageAction.MenuAction.DeleteAccount),
     ;
 
     companion object {
