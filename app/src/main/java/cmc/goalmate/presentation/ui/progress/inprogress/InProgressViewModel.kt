@@ -48,8 +48,7 @@ class InProgressViewModel
 
         private val selectedDate = MutableStateFlow(LocalDate.now())
         private val weeklyProgressState = MutableStateFlow<UiState<CalendarUiModel>>(UiState.Loading)
-        private val selectedDateTodoState =
-            MutableStateFlow<UiState<DailyProgressDetailUiModel>>(UiState.Loading)
+        private val selectedDateTodoState = MutableStateFlow<UiState<DailyProgressDetailUiModel>>(UiState.Loading)
         private val goalInfoState = MutableStateFlow<UiState<GoalOverViewUiModel>>(UiState.Loading)
 
         val state: StateFlow<InProgressUiState> = combine(
@@ -71,45 +70,48 @@ class InProgressViewModel
         )
 
         init {
-            loadInitialData()
-            loadTodayTodos()
+            viewModelScope.launch {
+                loadInitialData()
+            }
         }
 
-        private fun loadInitialData() {
-            viewModelScope.launch {
-                val goalInfoResult = menteeGoalRepository.getGoalInfo(goalId)
+        private suspend fun loadInitialData() {
+            menteeGoalRepository.getDailyTodos(goalId, LocalDate.now())
+                .onSuccess { todo ->
+                    loadGoalInfo()
+                    selectedDateTodoState.update { UiState.Success(todo.toUi(LocalDate.now())) }
+                }
+                .onFailure { error ->
+                    selectedDateTodoState.update { UiState.Error(error.asUiText()) }
+                }
+        }
 
-                goalInfoResult.onSuccess { goalInfo ->
-                    goalInfoState.update {
-                        UiState.Success(goalInfo.toUi())
-                    }
-                    val goalMateCalendarResult = menteeGoalRepository.loadGoalMateCalendar(
-                        menteeGoalId = goalId,
-                        startDate = goalInfo.startDate,
-                        endDate = goalInfo.endDate,
-                        targetDate = LocalDate.now(),
-                    )
-                    goalMateCalendarResult.onSuccess { goalMateCalendar ->
-                        weeklyProgressState.value = UiState.Success(goalMateCalendar.toUi())
-                    }.onFailure { error ->
-                        weeklyProgressState.value = UiState.Error(error.asUiText())
-                    }
-                }.onFailure { error ->
+        private suspend fun loadGoalInfo() {
+            menteeGoalRepository.getGoalInfo(goalId)
+                .onSuccess { goalInfo ->
+                    loadGoalCalendar(startDate = goalInfo.startDate, endDate = goalInfo.endDate)
+                    goalInfoState.update { UiState.Success(goalInfo.toUi()) }
+                }
+                .onFailure { error ->
                     goalInfoState.update { UiState.Error(error.asUiText()) }
                 }
-            }
         }
 
-        private fun loadTodayTodos() {
-            viewModelScope.launch {
-                menteeGoalRepository.getDailyTodos(goalId, LocalDate.now())
-                    .onSuccess {
-                        selectedDateTodoState.value = UiState.Success(it.toUi(LocalDate.now()))
-                    }
-                    .onFailure {
-                        selectedDateTodoState.value = UiState.Error(it.asUiText())
-                    }
-            }
+        private suspend fun loadGoalCalendar(
+            startDate: LocalDate,
+            endDate: LocalDate,
+        ) {
+            menteeGoalRepository.loadGoalMateCalendar(
+                menteeGoalId = goalId,
+                startDate = startDate,
+                endDate = endDate,
+                targetDate = LocalDate.now(),
+            )
+                .onSuccess { goalMateCalendar ->
+                    weeklyProgressState.value = UiState.Success(goalMateCalendar.toUi())
+                }.onFailure { error ->
+                    weeklyProgressState.value = UiState.Error(error.asUiText())
+                }
         }
 
         fun onAction(action: InProgressAction) {

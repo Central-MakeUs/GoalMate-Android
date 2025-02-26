@@ -16,26 +16,21 @@ import cmc.goalmate.domain.model.WeeklyProgress
 import cmc.goalmate.domain.model.toInfo
 import cmc.goalmate.domain.repository.MenteeGoalRepository
 import cmc.goalmate.domain.updateProgressForWeeks
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import javax.inject.Inject
 
 class MenteeGoalRepositoryImpl
     @Inject
     constructor(private val menteeGoalDataSource: MenteeGoalDataSource) : MenteeGoalRepository {
-        private val _goalInfo = MutableStateFlow<Map<Int, MenteeGoalInfo>>(emptyMap())
-        val goalInfo: StateFlow<Map<Int, MenteeGoalInfo>> = _goalInfo.asStateFlow()
+        private val goalInfo: MutableMap<Int, MenteeGoalInfo> = mutableMapOf<Int, MenteeGoalInfo>()
 
         override suspend fun getMenteeGoals(): DomainResult<MenteeGoals, DataError.Network> =
             menteeGoalDataSource.getGoals().fold(
-                onSuccess = { goals ->
-                    val goalsDomain = goals.toDomain()
-                    val goalInfoMap = goalsDomain.goals.associateBy({ it.id }, { it.toInfo() })
-                    _goalInfo.value = goalInfoMap
-                    DomainResult.Success(goalsDomain)
+                onSuccess = { goalsDto ->
+                    val goals = goalsDto.toDomain()
+                    val updatedGoals = goals.goals.associateBy({ it.id }, { it.toInfo() })
+                    goalInfo.putAll(updatedGoals)
+                    DomainResult.Success(goals)
                 },
                 onFailure = {
                     DomainResult.Error(it.toDataError())
@@ -43,13 +38,17 @@ class MenteeGoalRepositoryImpl
             )
 
         override suspend fun getGoalInfo(goalId: Int): DomainResult<MenteeGoalInfo, DataError> {
-            val cachedGoal = goalInfo.value[goalId]
+            val cachedGoal = goalInfo[goalId]
+            if (cachedGoal != null) return DomainResult.Success(cachedGoal)
 
-            return if (cachedGoal != null) {
-                DomainResult.Success(cachedGoal)
-            } else {
-                DomainResult.Error(DataError.Local.NOT_FOUND)
-            }
+            return menteeGoalDataSource.getDailyTodo(goalId, LocalDate.now()).fold(
+                onSuccess = {
+                    DomainResult.Success(it.menteeGoal.toDomain().toInfo())
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
         }
 
         override suspend fun getWeeklyProgress(
@@ -71,22 +70,14 @@ class MenteeGoalRepositoryImpl
         ): DomainResult<DailyTodos, DataError.Network> =
             menteeGoalDataSource.getDailyTodo(menteeGoalId, targetDate).fold(
                 onSuccess = { dailyTodoDto ->
+                    goalInfo[dailyTodoDto.menteeGoal.id] = dailyTodoDto.menteeGoal.toDomain().toInfo()
                     val result = DailyTodos(dailyTodoDto.todos.map { it.toDomain() })
-                    updateGoalCache(dailyTodoDto.menteeGoal.toDomain().toInfo())
                     DomainResult.Success(result)
                 },
                 onFailure = {
                     DomainResult.Error(it.toDataError())
                 },
             )
-
-        private fun updateGoalCache(menteeGoal: MenteeGoalInfo) {
-            _goalInfo.update { currentCache ->
-                currentCache.toMutableMap().apply {
-                    put(menteeGoal.id, menteeGoal)
-                }
-            }
-        }
 
         override suspend fun updateTodoStatus(
             menteeGoalId: Int,
