@@ -96,4 +96,28 @@ fun MyPageScreen(
             modifier = Modifier.weight(1f),
         )
     }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            sheetState = sheetState,
+            containerColor = MaterialTheme.goalMateColors.background,
+            tonalElevation = 0.dp,
+        ) {
+            NickNameEditContent(
+                nickNameText = viewModel.nickName,
+                nickNameTextState = state.successData().inputTextState,
+                helperText = state.successData().helperText,
+                canCheckDuplicate = state.successData().canCheckDuplication,
+                onAction = viewModel::onAction,
+                focusRequester = focusRequester,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = GoalMateDimens.HorizontalPadding,
+                        vertical = GoalMateDimens.BottomMargin,
+                    ),
+            )
+        }
+    }
 }

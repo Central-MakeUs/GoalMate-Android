@@ -59,6 +59,7 @@
     <string name="goal_progress_comment_title">멘토 코멘트</string>
 
     <string name="my_page_title">마이페이지</string>
+    <string name="my_page_nick_name_edit_confirm">저장하기</string>
 
     <string name="comments_detail_empty">오늘 해야 할 일을 진행하며 생긴\n 고민과 질문을 남기고 멘토 코멘트를 받아보세요:)</string>
     <string name="comments_detail_placeholder">하루 1회, 300자 미만으로 작성해주세요:)</string>

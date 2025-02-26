@@ -25,7 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,15 +48,28 @@ fun GoalMateTextField(
     inputTextState: InputTextState = InputTextState.None,
     helperText: String = "",
 ) {
+    var textFieldValue by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = value,
+                selection = TextRange(value.length),
+            ),
+        )
+    }
+
     BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
+        value = textFieldValue,
+        onValueChange = {
+            textFieldValue = it
+            onValueChange(it.text)
+        },
         singleLine = true,
         visualTransformation = VisualTransformation.None,
         textStyle = MaterialTheme.goalMateTypography.body.copy(color = inputTextState.getTextColor()),
         modifier = modifier,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.None,
         ),
         decorationBox = { innerTextField ->
             Column(
