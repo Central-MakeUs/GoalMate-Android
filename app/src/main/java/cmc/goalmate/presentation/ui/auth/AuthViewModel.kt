@@ -94,6 +94,7 @@ class AuthViewModel
                 _state.value = _state.value.copy(
                     nickNameFormatValidationState = InputTextState.None,
                     duplicationCheckState = InputTextState.None,
+                    helperText = "",
                 )
                 return
             }
@@ -102,14 +103,15 @@ class AuthViewModel
                 .onSuccess {
                     _state.value = _state.value.copy(
                         nickNameFormatValidationState = InputTextState.Success,
+                        duplicationCheckState = InputTextState.None,
                         helperText = "",
                     )
                 }
                 .onFailure {
                     _state.value = _state.value.copy(
                         nickNameFormatValidationState = InputTextState.Error,
-                        helperText = it.asUiText(),
                         duplicationCheckState = InputTextState.None,
+                        helperText = it.asUiText(),
                     )
                 }
         }

@@ -59,9 +59,11 @@ fun GoalMateTextField(
 
     BasicTextField(
         value = textFieldValue,
-        onValueChange = {
-            textFieldValue = it
-            onValueChange(it.text)
+        onValueChange = { newValue ->
+            if (textFieldValue.text != newValue.text) {
+                textFieldValue = newValue
+                onValueChange(newValue.text)
+            }
         },
         singleLine = true,
         visualTransformation = VisualTransformation.None,
