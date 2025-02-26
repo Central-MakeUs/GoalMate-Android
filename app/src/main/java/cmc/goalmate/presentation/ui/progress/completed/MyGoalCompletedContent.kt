@@ -62,8 +62,8 @@ fun MyGoalCompletedContent(
             achievementProgress = completedGoal.achievementProgress,
         )
         CommentSection(
-            nickName = "마루",
-            mentor = "다온",
+            nickName = completedGoal.mentee,
+            mentor = completedGoal.mentor,
             comment = completedGoal.finalComment,
             navigateToMoreComments = navigateToCommentDetail,
         )

@@ -8,14 +8,15 @@ import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.MenteeGoalRepository
+import cmc.goalmate.domain.repository.UserRepository
 import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiModel
 import cmc.goalmate.presentation.ui.progress.completed.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -35,6 +36,7 @@ class CompletedGoalViewModel
     constructor(
         savedStateHandle: SavedStateHandle,
         private val menteeGoalRepository: MenteeGoalRepository,
+        private val userRepository: UserRepository,
     ) : ViewModel() {
         private val route = savedStateHandle.toRoute<Screen.CompletedGoal>()
         private val goalId = route.goalId
@@ -43,27 +45,23 @@ class CompletedGoalViewModel
         private val _event = Channel<CompletedGoalEvent>()
         val event = _event.receiveAsFlow()
 
-        private val _state = MutableStateFlow<CompletedGoalUiState>(CompletedGoalUiState.Loading)
-        val state: StateFlow<CompletedGoalUiState> = _state
-            .onStart {
-                loadGoalInfo(goalId)
+        val state: StateFlow<CompletedGoalUiState> =
+            flow {
+                emit(CompletedGoalUiState.Loading)
+
+                menteeGoalRepository.getGoalInfo(goalId)
+                    .onSuccess { goal ->
+                        val menteeName = userRepository.getNickName().first()
+                        emit(CompletedGoalUiState.Success(goal.toUi(menteeName = menteeName)))
+                    }
+                    .onFailure {
+                        emit(CompletedGoalUiState.Error)
+                    }
             }.stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5000L),
                 CompletedGoalUiState.Loading,
             )
-
-        private fun loadGoalInfo(id: Int) {
-            viewModelScope.launch {
-                menteeGoalRepository.getGoalInfo(id)
-                    .onSuccess { goal ->
-                        _state.value = CompletedGoalUiState.Success(goal.toUi())
-                    }
-                    .onFailure {
-                        _state.value = CompletedGoalUiState.Error
-                    }
-            }
-        }
 
         fun onAction(action: CompletedGoalAction) {
             when (action) {
@@ -99,5 +97,9 @@ sealed interface CompletedGoalAction {
 sealed interface CompletedGoalEvent {
     data class NavigateToGoalDetail(val goalId: Int) : CompletedGoalEvent
 
-    data class NavigateToCommentDetail(val roomId: Int, val goalTitle: String, val startDate: String) : CompletedGoalEvent
+    data class NavigateToCommentDetail(
+        val roomId: Int,
+        val goalTitle: String,
+        val startDate: String,
+    ) : CompletedGoalEvent
 }

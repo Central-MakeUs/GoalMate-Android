@@ -10,6 +10,7 @@ import cmc.goalmate.domain.NickNameError
 import cmc.goalmate.domain.ValidateNickName
 import cmc.goalmate.domain.model.UserInfo
 import cmc.goalmate.domain.repository.UserRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UserRepositoryImpl
@@ -50,11 +51,12 @@ class UserRepositoryImpl
             remoteUserDataSource.getUserInfo().fold(
                 onSuccess = { userInfoDto ->
                     val userInfo = userInfoDto.toDomain()
-//                    localUserDataSource.saveNickName(userInfo.nickName)
                     DomainResult.Success(userInfo)
                 },
                 onFailure = { error ->
                     DomainResult.Error(error.toDataError())
                 },
             )
+
+        override fun getNickName(): Flow<String> = localUserDataSource.getNickName()
     }
