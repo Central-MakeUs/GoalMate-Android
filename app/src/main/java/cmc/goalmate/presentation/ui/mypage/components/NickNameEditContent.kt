@@ -29,6 +29,7 @@ fun NickNameEditContent(
     nickNameTextState: InputTextState,
     helperText: String,
     canCheckDuplicate: Boolean,
+    isConfirmButtonEnabled: Boolean,
     onAction: (MyPageAction) -> Unit,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
@@ -61,7 +62,7 @@ fun NickNameEditContent(
             },
             buttonSize = ButtonSize.LARGE,
             modifier = Modifier.fillMaxWidth(),
-            enabled = true,
+            enabled = isConfirmButtonEnabled,
         )
     }
 }
@@ -78,6 +79,7 @@ private fun NickNameEditContentPreview() {
             canCheckDuplicate = true,
             onAction = {},
             focusRequester = focusRequester,
+            isConfirmButtonEnabled = true,
             modifier =
                 Modifier
                     .height(550.dp)

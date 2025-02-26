@@ -19,6 +19,9 @@ sealed interface MyPageUiState {
         val canCheckDuplication: Boolean
             get() = nicknameState == NicknameState.CanCheckDuplication
 
+        val canConfirmNickNameChanged: Boolean
+            get() = nicknameState is NicknameState.Available
+
         val helperText: String
             get() = (nicknameState as? NicknameState.InValid)?.errorText
                 ?: (nicknameState as? NicknameState.Available)?.successText ?: ""

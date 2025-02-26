@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -31,6 +32,8 @@ import cmc.goalmate.presentation.ui.mypage.model.MenuItemUiModel
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,12 +46,14 @@ fun MyPageScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val coroutineScope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
         snapshotFlow { sheetState.isVisible }
+            .distinctUntilChanged()
             .collectLatest { isVisible ->
                 if (isVisible) {
                     delay(300)
@@ -80,6 +85,15 @@ fun MyPageScreen(
             MyPageEvent.EditNickName -> {
                 showBottomSheet = true
             }
+            MyPageEvent.SuccessChangeNickName -> {
+                coroutineScope.launch {
+                    sheetState.hide()
+                }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        showBottomSheet = false
+                    }
+                }
+            }
         }
     }
 
@@ -110,6 +124,7 @@ fun MyPageScreen(
                 helperText = state.successData().helperText,
                 canCheckDuplicate = state.successData().canCheckDuplication,
                 onAction = viewModel::onAction,
+                isConfirmButtonEnabled = state.successData().canConfirmNickNameChanged,
                 focusRequester = focusRequester,
                 modifier = Modifier
                     .fillMaxWidth()

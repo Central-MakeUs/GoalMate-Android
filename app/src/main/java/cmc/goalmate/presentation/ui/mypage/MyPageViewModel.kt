@@ -156,6 +156,16 @@ class MyPageViewModel
 
         private fun confirmNewNickName(newNickName: String) {
             viewModelScope.launch {
+                userRepository.updateNickName(newNickName)
+                    .onSuccess {
+                        _state.update { current ->
+                            val updatedUserInfo = current.successData().userInfo.copy(nickName = newNickName)
+                            (current as MyPageUiState.Success).copy(nicknameState = NicknameState.Unchanged, userInfo = updatedUserInfo)
+                        }
+                        sendEvent(MyPageEvent.SuccessChangeNickName)
+                    }
+                    .onFailure {
+                    }
             }
         }
     }

@@ -35,5 +35,7 @@ sealed interface MyPageEvent {
 
     data object EditNickName : MyPageEvent
 
+    data object SuccessChangeNickName : MyPageEvent
+
     data object NeedLogin : MyPageEvent
 }
