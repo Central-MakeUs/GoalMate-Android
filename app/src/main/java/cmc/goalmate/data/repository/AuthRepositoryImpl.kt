@@ -1,6 +1,7 @@
 package cmc.goalmate.data.repository
 
 import cmc.goalmate.data.datasource.AuthDataSource
+import cmc.goalmate.data.datasource.LocalUserDataSource
 import cmc.goalmate.data.datasource.TokenDataSource
 import cmc.goalmate.data.mapper.toDataError
 import cmc.goalmate.data.model.toDomain
@@ -20,6 +21,7 @@ class AuthRepositoryImpl
     constructor(
         private val authDataSource: AuthDataSource,
         private val tokenDataSource: TokenDataSource,
+        private val localUserDataSource: LocalUserDataSource,
     ) : AuthRepository {
         override suspend fun login(idToken: String): DomainResult<Login, DataError.Network> =
             authDataSource.login(idToken).fold(
@@ -88,7 +90,10 @@ class AuthRepositoryImpl
 
         override suspend fun deleteAccount(): DomainResult<Unit, DataError> =
             authDataSource.deleteAccount().fold(
-                onSuccess = { deleteToken() },
+                onSuccess = {
+                    localUserDataSource.deleteNickName()
+                    deleteToken()
+                },
                 onFailure = {
                     DomainResult.Error(it.toDataError())
                 },

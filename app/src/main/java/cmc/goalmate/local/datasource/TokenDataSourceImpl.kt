@@ -10,7 +10,7 @@ import javax.inject.Inject
 class TokenDataSourceImpl
     @Inject
     constructor(private val tokenDataStore: TokenDataStore) : TokenDataSource {
-        override suspend fun getToken(): Flow<TokenDto> =
+        override fun getToken(): Flow<TokenDto> =
             combine(
                 tokenDataStore.accessToken,
                 tokenDataStore.refreshToken,

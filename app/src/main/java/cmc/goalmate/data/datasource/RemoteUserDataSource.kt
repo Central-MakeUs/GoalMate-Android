@@ -6,7 +6,7 @@ import cmc.goalmate.data.util.getOrThrow
 import cmc.goalmate.remote.service.MenteeService
 import javax.inject.Inject
 
-class UserDataSource
+class RemoteUserDataSource
     @Inject
     constructor(private val menteeService: MenteeService) {
         suspend fun validateNickName(nickName: String): Result<Boolean> =
