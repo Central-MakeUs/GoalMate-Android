@@ -21,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,15 +40,26 @@ fun GoalMateCheckBox(
     isEnabled: Boolean = true,
 ) {
     val contentColor =
-        if (isChecked) MaterialTheme.goalMateColors.primary else MaterialTheme.goalMateColors.checkboxBackground
+        if (isChecked) {
+            MaterialTheme.goalMateColors.primary
+        } else {
+            MaterialTheme.goalMateColors.checkboxBackground
+        }
+    val hapticFeedback = LocalHapticFeedback.current
 
     Box(
         modifier = modifier
             .size(GoalMateDimens.CheckBoxSize)
-            .clickable(enabled = isEnabled, onClick = { onCheckedChange() })
+            .clickable(
+                enabled = isEnabled,
+                onClick = {
+                    onCheckedChange()
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                },
+            )
             .padding(3.dp)
             .clip(RoundedCornerShape(4.dp))
-            .background(color = contentColor)
+            .background(color = contentColor),
     ) {
         Column(
             modifier = Modifier
