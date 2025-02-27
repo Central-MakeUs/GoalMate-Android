@@ -1,5 +1,8 @@
 package cmc.goalmate.presentation.ui.progress.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -36,8 +41,16 @@ fun ArcProgressBar(
 ) {
     val barColor = MaterialTheme.goalMateColors.secondary02
     val backgroundColor = MaterialTheme.goalMateColors.secondary02Variant
-
     val adjustedPercent = MIN_SWIPE_ANGLE + (percent / 100f) * (MAX_SWIPE_ANGLE - MIN_SWIPE_ANGLE)
+
+    val animatedValue = remember { Animatable(0f) }
+
+    LaunchedEffect(percent) {
+        animatedValue.animateTo(
+            targetValue = adjustedPercent,
+            animationSpec = tween(durationMillis = 500, easing = LinearEasing),
+        )
+    }
 
     Box(modifier = modifier) {
         Canvas(
@@ -54,7 +67,7 @@ fun ArcProgressBar(
             drawArc(
                 color = barColor,
                 startAngle = START_ANGLE,
-                sweepAngle = adjustedPercent,
+                sweepAngle = animatedValue.value,
                 useCenter = false,
                 size = Size(200.dp.toPx(), 200.dp.toPx()),
                 style = Stroke(width = 20.dp.toPx(), cap = StrokeCap.Round),
