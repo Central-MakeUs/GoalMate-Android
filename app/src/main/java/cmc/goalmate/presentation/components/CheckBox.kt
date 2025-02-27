@@ -1,7 +1,6 @@
 package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,8 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,13 +28,12 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.util.noRippleClickable
 
 @Composable
 fun GoalMateCheckBox(
     isChecked: Boolean,
-    onCheckedChange: () -> Unit,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = true,
 ) {
     val contentColor =
         if (isChecked) {
@@ -45,18 +41,10 @@ fun GoalMateCheckBox(
         } else {
             MaterialTheme.goalMateColors.checkboxBackground
         }
-    val hapticFeedback = LocalHapticFeedback.current
 
     Box(
         modifier = modifier
             .size(GoalMateDimens.CheckBoxSize)
-            .clickable(
-                enabled = isEnabled,
-                onClick = {
-                    onCheckedChange()
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                },
-            )
             .padding(3.dp)
             .clip(RoundedCornerShape(4.dp))
             .background(color = contentColor),
@@ -82,7 +70,6 @@ fun GoalMateCheckBoxWithText(
     isChecked: Boolean,
     onCheckedChange: () -> Unit,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = true,
 ) {
     Row(
         modifier = modifier,
@@ -91,8 +78,10 @@ fun GoalMateCheckBoxWithText(
     ) {
         GoalMateCheckBox(
             isChecked = isChecked,
-            onCheckedChange = onCheckedChange,
-            isEnabled = isEnabled,
+            modifier = Modifier
+                .noRippleClickable {
+                    onCheckedChange()
+                },
         )
         Text(
             text = content,

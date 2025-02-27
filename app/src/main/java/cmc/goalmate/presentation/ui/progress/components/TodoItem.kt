@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,6 +34,7 @@ import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.progress.inprogress.model.TodoGoalUiModel
+import cmc.goalmate.presentation.ui.util.singleClickable
 
 @Composable
 fun ToDoItem(
@@ -40,14 +43,18 @@ fun ToDoItem(
     modifier: Modifier = Modifier,
 ) {
     var isTipVisible by remember { mutableStateOf<Boolean>(false) }
-
+    val hapticFeedback = LocalHapticFeedback.current
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         GoalMateCheckBox(
             isChecked = todo.isCompleted,
-            onCheckedChange = onCheckedChange,
+            modifier = Modifier
+                .singleClickable(noRipple = true) {
+                    onCheckedChange()
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                },
         )
         Column(
             modifier = Modifier.weight(1f),
