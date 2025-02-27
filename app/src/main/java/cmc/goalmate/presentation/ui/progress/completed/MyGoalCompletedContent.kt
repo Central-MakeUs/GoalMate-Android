@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,16 +22,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.GoalDateRange
-import cmc.goalmate.presentation.components.GoalMateProgressBar
 import cmc.goalmate.presentation.components.MoreOptionButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.White
 import cmc.goalmate.presentation.theme.goalMateColors
+import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.detail.components.InfoRow
 import cmc.goalmate.presentation.ui.detail.components.SubTitleText
-import cmc.goalmate.presentation.ui.mygoals.MyGoalUiState
 import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiModel
+import cmc.goalmate.presentation.ui.progress.components.CompletedProgressBar
 import cmc.goalmate.presentation.ui.progress.components.FinalMessage
 import cmc.goalmate.presentation.ui.progress.components.Subtitle
 
@@ -45,9 +46,6 @@ fun MyGoalCompletedContent(
         verticalArrangement = Arrangement.spacedBy(30.dp),
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                top = GoalMateDimens.BottomMargin,
-            )
             .verticalScroll(rememberScrollState()),
     ) {
         MoreOptionButton(
@@ -108,18 +106,15 @@ private fun CompletedAchievementProgress(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(30.dp),
+        horizontalArrangement = Arrangement.spacedBy(22.dp),
     ) {
         SubTitleText(
             text = "달성율",
-            modifier = Modifier.defaultMinSize(minWidth = 60.dp),
+            modifier = Modifier
+                .defaultMinSize(minWidth = 60.dp)
+                .padding(top = 12.dp),
         )
-
-        GoalMateProgressBar(
-            currentProgress = achievementProgress,
-            myGoalState = MyGoalUiState.IN_PROGRESS,
-            thickness = 14.dp,
-        )
+        CompletedProgressBar(progress = achievementProgress)
     }
 }
 

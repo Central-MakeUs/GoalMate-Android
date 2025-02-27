@@ -1,16 +1,19 @@
 package cmc.goalmate.presentation.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -30,17 +33,22 @@ fun GoalMateProgressBar(
     myGoalState: MyGoalUiState = MyGoalUiState.IN_PROGRESS,
 ) {
     Column(modifier = modifier) {
-        LinearProgressIndicator(
-            progress = { currentProgress },
-            color = myGoalState.progressIndicatorColor(),
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(thickness),
-            strokeCap = StrokeCap.Round,
-            gapSize = (-15).dp,
-            trackColor = myGoalState.progressBackgroundColor(),
-            drawStopIndicator = {},
-        )
+                .clip(shape = RoundedCornerShape(14.dp)),
+        ) {
+            LinearProgressIndicator(
+                progress = { currentProgress },
+                color = myGoalState.progressIndicatorColor(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(thickness),
+                strokeCap = StrokeCap.Butt,
+                gapSize = (-15).dp,
+                trackColor = myGoalState.progressBackgroundColor(),
+                drawStopIndicator = {},
+            )
+        }
         Spacer(Modifier.size(8.dp))
         Text(
             text = "${(currentProgress * 100).toInt()}%",

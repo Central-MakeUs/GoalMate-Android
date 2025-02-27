@@ -2,6 +2,7 @@ package cmc.goalmate.presentation.ui.progress.completed
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ fun CompletedScreen(
                     ),
                 )
             }
+
             is CompletedGoalEvent.NavigateToGoalDetail -> {
                 navigateToGoalDetail(event.goalId)
             }
@@ -56,6 +58,7 @@ fun CompletedScreen(
             state = state,
             onAction = viewModel::onAction,
             navigateToHome = navigateToHome,
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
@@ -65,13 +68,14 @@ private fun CompletedScreenContent(
     state: CompletedGoalUiState,
     onAction: (CompletedGoalAction) -> Unit,
     navigateToHome: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     when (state) {
         CompletedGoalUiState.Error -> {}
         CompletedGoalUiState.Loading -> {}
         is CompletedGoalUiState.Success -> {
             Box(
-                modifier = Modifier,
+                modifier = modifier,
             ) {
                 MyGoalCompletedContent(
                     completedGoal = state.goal,
@@ -79,7 +83,9 @@ private fun CompletedScreenContent(
                     navigateToCommentDetail = {
                         onAction(CompletedGoalAction.NavigateToCommentDetail)
                     },
-                    modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+                    modifier = Modifier
+                        .padding(horizontal = GoalMateDimens.HorizontalPadding)
+                        .padding(top = GoalMateDimens.BottomMargin),
                 )
                 ProgressBottomButton(
                     buttonText = "다음 목표 시작하기",

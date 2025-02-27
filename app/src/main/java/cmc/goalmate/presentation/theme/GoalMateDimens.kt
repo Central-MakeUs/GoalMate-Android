@@ -28,4 +28,6 @@ object GoalMateDimens {
     val BoxContentVerticalPadding = 24.dp
 
     val VerticalSpacerLarge = 44.dp
+
+    val CompletedProgressBarHeight = 14.dp
 }
