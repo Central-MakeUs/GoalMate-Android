@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +16,7 @@ import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiMod
 import cmc.goalmate.presentation.ui.progress.inprogress.model.GoalOverViewUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressUiState
 import cmc.goalmate.presentation.ui.progress.inprogress.model.UiState
+import cmc.goalmate.presentation.ui.progress.inprogress.model.WeekUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.convertToDomain
 import cmc.goalmate.presentation.ui.progress.inprogress.model.successData
 import cmc.goalmate.presentation.ui.progress.inprogress.model.toUi
@@ -102,7 +104,7 @@ class InProgressViewModel
             startDate: LocalDate,
             endDate: LocalDate,
         ) {
-            menteeGoalRepository.loadGoalMateCalendar(
+            menteeGoalRepository.loadInitialGoalMateCalendar(
                 menteeGoalId = menteeGoalId,
                 startDate = startDate,
                 endDate = endDate,
@@ -133,8 +135,7 @@ class InProgressViewModel
                 )
 
                 is InProgressAction.ViewPreviousWeek -> {
-                    val targetWeek = action.targetWeek
-                    // TODO: 스와이프 시 이전 데이터 로드
+                    loadPreviousWeekData(action.currentPageWeekIndex)
                 }
             }
         }
@@ -216,6 +217,44 @@ class InProgressViewModel
                 }.onFailure {
                     selectedDateTodoState.value = UiState.Error(it.asUiText())
                 }
+            }
+        }
+
+        private fun loadPreviousWeekData(currentWeekIndex: Int) {
+            val weeklyData = weeklyProgressState.successData().weeklyData
+
+            if (currentWeekIndex < 1 || !weeklyData[currentWeekIndex - 1].shouldLoadPrevious) return
+
+            val targetWeekIndex = currentWeekIndex - 2
+            if (targetWeekIndex < 0) return
+            val targetDate = weeklyData[targetWeekIndex].dailyProgresses.last().actualDate
+            viewModelScope.launch {
+                menteeGoalRepository.getWeeklyProgress(
+                    menteeGoalId = menteeGoalId,
+                    targetDate = targetDate,
+                )
+                    .onSuccess { week ->
+                        updateCalendar(
+                            targetWeekIndex = targetWeekIndex,
+                            updatedWeekData = week.toUi(targetWeekIndex),
+                        )
+                    }
+                    .onFailure {
+                        Log.d("yenny", "loadPreviousWeekData 에러")
+                    }
+            }
+        }
+
+        private fun updateCalendar(
+            targetWeekIndex: Int,
+            updatedWeekData: WeekUiModel,
+        ) {
+            weeklyProgressState.update { current ->
+                val updated = current.successData().weeklyData.toMutableList().apply {
+                    this[targetWeekIndex + 1] = this[targetWeekIndex + 1].copy(shouldLoadPrevious = false)
+                    this[targetWeekIndex] = updatedWeekData
+                }
+                UiState.Success(current.successData().copy(weeklyData = updated))
             }
         }
     }

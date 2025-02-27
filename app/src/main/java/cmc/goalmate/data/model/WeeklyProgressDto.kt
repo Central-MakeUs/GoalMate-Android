@@ -1,12 +1,12 @@
 package cmc.goalmate.data.model
 
 import cmc.goalmate.domain.model.DailyProgress
+import cmc.goalmate.domain.model.Week
 import cmc.goalmate.domain.model.Weekday
-import cmc.goalmate.domain.model.WeeklyProgress
 import cmc.goalmate.remote.dto.response.ProgressResponse
 import cmc.goalmate.remote.dto.response.WeeklyProgressResponse
 import java.time.LocalDate
-import java.time.YearMonth
+import java.util.Locale
 
 data class WeeklyProgressDto(
     val progressList: List<ProgressDto>,
@@ -38,17 +38,11 @@ fun ProgressResponse.toData(): ProgressDto =
         isValid = this.isValid,
     )
 
-fun WeeklyProgressDto.toDomain(): WeeklyProgress {
-    val target = this.progressList[3]
-    val formattedDate = LocalDate.parse(target.date)
-
-    return WeeklyProgress(
-        yearMonth = YearMonth.from(formattedDate),
-        progressData = this.progressList.map { it.toDomain() },
-        hasLastWeek = hasLastWeek,
-        hasNextWeek = hasNextWeek,
+fun WeeklyProgressDto.toWeekDomain(): Week =
+    Week(
+        dailyProgresses = this.progressList.map { it.toDomain() },
+        shouldLoadPrevious = hasLastWeek,
     )
-}
 
 fun ProgressDto.toDomain(): DailyProgress {
     val formattedDate = LocalDate.parse(date)
@@ -68,7 +62,7 @@ fun ProgressDto.toDomain(): DailyProgress {
 }
 
 fun ProgressDto.weekDay(): Weekday =
-    when (this.dayOfWeek) {
+    when (this.dayOfWeek.uppercase(locale = Locale.US)) {
         "SUNDAY" -> Weekday.SUNDAY
         "MONDAY" -> Weekday.MONDAY
         "TUESDAY" -> Weekday.TUESDAY

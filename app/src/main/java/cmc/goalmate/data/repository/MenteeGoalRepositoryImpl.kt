@@ -4,6 +4,7 @@ import cmc.goalmate.data.datasource.MenteeGoalDataSource
 import cmc.goalmate.data.mapper.toDataError
 import cmc.goalmate.data.mapper.toDomain
 import cmc.goalmate.data.model.toDomain
+import cmc.goalmate.data.model.toWeekDomain
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.generateWeeklyCalendar
@@ -12,7 +13,7 @@ import cmc.goalmate.domain.model.GoalMateCalendar
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoals
 import cmc.goalmate.domain.model.TodoStatus
-import cmc.goalmate.domain.model.WeeklyProgress
+import cmc.goalmate.domain.model.Week
 import cmc.goalmate.domain.model.toInfo
 import cmc.goalmate.domain.repository.MenteeGoalRepository
 import cmc.goalmate.domain.updateProgressForWeeks
@@ -54,10 +55,10 @@ class MenteeGoalRepositoryImpl
         override suspend fun getWeeklyProgress(
             menteeGoalId: Int,
             targetDate: LocalDate,
-        ): DomainResult<WeeklyProgress, DataError.Network> =
+        ): DomainResult<Week, DataError.Network> =
             menteeGoalDataSource.getWeeklyProgress(menteeGoalId, targetDate).fold(
                 onSuccess = { weeklyProgress ->
-                    DomainResult.Success(weeklyProgress.toDomain())
+                    DomainResult.Success(weeklyProgress.toWeekDomain())
                 },
                 onFailure = {
                     DomainResult.Error(it.toDataError())
@@ -93,7 +94,7 @@ class MenteeGoalRepositoryImpl
                 },
             )
 
-        override suspend fun loadGoalMateCalendar(
+        override suspend fun loadInitialGoalMateCalendar(
             menteeGoalId: Int,
             startDate: LocalDate,
             endDate: LocalDate,
@@ -101,15 +102,13 @@ class MenteeGoalRepositoryImpl
         ): DomainResult<GoalMateCalendar, DataError.Network> {
             val weeklyProgressDto = menteeGoalDataSource.getWeeklyProgress(menteeGoalId, targetDate)
                 .getOrElse { return DomainResult.Error(it.toDataError()) }
-            val initialCalendar =
-                generateWeeklyCalendar(startDate = startDate, endDate = endDate, target = targetDate)
+            val initialCalendar = generateWeeklyCalendar(startDate = startDate, endDate = endDate, target = targetDate)
 
             val updatedWeekData = updateProgressForWeeks(
                 weeks = initialCalendar.weeklyData,
-                updatedWeeklyDataDto = weeklyProgressDto,
+                updatedWeekProgressDtos = weeklyProgressDto.progressList,
             )
             val updatedCalendar = initialCalendar.copy(weeklyData = updatedWeekData)
-
             if (!weeklyProgressDto.hasLastWeek) { // targetDate가 첫 주 일 경우
                 return DomainResult.Success(updatedCalendar)
             }
@@ -120,7 +119,7 @@ class MenteeGoalRepositoryImpl
                     .getOrElse { return DomainResult.Error(it.toDataError()) }
             val newUpdatedWeekData = updateProgressForWeeks(
                 weeks = updatedCalendar.weeklyData,
-                updatedWeeklyDataDto = newWeeklyProgressDto,
+                updatedWeekProgressDtos = newWeeklyProgressDto.progressList,
             )
             return DomainResult.Success(
                 updatedCalendar.copy(

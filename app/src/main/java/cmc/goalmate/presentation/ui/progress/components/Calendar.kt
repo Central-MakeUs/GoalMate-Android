@@ -17,8 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -82,7 +80,7 @@ fun GoalMateCalendar(
         }
 
         WeeklyCalendar(
-            initialWeekNumber = calendarData.todayWeekNumber - 1,
+            initialWeekNumber = calendarData.todayWeekNumber,
             weeklyData = calendarData.weeklyData,
             selectedDate = selectedDate,
             onAction = onAction,
@@ -113,15 +111,13 @@ private fun WeeklyCalendar(
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val pagerState =
-        rememberPagerState(pageCount = { weeklyData.size }, initialPage = initialWeekNumber)
-    var previousPage by rememberSaveable { mutableIntStateOf(pagerState.currentPage) }
+    val pagerState = rememberPagerState(
+        pageCount = { weeklyData.size },
+        initialPage = initialWeekNumber - 1,
+    )
 
     LaunchedEffect(pagerState.currentPage) {
-        if (pagerState.currentPage < previousPage) {
-            onAction(InProgressAction.ViewPreviousWeek(currentPageWeekIndex = pagerState.currentPage))
-        }
-        previousPage = pagerState.currentPage
+        onAction(InProgressAction.ViewPreviousWeek(currentPageWeekIndex = pagerState.currentPage))
     }
 
     HorizontalPager(

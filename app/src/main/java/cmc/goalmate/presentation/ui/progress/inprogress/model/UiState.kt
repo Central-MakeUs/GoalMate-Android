@@ -11,3 +11,5 @@ sealed interface UiState<out T> {
 }
 
 fun <T> StateFlow<UiState<T>>.successData(): T = (this.value as UiState.Success).data
+
+fun <T> UiState<T>.successData(): T = (this as UiState.Success).data

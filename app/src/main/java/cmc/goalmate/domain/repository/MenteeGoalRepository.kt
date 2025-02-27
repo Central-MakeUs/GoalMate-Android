@@ -7,7 +7,7 @@ import cmc.goalmate.domain.model.GoalMateCalendar
 import cmc.goalmate.domain.model.MenteeGoalInfo
 import cmc.goalmate.domain.model.MenteeGoals
 import cmc.goalmate.domain.model.TodoStatus
-import cmc.goalmate.domain.model.WeeklyProgress
+import cmc.goalmate.domain.model.Week
 import java.time.LocalDate
 
 interface MenteeGoalRepository {
@@ -18,7 +18,7 @@ interface MenteeGoalRepository {
     suspend fun getWeeklyProgress(
         menteeGoalId: Int,
         targetDate: LocalDate,
-    ): DomainResult<WeeklyProgress, DataError.Network>
+    ): DomainResult<Week, DataError.Network>
 
     suspend fun getDailyTodos(
         menteeGoalId: Int,
@@ -31,7 +31,7 @@ interface MenteeGoalRepository {
         updatedStatus: TodoStatus,
     ): DomainResult<Unit, DataError.Network>
 
-    suspend fun loadGoalMateCalendar(
+    suspend fun loadInitialGoalMateCalendar(
         menteeGoalId: Int,
         startDate: LocalDate,
         endDate: LocalDate,

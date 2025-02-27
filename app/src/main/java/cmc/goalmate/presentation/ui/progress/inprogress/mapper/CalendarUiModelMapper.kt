@@ -13,7 +13,7 @@ import cmc.goalmate.presentation.ui.util.calculateProgress
 fun GoalMateCalendar.toUi(): CalendarUiModel =
     CalendarUiModel(
         todayWeekNumber = weekNumber,
-        weeklyData = weeklyData.mapIndexed { index, week -> week.toUi(index + 1) },
+        weeklyData = weeklyData.mapIndexed { index, week -> week.toUi(index) },
     )
 
 fun Week.toUi(id: Int): WeekUiModel =

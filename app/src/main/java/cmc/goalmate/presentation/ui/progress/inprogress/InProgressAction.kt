@@ -7,7 +7,7 @@ sealed interface InProgressAction {
 
     data class SelectDate(val selectedDate: DailyProgressUiModel) : InProgressAction
 
-    data class ViewPreviousWeek(val targetWeek: Int) : InProgressAction
+    data class ViewPreviousWeek(val currentPageWeekIndex: Int) : InProgressAction
 
     data object NavigateToGoalDetail : InProgressAction
 
