@@ -3,6 +3,8 @@ package cmc.goalmate.presentation.ui.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -38,7 +40,7 @@ fun HomeScreen(
                 HomeContent(
                     goals = homeState.goals,
                     navigateToDetail = navigateToDetail,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).padding(top = GoalMateDimens.TopMargin),
                 )
             }
         }
@@ -79,6 +81,7 @@ fun HomeScreenPreview() {
         HomeContent(
             goals = dummyGoals,
             navigateToDetail = {},
+            modifier = Modifier.fillMaxSize().padding(top = 16.dp),
         )
     }
 }
