@@ -39,8 +39,9 @@ class CompletedGoalViewModel
         private val userRepository: UserRepository,
     ) : ViewModel() {
         private val route = savedStateHandle.toRoute<Screen.CompletedGoal>()
-        private val goalId = route.goalId
+        private val menteeGoalId = route.menteeGoalId
         private val commentRoomId = route.roomId
+        private val goalId = route.goalId
 
         private val _event = Channel<CompletedGoalEvent>()
         val event = _event.receiveAsFlow()
@@ -49,7 +50,7 @@ class CompletedGoalViewModel
             flow {
                 emit(CompletedGoalUiState.Loading)
 
-                menteeGoalRepository.getGoalInfo(goalId)
+                menteeGoalRepository.getGoalInfo(menteeGoalId)
                     .onSuccess { goal ->
                         val menteeName = userRepository.getNickName().first()
                         emit(CompletedGoalUiState.Success(goal.toUi(menteeName = menteeName)))

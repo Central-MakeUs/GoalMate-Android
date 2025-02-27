@@ -34,9 +34,10 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
                 navigateToAchievingGoal = {
                     navController.navigateToInProgress(
                         params = InProgressGoalParams(
-                            goalId = content.newGoalId,
+                            menteeGoalId = content.newGoalId,
                             goalTitle = content.goalSummary.title,
                             roomId = content.newCommentRoomId,
+                            goalId = content.goalSummary.goalId,
                         ),
                     ) {
                         popUpTo<Screen.GoalDetail> { inclusive = true }

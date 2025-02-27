@@ -90,6 +90,7 @@ private fun GoalStartScreenPreview() {
     GoalMateTheme {
         GoalStartScreen(
             goal = GoalSummary(
+                goalId = 0,
                 title = "목표명",
                 mentor = "멘토명",
                 price = "10,000원",

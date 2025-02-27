@@ -8,6 +8,7 @@ import cmc.goalmate.presentation.ui.util.calculateProgress
 import java.time.format.DateTimeFormatter
 
 data class MyGoalUiModel(
+    val menteeGoalId: Int,
     val goalId: Int,
     val roomId: Int,
     val title: String,
@@ -22,6 +23,7 @@ data class MyGoalUiModel(
 ) {
     companion object {
         val DUMMY = MyGoalUiModel(
+            menteeGoalId = 0,
             goalId = 0,
             roomId = 0,
             title = "다온과 함께하는 영어 완전 정복",
@@ -34,8 +36,9 @@ data class MyGoalUiModel(
             goalState = MyGoalUiState.IN_PROGRESS,
         )
         val DUMMY2 = MyGoalUiModel(
-            goalId = 0,
+            menteeGoalId = 0,
             roomId = 0,
+            goalId = 0,
             title = "마루와 함께하는 백앤드 서버 찐천재 목표",
             thumbnailUrl = "",
             mentorName = "마루",
@@ -63,7 +66,8 @@ fun MenteeGoals.toUi(): List<MyGoalUiModel> = this.goals.map { it.toUi() }
 
 fun MenteeGoal.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): MyGoalUiModel =
     MyGoalUiModel(
-        goalId = id,
+        menteeGoalId = menteeGoalId,
+        goalId = goalId,
         title = title,
         thumbnailUrl = mainImage ?: "",
         mentorName = mentorName,

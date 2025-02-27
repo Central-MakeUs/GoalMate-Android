@@ -43,10 +43,10 @@ sealed interface Screen {
     }
 
     @Serializable
-    data class CompletedGoal(val goalId: Int, val roomId: Int) : Screen
+    data class CompletedGoal(val menteeGoalId: Int, val goalId: Int, val roomId: Int) : Screen
 
     @Serializable
-    data class InProgressGoal(val goalId: Int, val goalTitle: String, val roomId: Int) : Screen
+    data class InProgressGoal(val menteeGoalId: Int, val goalId: Int, val goalTitle: String, val roomId: Int) : Screen
 
     @Serializable
     data class CommentsDetail(val roomId: Int, val goalTitle: String, val startDate: String) : Screen

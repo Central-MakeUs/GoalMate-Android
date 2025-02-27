@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 
 @Serializable
 data class GoalSummary(
+    val goalId: Int,
     val title: String,
     val mentor: String,
     val price: String,

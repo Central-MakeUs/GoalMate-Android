@@ -3,7 +3,8 @@ package cmc.goalmate.data.model
 data class MenteeGoalsDto(val goals: List<MenteeGoalDto>)
 
 data class MenteeGoalDto(
-    val id: Int,
+    val menteeGoalId: Int,
+    val goalId: Int,
     val title: String,
     val topic: String,
     val mentorName: String,

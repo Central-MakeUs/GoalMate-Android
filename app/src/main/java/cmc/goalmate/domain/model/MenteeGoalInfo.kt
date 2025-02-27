@@ -19,7 +19,7 @@ data class MenteeGoalInfo(
 
 fun MenteeGoal.toInfo(): MenteeGoalInfo =
     MenteeGoalInfo(
-        id = id,
+        id = menteeGoalId,
         title = title,
         topic = topic,
         mentorName = mentorName,

@@ -16,7 +16,8 @@ fun MenteeGoalsResponse.toData(): MenteeGoalsDto = MenteeGoalsDto(goals = this.m
 
 fun MenteeGoalResponse.toData(): MenteeGoalDto =
     MenteeGoalDto(
-        id = id,
+        menteeGoalId = id,
+        goalId = goalId,
         title = title,
         topic = topic,
         mentorName = mentorName,
@@ -39,7 +40,8 @@ fun MenteeGoalsDto.toDomain(): MenteeGoals = MenteeGoals(goals.map { it.toDomain
 
 fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = goalMateDateFormatter): MenteeGoal =
     MenteeGoal(
-        id = id,
+        menteeGoalId = menteeGoalId,
+        goalId = goalId,
         title = title,
         topic = topic,
         mentorName = mentorName,
@@ -58,7 +60,7 @@ fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = goalMateDateFormat
 private fun MenteeGoalDto.convertMenteeGoalStatus(): MenteeGoalStatus =
     when (menteeGoalStatus) {
         "IN_PROGRESS" -> MenteeGoalStatus.InProgress
-        "COMPLETED" -> MenteeGoalStatus.Completed(requireNotNull(finalComment))
+        "COMPLETED" -> MenteeGoalStatus.Completed(finalComment ?: "")
         "CANCELED" -> MenteeGoalStatus.Canceled
         else -> MenteeGoalStatus.Unknown
     }

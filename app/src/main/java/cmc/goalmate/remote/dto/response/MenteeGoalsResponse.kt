@@ -12,6 +12,7 @@ data class MenteeGoalsResponse(
 @Serializable
 data class MenteeGoalResponse(
     val id: Int,
+    @SerialName("goal_id") val goalId: Int,
     val title: String,
     val topic: String,
     @SerialName("mentor_name") val mentorName: String,

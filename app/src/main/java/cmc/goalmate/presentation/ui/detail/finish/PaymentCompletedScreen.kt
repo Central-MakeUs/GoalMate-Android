@@ -111,7 +111,7 @@ private fun PaymentCompletedContent(
 private fun PaymentCompletedScreenPreview() {
     GoalMateTheme {
         PaymentCompletedScreen(
-            goal = GoalSummary("", "", "", ""),
+            goal = GoalSummary(0,"", "", "", ""),
             navigateToAchievingGoal = {},
             modifier = Modifier.background(Color.White),
         )

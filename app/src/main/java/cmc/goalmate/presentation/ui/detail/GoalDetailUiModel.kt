@@ -10,6 +10,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 data class GoalDetailUiModel(
+    val id: Int,
     val title: String,
     val mentorName: String,
     val imageUrls: List<String>,
@@ -40,6 +41,7 @@ data class GoalDetailUiModel(
     companion object {
         private const val TEMP_PRICE = "0"
         val DUMMY = GoalDetailUiModel(
+            id = 0,
             title = "다온과 함께하는 영어 완전 정복 30일 목표",
             mentorName = "다온",
             imageUrls = listOf("image1", "image2"),
@@ -66,6 +68,7 @@ data class GoalDetailUiModel(
 
 fun GoalDetailUiModel.toSummary(): GoalSummary =
     GoalSummary(
+        goalId = id,
         title = title,
         mentor = mentorName,
         price = price,
@@ -79,6 +82,7 @@ fun GoalDetail.toUi(dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPatte
     val endDate = today.plusDays(this.period.toLong())
 
     return GoalDetailUiModel(
+        id = id,
         title = this.title,
         mentorName = this.mentorName,
         imageUrls = this.thumbnailImages,

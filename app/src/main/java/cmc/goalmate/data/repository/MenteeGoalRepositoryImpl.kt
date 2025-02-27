@@ -28,7 +28,7 @@ class MenteeGoalRepositoryImpl
             menteeGoalDataSource.getGoals().fold(
                 onSuccess = { goalsDto ->
                     val goals = goalsDto.toDomain()
-                    val updatedGoals = goals.goals.associateBy({ it.id }, { it.toInfo() })
+                    val updatedGoals = goals.goals.associateBy({ it.menteeGoalId }, { it.toInfo() })
                     goalInfo.putAll(updatedGoals)
                     DomainResult.Success(goals)
                 },
@@ -70,7 +70,7 @@ class MenteeGoalRepositoryImpl
         ): DomainResult<DailyTodos, DataError.Network> =
             menteeGoalDataSource.getDailyTodo(menteeGoalId, targetDate).fold(
                 onSuccess = { dailyTodoDto ->
-                    goalInfo[dailyTodoDto.menteeGoal.id] = dailyTodoDto.menteeGoal.toDomain().toInfo()
+                    goalInfo[dailyTodoDto.menteeGoal.menteeGoalId] = dailyTodoDto.menteeGoal.toDomain().toInfo()
                     val result = DailyTodos(dailyTodoDto.todos.map { it.toDomain() })
                     DomainResult.Success(result)
                 },

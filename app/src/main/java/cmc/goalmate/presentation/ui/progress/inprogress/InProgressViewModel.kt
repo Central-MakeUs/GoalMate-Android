@@ -40,8 +40,9 @@ class InProgressViewModel
         savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
         private val route = savedStateHandle.toRoute<Screen.InProgressGoal>()
-        private val goalId = route.goalId
+        private val menteeGoalId = route.menteeGoalId
         private val commentRoomId = route.roomId
+        private val goalId = route.goalId
 
         private val _event = Channel<InProgressEvent>()
         val event = _event.receiveAsFlow()
@@ -76,7 +77,7 @@ class InProgressViewModel
         }
 
         private suspend fun loadInitialData() {
-            menteeGoalRepository.getDailyTodos(goalId, LocalDate.now())
+            menteeGoalRepository.getDailyTodos(menteeGoalId, LocalDate.now())
                 .onSuccess { todo ->
                     loadGoalInfo()
                     selectedDateTodoState.update { UiState.Success(todo.toUi(LocalDate.now())) }
@@ -87,7 +88,7 @@ class InProgressViewModel
         }
 
         private suspend fun loadGoalInfo() {
-            menteeGoalRepository.getGoalInfo(goalId)
+            menteeGoalRepository.getGoalInfo(menteeGoalId)
                 .onSuccess { goalInfo ->
                     loadGoalCalendar(startDate = goalInfo.startDate, endDate = goalInfo.endDate)
                     goalInfoState.update { UiState.Success(goalInfo.toUi()) }
@@ -102,7 +103,7 @@ class InProgressViewModel
             endDate: LocalDate,
         ) {
             menteeGoalRepository.loadGoalMateCalendar(
-                menteeGoalId = goalId,
+                menteeGoalId = menteeGoalId,
                 startDate = startDate,
                 endDate = endDate,
                 targetDate = LocalDate.now(),
@@ -121,16 +122,14 @@ class InProgressViewModel
                 InProgressAction.NavigateToComment -> {
                     sendEvent(
                         InProgressEvent.NavigateToComment(
-                            commentRoomId,
+                            commentRoomId = commentRoomId,
                             startDate = goalInfoState.successData().startDate.toString(),
                         ),
                     )
                 }
 
                 InProgressAction.NavigateToGoalDetail -> sendEvent(
-                    InProgressEvent.NavigateToGoalDetail(
-                        goalId,
-                    ),
+                    InProgressEvent.NavigateToGoalDetail(goalId = goalId),
                 )
 
                 is InProgressAction.ViewPreviousWeek -> {
@@ -163,7 +162,7 @@ class InProgressViewModel
 
             viewModelScope.launch {
                 menteeGoalRepository.updateTodoStatus(
-                    menteeGoalId = goalId,
+                    menteeGoalId = menteeGoalId,
                     todoId = todoId,
                     updatedStatus = convertToDomain(updatedState),
                 ).onFailure {
@@ -208,7 +207,7 @@ class InProgressViewModel
             selectedDateTodoState.value = UiState.Loading
             viewModelScope.launch {
                 menteeGoalRepository.getDailyTodos(
-                    menteeGoalId = goalId,
+                    menteeGoalId = menteeGoalId,
                     targetDate = newDate.actualDate,
                 ).onSuccess { dailyTodos ->
                     selectedDateTodoState.value = UiState.Success(

@@ -35,9 +35,10 @@ fun MyGoalsContent(
                         onStartButtonClicked = {
                             navigateToProgressGoal(
                                 InProgressGoalParams(
+                                    menteeGoalId = myGoal.menteeGoalId,
+                                    goalTitle = myGoal.title,
+                                    roomId = myGoal.roomId,
                                     goalId = myGoal.goalId,
-                                    myGoal.title,
-                                    myGoal.roomId,
                                 ),
                             )
                         },
@@ -48,10 +49,14 @@ fun MyGoalsContent(
                         myGoal = myGoal,
                         onCompletedButtonClicked = {
                             navigateToCompletedGoal(
-                                CompletedGoalParams(goalId = myGoal.goalId, roomId = myGoal.roomId),
+                                CompletedGoalParams(
+                                    menteeGoalId = myGoal.menteeGoalId,
+                                    roomId = myGoal.roomId,
+                                    goalId = myGoal.goalId,
+                                ),
                             )
                         },
-                        onRestartButtonClicked = { navigateToGoalDetail(myGoal.goalId) },
+                        onRestartButtonClicked = { navigateToGoalDetail(myGoal.menteeGoalId) },
                         modifier = Modifier,
                     )
                 }

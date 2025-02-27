@@ -5,7 +5,8 @@ import java.time.LocalDate
 data class MenteeGoals(val goals: List<MenteeGoal>)
 
 data class MenteeGoal(
-    val id: Int,
+    val menteeGoalId: Int,
+    val goalId: Int,
     val title: String,
     val topic: String,
     val mentorName: String,
