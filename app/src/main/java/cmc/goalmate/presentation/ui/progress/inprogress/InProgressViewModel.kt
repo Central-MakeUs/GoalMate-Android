@@ -14,6 +14,7 @@ import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressDetailUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.GoalOverViewUiModel
+import cmc.goalmate.presentation.ui.progress.inprogress.model.InProgressUiState
 import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressUiState
 import cmc.goalmate.presentation.ui.progress.inprogress.model.UiState
 import cmc.goalmate.presentation.ui.progress.inprogress.model.WeekUiModel

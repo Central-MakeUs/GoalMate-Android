@@ -109,17 +109,5 @@ private fun GoalMateDialogPreview() {
             buttonText = "확인했어요",
             onConfirmation = {},
             )
-//        GoalMateDialog(
-//            buttonText = "오늘 목표 완료 하기",
-//            onConfirmation = {},
-//        ) {
-//            Text(
-//                text = stringResource(R.string.goal_in_progress_uneditable_warning_message),
-//                style = MaterialTheme.goalMateTypography.buttonLabelLarge,
-//                color = MaterialTheme.goalMateColors.onSurfaceVariant,
-//                textAlign = TextAlign.Center,
-//                modifier = it,
-//            )
-//        }
     }
 }

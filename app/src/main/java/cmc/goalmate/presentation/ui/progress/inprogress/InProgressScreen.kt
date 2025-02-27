@@ -1,8 +1,8 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
-import androidx.compose.foundation.layout.Box
+import android.app.Activity
+import android.view.WindowManager
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,11 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.app.navigation.CommentDetailParams
@@ -22,9 +23,10 @@ import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.components.GoalMateDialog
+import cmc.goalmate.presentation.components.GoalMateIconDialog
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.progress.components.ProgressBottomButton
+import cmc.goalmate.presentation.ui.util.ComposableLifeCycle
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
@@ -37,7 +39,8 @@ fun InProgressScreen(
     viewModel: InProgressViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var isDialogVisible by rememberSaveable { mutableStateOf(false) }
+    var isTodoModificationDialogVisible by rememberSaveable { mutableStateOf(false) }
+    HandleScreenCapture()
 
     ObserveAsEvent(viewModel.event) { event ->
         when (event) {
@@ -48,7 +51,7 @@ fun InProgressScreen(
                 navigateToGoalDetail(event.goalId)
             }
             InProgressEvent.TodoModificationNotAllowed -> {
-                isDialogVisible = true
+                isTodoModificationDialogVisible = true
             }
         }
     }
@@ -60,27 +63,28 @@ fun InProgressScreen(
             onBackButtonClicked = navigateBack,
             title = goalTitle,
         )
-
-        Box(modifier = Modifier.weight(1f)) {
-            InProgressScreenContent(
-                state = state,
-                onAction = viewModel::onAction,
-                modifier = Modifier.fillMaxSize(),
-            )
-            ProgressBottomButton(
-                buttonText = "멘토 코멘트 받으러 가기",
-                onClicked = { viewModel.onAction(InProgressAction.NavigateToComment) },
-                modifier = Modifier.align(Alignment.BottomCenter),
-            )
-        }
+        InProgressScreenContent(
+            state = state,
+            onAction = viewModel::onAction,
+            modifier = Modifier.weight(1f),
+        )
     }
 
+    TodoModificationDialog(
+        isDialogVisible = isTodoModificationDialogVisible,
+        onConfirmButtonClicked = { isTodoModificationDialogVisible = false },
+    )
+}
+
+@Composable
+private fun TodoModificationDialog(
+    isDialogVisible: Boolean,
+    onConfirmButtonClicked: () -> Unit,
+) {
     if (isDialogVisible) {
         GoalMateDialog(
             buttonText = "오늘 목표 완료 하기",
-            onConfirmation = {
-                isDialogVisible = false
-            },
+            onConfirmation = onConfirmButtonClicked,
         ) {
             Text(
                 text = stringResource(R.string.goal_in_progress_uneditable_warning_message),
@@ -89,6 +93,41 @@ fun InProgressScreen(
                 textAlign = TextAlign.Center,
                 modifier = it,
             )
+        }
+    }
+}
+
+@Composable
+private fun ScreenShotDialog(
+    isDialogVisible: Boolean,
+    onConfirmButtonClicked: () -> Unit,
+) {
+    if (isDialogVisible) {
+        GoalMateIconDialog(
+            subTitle = stringResource(R.string.goal_in_progress_screenshot_warning_title),
+            contentText = stringResource(R.string.goal_in_progress_screenshot_warning_message),
+            buttonText = stringResource(R.string.goal_in_progress_screenshot_warning_button),
+            onConfirmation = onConfirmButtonClicked,
+        )
+    }
+}
+
+@Composable
+private fun HandleScreenCapture() {
+    val activity = LocalContext.current as? Activity
+
+    ComposableLifeCycle { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_START -> {
+                activity?.window?.setFlags(
+                    WindowManager.LayoutParams.FLAG_SECURE,
+                    WindowManager.LayoutParams.FLAG_SECURE,
+                )
+            }
+            Lifecycle.Event.ON_PAUSE -> {
+                activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            }
+            else -> {}
         }
     }
 }

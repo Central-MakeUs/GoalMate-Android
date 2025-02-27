@@ -1,9 +1,5 @@
-package cmc.goalmate.presentation.ui.progress.inprogress
+package cmc.goalmate.presentation.ui.progress.inprogress.model
 
-import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
-import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressDetailUiModel
-import cmc.goalmate.presentation.ui.progress.inprogress.model.GoalOverViewUiModel
-import cmc.goalmate.presentation.ui.progress.inprogress.model.UiState
 import java.time.LocalDate
 
 data class InProgressUiState(
