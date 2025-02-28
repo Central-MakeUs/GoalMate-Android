@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
-import cmc.goalmate.presentation.theme.color.Primary10
+import cmc.goalmate.presentation.theme.color.Primary600
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.comments.detail.CommentAction
@@ -83,7 +83,7 @@ private fun CommentDateHeader(
         Spacer(Modifier.size(6.dp))
         TextTag(
             text = "D-$dDayText",
-            textColor =MaterialTheme.goalMateColors.onBackground,
+            textColor = MaterialTheme.goalMateColors.onBackground,
             backgroundColor = MaterialTheme.goalMateColors.secondary02,
             textStyle = MaterialTheme.goalMateTypography.captionSemiBold,
         )
@@ -105,8 +105,8 @@ private fun DailyCommentItem(
         Column {
             Text(
                 text = content,
-                style = MaterialTheme.goalMateTypography.bodySmallMedium,
-                color = MaterialTheme.goalMateColors.textButton,
+                style = MaterialTheme.goalMateTypography.body,
+                color = sender.textColor(),
                 modifier = Modifier
                     .background(
                         color = sender.backgroundColor(),
@@ -136,9 +136,16 @@ private fun DailyCommentItem(
 }
 
 @Composable
-fun SenderUiModel.backgroundColor(): Color =
+private fun SenderUiModel.textColor(): Color =
     when (this) {
-        SenderUiModel.MENTEE -> Primary10
+        SenderUiModel.MENTEE -> MaterialTheme.goalMateColors.onBackground
+        SenderUiModel.MENTOR -> MaterialTheme.goalMateColors.textButton
+    }
+
+@Composable
+private fun SenderUiModel.backgroundColor(): Color =
+    when (this) {
+        SenderUiModel.MENTEE -> Primary600
         SenderUiModel.MENTOR -> MaterialTheme.goalMateColors.surfaceVariant
     }
 

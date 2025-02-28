@@ -71,8 +71,8 @@ fun MessageTextField(
                 if (value.isEmpty()) {
                     Text(
                         text = stringResource(R.string.comments_detail_placeholder),
-                        color = Grey400,
-                        style = MaterialTheme.goalMateTypography.bodySmall,
+                        color = MaterialTheme.goalMateColors.labelTitle,
+                        style = MaterialTheme.goalMateTypography.body,
                     )
                 }
                 innerTextField()

@@ -116,7 +116,7 @@ private fun SubmitButton(
 private fun CommentTextFieldPreview() {
     GoalMateTheme {
         CommentTextField(
-            commentText = "안녕하세요!!",
+            commentText = "",
             onAction = {},
             isButtonEnabled = true,
             showCancelButton = true,
