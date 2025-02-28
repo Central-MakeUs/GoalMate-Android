@@ -140,6 +140,7 @@ private fun SenderUiModel.textColor(): Color =
     when (this) {
         SenderUiModel.MENTEE -> MaterialTheme.goalMateColors.onBackground
         SenderUiModel.MENTOR -> MaterialTheme.goalMateColors.textButton
+        SenderUiModel.ADMIN -> MaterialTheme.goalMateColors.textButton
     }
 
 @Composable
@@ -147,6 +148,7 @@ private fun SenderUiModel.backgroundColor(): Color =
     when (this) {
         SenderUiModel.MENTEE -> Primary600
         SenderUiModel.MENTOR -> MaterialTheme.goalMateColors.surfaceVariant
+        SenderUiModel.ADMIN -> MaterialTheme.goalMateColors.surfaceVariant
     }
 
 @Composable

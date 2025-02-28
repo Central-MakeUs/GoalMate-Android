@@ -15,4 +15,5 @@ data class Comment(
 enum class Writer {
     MENTOR,
     MENTEE,
+    ADMIN,
 }

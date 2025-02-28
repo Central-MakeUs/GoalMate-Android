@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter
 enum class SenderUiModel {
     MENTOR,
     MENTEE,
+    ADMIN,
 }
 
 data class MessageUiModel(val id: Int, val content: String, val sender: SenderUiModel) {
@@ -69,4 +70,5 @@ fun Writer.toUi(): SenderUiModel =
     when (this) {
         Writer.MENTEE -> SenderUiModel.MENTEE
         Writer.MENTOR -> SenderUiModel.MENTOR
+        Writer.ADMIN -> SenderUiModel.ADMIN
     }

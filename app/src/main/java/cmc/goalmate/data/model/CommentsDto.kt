@@ -32,6 +32,7 @@ fun convertWriterRole(writerRole: String): Writer =
     when (writerRole) {
         "MENTOR" -> Writer.MENTOR
         "MENTEE" -> Writer.MENTEE
+        "ADMIN" -> Writer.ADMIN
         else -> error("존재하지 않은 코멘트 작성자 : $writerRole")
     }
 
