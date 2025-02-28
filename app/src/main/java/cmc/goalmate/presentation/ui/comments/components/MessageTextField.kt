@@ -3,10 +3,14 @@ package cmc.goalmate.presentation.ui.comments.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,18 +33,22 @@ import cmc.goalmate.presentation.theme.color.Grey400
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
+// .heightIn(max = 200.dp).verticalScroll(scrollState)
+
 @Composable
 fun MessageTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scrollState = rememberScrollState()
+
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
         visualTransformation = VisualTransformation.None,
         textStyle = MaterialTheme.goalMateTypography.body.merge(TextStyle(color = MaterialTheme.goalMateColors.onBackground)),
-        modifier = modifier,
+        modifier = modifier.verticalScroll(scrollState),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
         ),
@@ -48,6 +56,7 @@ fun MessageTextField(
             Box(
                 contentAlignment = Alignment.CenterStart,
                 modifier = modifier
+                    .heightIn(max = 216.dp)
                     .background(color = Color.White, shape = RoundedCornerShape(30.dp))
                     .border(
                         width = 2.dp,
@@ -55,8 +64,8 @@ fun MessageTextField(
                         shape = RoundedCornerShape(30.dp),
                     )
                     .padding(
-                        horizontal = 14.dp,
-                        vertical = 11.dp,
+                        horizontal = 16.dp,
+                        vertical = 12.dp,
                     ),
             ) {
                 if (value.isEmpty()) {
@@ -75,11 +84,12 @@ fun MessageTextField(
 @Composable
 @Preview
 fun MessageTextFieldPreview() {
-    var inputs by remember { mutableStateOf("") }
+    var inputs by remember { mutableStateOf("안녕하세요\n안녕하세요\n안녕하세요\n안녕하세요\n안녕하세요\n반갑습니다.안녕하세요\n언제까지 내려가는거예요\n아직인것같죠\n한번더!!") }
     GoalMateTheme {
         MessageTextField(
             value = inputs,
             onValueChange = { inputs = it },
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

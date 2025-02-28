@@ -3,8 +3,12 @@ package cmc.goalmate.presentation.ui.comments.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +33,7 @@ fun CommentTextField(
     showCancelButton: Boolean = false,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         modifier = modifier,
     ) {
         MessageTextField(
@@ -112,10 +116,11 @@ private fun SubmitButton(
 private fun CommentTextFieldPreview() {
     GoalMateTheme {
         CommentTextField(
-            commentText = "",
+            commentText = "안녕하세요!!",
             onAction = {},
             isButtonEnabled = true,
             showCancelButton = true,
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

@@ -94,12 +94,13 @@ class CommentsDetailViewModel
                 is CommentAction.EditComment -> {
                     editingCommentId = action.commentId
                     val content = state.successData().comments.findMessageContentById(action.commentId)
+                    commentContent = content
                     sendEvent(CommentEvent.StartEditComment(currentContent = content))
                 }
 
                 is CommentAction.SendComment -> {
                     if (editingCommentId != null) {
-                        editComment(targetId = editingCommentId!!, commentContent = action.content)
+                        editComment(targetId = editingCommentId!!, comment = action.content)
                     } else {
                         uploadNewComment(action.content)
                     }
@@ -137,20 +138,21 @@ class CommentsDetailViewModel
 
         private fun editComment(
             targetId: Int,
-            commentContent: String,
+            comment: String,
         ) {
             val beforeData = state.successData().comments
             val updated = state.successData().comments.replaceContentMessage(
                 targetId = targetId,
-                updatedComment = commentContent,
+                updatedComment = comment,
             )
             _state.value = state.value.success().copy(comments = updated)
             viewModelScope.launch {
                 commentRepository.updateComment(
                     commentId = targetId,
-                    content = commentContent,
+                    content = comment,
                 ).onSuccess {
                     _event.send(CommentEvent.SuccessSending)
+                    commentContent = ""
                 }.onFailure {
                     _state.update { state ->
                         state.success().copy(comments = beforeData)
@@ -159,7 +161,7 @@ class CommentsDetailViewModel
             }
         }
 
-        private fun uploadNewComment(commentContent: String) {
+        private fun uploadNewComment(newComment: String) {
             if (!state.successData().canSendMessage) {
                 sendEvent(CommentEvent.ShowSendingError)
                 return
@@ -168,10 +170,11 @@ class CommentsDetailViewModel
             val tempId = -1
             val newMessage = MessageUiModel(
                 id = tempId,
-                content = commentContent,
+                content = newComment,
                 sender = SenderUiModel.MENTEE,
             )
 
+            commentContent = ""
             _state.update { state ->
                 state.success().copy(comments = state.success().comments.addMessage(newMessage))
             }
@@ -179,7 +182,7 @@ class CommentsDetailViewModel
             viewModelScope.launch {
                 commentRepository.postComment(
                     roomId = roomId,
-                    content = commentContent,
+                    content = newComment,
                 ).onSuccess { newCommentId ->
                     _state.update { state ->
                         val updated = state.success().comments.replaceTempMessage(
@@ -190,6 +193,7 @@ class CommentsDetailViewModel
                     }
                     _event.send(CommentEvent.SuccessSending)
                 }.onFailure {
+                    commentContent = newComment
                     _state.update { state ->
                         state.success().copy(comments = beforeData)
                     }
