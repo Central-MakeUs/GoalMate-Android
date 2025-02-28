@@ -45,4 +45,9 @@ class CommentDataSource
             runCatching {
                 commentService.deleteComment(commentId).getOrThrow()
             }
+
+        suspend fun getNewCommentCount(): Result<Int> =
+            runCatching {
+                commentService.getNewCommentCount().getOrThrow().count
+            }
     }

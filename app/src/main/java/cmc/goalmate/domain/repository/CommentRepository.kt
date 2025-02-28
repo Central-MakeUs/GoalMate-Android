@@ -21,4 +21,6 @@ interface CommentRepository {
     ): DomainResult<Int, DataError.Network>
 
     suspend fun deleteComment(commentId: Int): DomainResult<Unit, DataError.Network>
+
+    suspend fun getNewCommentCount(): DomainResult<Int, DataError.Network>
 }

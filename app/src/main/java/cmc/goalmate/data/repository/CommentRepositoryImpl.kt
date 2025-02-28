@@ -16,7 +16,9 @@ class CommentRepositoryImpl
     constructor(private val commentDataSource: CommentDataSource) : CommentRepository {
         override suspend fun getCommentRooms(): DomainResult<CommentRooms, DataError.Network> =
             commentDataSource.getCommentRooms().fold(
-                onSuccess = { DomainResult.Success(it.toDomain()) },
+                onSuccess = {
+                    DomainResult.Success(it.toDomain())
+                },
                 onFailure = { DomainResult.Error(it.toDataError()) },
             )
 
@@ -59,6 +61,16 @@ class CommentRepositoryImpl
             commentDataSource.deleteComment(commentId).fold(
                 onSuccess = {
                     DomainResult.Success(Unit)
+                },
+                onFailure = {
+                    DomainResult.Error(it.toDataError())
+                },
+            )
+
+        override suspend fun getNewCommentCount(): DomainResult<Int, DataError.Network> =
+            commentDataSource.getNewCommentCount().fold(
+                onSuccess = {
+                    DomainResult.Success(it)
                 },
                 onFailure = {
                     DomainResult.Error(it.toDataError())

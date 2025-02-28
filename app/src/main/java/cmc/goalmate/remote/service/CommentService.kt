@@ -6,6 +6,8 @@ import cmc.goalmate.remote.dto.response.BaseResponse
 import cmc.goalmate.remote.dto.response.CommentResponse
 import cmc.goalmate.remote.dto.response.CommentRoomsResponse
 import cmc.goalmate.remote.dto.response.CommentsResponse
+import cmc.goalmate.remote.dto.response.NewCommentCountResponse
+import cmc.goalmate.remote.service.CommentService.Companion.COMMENT_URL
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -28,18 +30,22 @@ interface CommentService {
         @Body commentRequest: CommentRequest,
     ): ApiResponse<BaseResponse<CommentResponse>>
 
-    @PUT("/comments/{commentId}")
+    @PUT("$COMMENT_URL/{commentId}")
     suspend fun updateComment(
         @Path("commentId") commentId: Int,
         @Body commentUpdatedRequest: CommentRequest,
     ): ApiResponse<BaseResponse<CommentResponse>>
 
-    @DELETE("/comments/{commentId}")
+    @DELETE("$COMMENT_URL/{commentId}")
     suspend fun deleteComment(
         @Path("commentId") commentId: Int,
     ): ApiResponse<BaseResponse<Unit>>
 
+    @GET("$COMMENT_URL/new")
+    suspend fun getNewCommentCount(): ApiResponse<BaseResponse<NewCommentCountResponse>>
+
     companion object {
         private const val COMMENT_ROOM = "/comment-rooms"
+        private const val COMMENT_URL = "/comments"
     }
 }
