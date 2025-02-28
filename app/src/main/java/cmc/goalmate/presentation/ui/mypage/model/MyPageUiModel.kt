@@ -17,7 +17,7 @@ data class MyPageUiModel(
 
         val DEFAULT_INFO = MyPageUiModel(
             nickName = "로그인 회원가입",
-            welcomeMessage = "회원가입하고 무료 목표 참여권 받으세요.\n",
+            welcomeMessage = "회원가입하고 지금 바로 목표를 달성해보아요!\n",
             onGoingGoalCount = DEFAULT_COUNT,
             completedGoalCount = DEFAULT_COUNT,
             icon = R.drawable.icon_arrow_forward,
