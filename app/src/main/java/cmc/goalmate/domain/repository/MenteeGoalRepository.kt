@@ -37,4 +37,6 @@ interface MenteeGoalRepository {
         endDate: LocalDate,
         targetDate: LocalDate,
     ): DomainResult<GoalMateCalendar, DataError.Network>
+
+    suspend fun hasRemainingTodosToday(): DomainResult<Boolean, DataError.Network>
 }

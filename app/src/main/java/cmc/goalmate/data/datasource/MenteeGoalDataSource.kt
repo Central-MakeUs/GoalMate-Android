@@ -56,4 +56,9 @@ class MenteeGoalDataSource
                 val request = TodoRequest(todoStatus = updatedStatus.toData())
                 menteeGoalService.updateTodo(menteeGoalId, todoId, request).getOrThrow().toData()
             }
+
+        suspend fun checkForInCompletedTodos(): Result<Boolean> =
+            runCatching {
+                menteeGoalService.checkForIncompleteTodos().getOrThrow().hasRemainingTodosToday
+            }
     }

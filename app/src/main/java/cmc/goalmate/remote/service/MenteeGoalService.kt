@@ -5,6 +5,7 @@ import cmc.goalmate.remote.dto.request.TodoRequest
 import cmc.goalmate.remote.dto.response.BaseResponse
 import cmc.goalmate.remote.dto.response.DailyTodoResponse
 import cmc.goalmate.remote.dto.response.MenteeGoalsResponse
+import cmc.goalmate.remote.dto.response.RemainingTodoResponse
 import cmc.goalmate.remote.dto.response.TodoResponse
 import cmc.goalmate.remote.dto.response.WeeklyProgressResponse
 import retrofit2.http.Body
@@ -35,6 +36,9 @@ interface MenteeGoalService {
         @Path("todoId") todoId: Int,
         @Body request: TodoRequest,
     ): ApiResponse<BaseResponse<TodoResponse>>
+
+    @GET("$BASE_URL/todos")
+    suspend fun checkForIncompleteTodos(): ApiResponse<BaseResponse<RemainingTodoResponse>>
 
     companion object {
         private const val BASE_URL = "/mentees/my"

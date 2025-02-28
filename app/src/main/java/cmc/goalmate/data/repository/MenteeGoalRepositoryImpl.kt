@@ -3,7 +3,6 @@ package cmc.goalmate.data.repository
 import cmc.goalmate.data.datasource.MenteeGoalDataSource
 import cmc.goalmate.data.mapper.toDataError
 import cmc.goalmate.data.mapper.toDomain
-import cmc.goalmate.data.model.toDomain
 import cmc.goalmate.data.model.toWeekDomain
 import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
@@ -71,7 +70,8 @@ class MenteeGoalRepositoryImpl
         ): DomainResult<DailyTodos, DataError.Network> =
             menteeGoalDataSource.getDailyTodo(menteeGoalId, targetDate).fold(
                 onSuccess = { dailyTodoDto ->
-                    goalInfo[dailyTodoDto.menteeGoal.menteeGoalId] = dailyTodoDto.menteeGoal.toDomain().toInfo()
+                    goalInfo[dailyTodoDto.menteeGoal.menteeGoalId] =
+                        dailyTodoDto.menteeGoal.toDomain().toInfo()
                     val result = DailyTodos(dailyTodoDto.todos.map { it.toDomain() })
                     DomainResult.Success(result)
                 },
@@ -102,7 +102,8 @@ class MenteeGoalRepositoryImpl
         ): DomainResult<GoalMateCalendar, DataError.Network> {
             val weeklyProgressDto = menteeGoalDataSource.getWeeklyProgress(menteeGoalId, targetDate)
                 .getOrElse { return DomainResult.Error(it.toDataError()) }
-            val initialCalendar = generateWeeklyCalendar(startDate = startDate, endDate = endDate, target = targetDate)
+            val initialCalendar =
+                generateWeeklyCalendar(startDate = startDate, endDate = endDate, target = targetDate)
 
             val updatedWeekData = updateProgressForWeeks(
                 weeks = initialCalendar.weeklyData,
@@ -127,4 +128,15 @@ class MenteeGoalRepositoryImpl
                 ),
             )
         }
+
+        override suspend fun hasRemainingTodosToday(): DomainResult<Boolean, DataError.Network> =
+            menteeGoalDataSource.checkForInCompletedTodos()
+                .fold(
+                    onSuccess = {
+                        DomainResult.Success(it)
+                    },
+                    onFailure = {
+                        DomainResult.Error(it.toDataError())
+                    },
+                )
     }
