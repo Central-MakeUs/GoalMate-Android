@@ -38,14 +38,14 @@ fun NavController.navigateToCompleted(params: CompletedGoalParams) {
     )
 }
 
-data class CommentDetailParams(val roomId: Int, val goalTitle: String, val startDate: String)
+data class CommentDetailParams(val roomId: Int, val goalTitle: String, val endDate: String)
 
 fun NavController.navigateToCommentDetail(params: CommentDetailParams) {
     navigate(
         Screen.CommentsDetail(
             roomId = params.roomId,
             goalTitle = params.goalTitle,
-            startDate = params.startDate,
+            endDate = params.endDate,
         ),
     )
 }

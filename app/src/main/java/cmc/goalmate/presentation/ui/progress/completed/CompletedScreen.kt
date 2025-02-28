@@ -38,7 +38,7 @@ fun CompletedScreen(
                     CommentDetailParams(
                         roomId = event.roomId,
                         goalTitle = event.goalTitle,
-                        startDate = event.startDate,
+                        endDate = event.endDate,
                     ),
                 )
             }

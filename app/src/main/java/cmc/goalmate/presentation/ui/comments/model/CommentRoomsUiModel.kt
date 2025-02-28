@@ -3,8 +3,8 @@ package cmc.goalmate.presentation.ui.comments.model
 import cmc.goalmate.domain.model.CommentRoom
 import cmc.goalmate.domain.model.CommentRooms
 import cmc.goalmate.presentation.ui.mygoals.MyGoalUiState
+import cmc.goalmate.presentation.ui.util.calculateDaysBetween
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 data class CommentRoomsUiModel(
     val roomId: Int,
@@ -12,6 +12,7 @@ data class CommentRoomsUiModel(
     val mentorName: String,
     val title: String,
     val startDate: String,
+    val endDate: String,
     val remainingDays: Int,
     val goalState: MyGoalUiState,
     val hasNewComment: Boolean = false,
@@ -22,6 +23,7 @@ data class CommentRoomsUiModel(
             imageUrl = "",
             mentorName = "ANNA",
             startDate = "",
+            endDate = "",
             title = "ANNA와 함께하는 영어 완전 정복 30일 목표입니다 블라블라블라",
             remainingDays = 23,
             goalState = MyGoalUiState.IN_PROGRESS,
@@ -32,16 +34,15 @@ data class CommentRoomsUiModel(
 
 fun CommentRooms.toUi(): List<CommentRoomsUiModel> = this.rooms.map { it.toUi() }
 
-fun CommentRoom.toUi(): CommentRoomsUiModel {
-    val daysFromStart = ChronoUnit.DAYS.between(LocalDate.now(), endDate).toInt().coerceAtLeast(0)
-    return CommentRoomsUiModel(
+fun CommentRoom.toUi(): CommentRoomsUiModel =
+    CommentRoomsUiModel(
         roomId = commentRoomId,
         imageUrl = mentorProfileImage ?: "",
         mentorName = mentorName,
         title = menteeGoalTitle,
         startDate = startDate.toString(),
-        remainingDays = daysFromStart,
+        endDate = endDate.toString(),
+        remainingDays = calculateDaysBetween(endDate),
         goalState = if (endDate >= LocalDate.now()) MyGoalUiState.IN_PROGRESS else MyGoalUiState.COMPLETED,
         hasNewComment = newCommentsCount > 0,
     )
-}

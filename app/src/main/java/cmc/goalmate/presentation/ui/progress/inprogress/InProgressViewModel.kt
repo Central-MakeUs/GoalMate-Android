@@ -126,7 +126,7 @@ class InProgressViewModel
                     sendEvent(
                         InProgressEvent.NavigateToComment(
                             commentRoomId = commentRoomId,
-                            startDate = goalInfoState.successData().startDate.toString(),
+                            endDate = goalInfoState.successData().endDate.toString(),
                         ),
                     )
                 }

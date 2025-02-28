@@ -29,7 +29,6 @@ import cmc.goalmate.presentation.components.TextTag
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.Primary10
-import cmc.goalmate.presentation.theme.color.Primary700
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.comments.detail.CommentAction
@@ -49,7 +48,7 @@ fun DailyComment(
     ) {
         CommentDateHeader(
             commentDate = comment.date,
-            daysFromStart = "${comment.daysFromStart}",
+            dDayText = "${comment.daysFromStart}",
             modifier = Modifier.fillMaxWidth(),
         )
         comment.messages.forEach { message ->
@@ -67,7 +66,7 @@ fun DailyComment(
 @Composable
 private fun CommentDateHeader(
     commentDate: String,
-    daysFromStart: String,
+    dDayText: String,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -83,9 +82,10 @@ private fun CommentDateHeader(
         )
         Spacer(Modifier.size(6.dp))
         TextTag(
-            text = "D+$daysFromStart",
-            textColor = MaterialTheme.goalMateColors.background,
-            backgroundColor = Primary700,
+            text = "D-$dDayText",
+            textColor =MaterialTheme.goalMateColors.onBackground,
+            backgroundColor = MaterialTheme.goalMateColors.secondary02,
+            textStyle = MaterialTheme.goalMateTypography.captionSemiBold,
         )
     }
 }

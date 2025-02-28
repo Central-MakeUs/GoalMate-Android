@@ -46,7 +46,7 @@ private fun MyGoalItemLayout(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         GoalStatusTag(
-            daysFromStart = myGoal.daysFromStart,
+            daysFromStart = myGoal.remainingDays,
             goalState = myGoal.goalState,
             modifier = Modifier.fillMaxWidth(),
         )

@@ -45,7 +45,7 @@ fun InProgressScreen(
     ObserveAsEvent(viewModel.event) { event ->
         when (event) {
             is InProgressEvent.NavigateToComment -> {
-                navigateToComments(CommentDetailParams(event.commentRoomId, goalTitle, event.startDate))
+                navigateToComments(CommentDetailParams(roomId = event.commentRoomId, goalTitle = goalTitle, endDate = event.endDate))
             }
             is InProgressEvent.NavigateToGoalDetail -> {
                 navigateToGoalDetail(event.goalId)

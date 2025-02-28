@@ -51,9 +51,9 @@ fun CommentRoomsContent(
                     .clickable {
                         navigateToCommentDetail(
                             CommentDetailParams(
-                                goalComment.roomId,
-                                goalComment.title,
-                                goalComment.startDate,
+                                roomId = goalComment.roomId,
+                                goalTitle = goalComment.title,
+                                endDate = goalComment.endDate,
                             ),
                         )
                     }

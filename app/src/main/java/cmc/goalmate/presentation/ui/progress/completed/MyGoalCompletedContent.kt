@@ -92,7 +92,7 @@ private fun GoalInfoOverview(
         ) {
             GoalDateRange(
                 startDate = goal.formattedStartDate,
-                endDate = goal.endDate,
+                endDate = goal.formattedEndDate,
                 icon = R.drawable.icon_calendar_active,
             )
         }

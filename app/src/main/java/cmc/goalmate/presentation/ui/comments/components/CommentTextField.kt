@@ -13,19 +13,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
+import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
+import cmc.goalmate.presentation.ui.comments.detail.CommentAction
 
 @Composable
 fun CommentTextField(
     commentText: String,
-    onCommentTextChanged: (String) -> Unit,
-    onCancelButtonClicked: () -> Unit,
-    onSubmitButtonClicked: () -> Unit,
-    showCancelButton: Boolean,
-    isCommentTextFieldEnabled: Boolean,
+    onAction: (CommentAction) -> Unit,
+    isButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
+    showCancelButton: Boolean = false,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -33,17 +34,17 @@ fun CommentTextField(
     ) {
         MessageTextField(
             value = commentText,
-            onValueChange = onCommentTextChanged,
+            onValueChange = {},
             modifier = Modifier.weight(1f),
         )
         Spacer(Modifier.size(6.dp))
         if (showCancelButton) {
-            CancelButton(onClick = onCancelButtonClicked)
+            CancelButton(onClick = { onAction(CommentAction.CancelEdit) })
         }
         Spacer(Modifier.size(6.dp))
         SubmitButton(
-            onClick = onSubmitButtonClicked,
-            enabled = commentText.isNotBlank() && isCommentTextFieldEnabled,
+            onClick = { onAction(CommentAction.SendComment(commentText)) },
+            enabled = commentText.isNotBlank() && isButtonEnabled,
         )
     }
 }
@@ -102,6 +103,19 @@ private fun SubmitButton(
             imageVector = ImageVector.vectorResource(R.drawable.icon_upload),
             contentDescription = null,
             tint = iconTint,
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun CommentTextFieldPreview() {
+    GoalMateTheme {
+        CommentTextField(
+            commentText = "",
+            onAction = {},
+            isButtonEnabled = true,
+            showCancelButton = true,
         )
     }
 }

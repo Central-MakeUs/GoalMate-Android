@@ -15,6 +15,7 @@ import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.components.GoalMateIconDialog
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.ui.comments.components.CommentTextField
+import cmc.goalmate.presentation.ui.comments.detail.model.CommentsUiState
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
@@ -70,15 +71,9 @@ fun CommentsDetailScreen(
             )
             CommentTextField(
                 commentText = commentText,
-                onCommentTextChanged = { commentText = it },
-                onCancelButtonClicked = {
-                    viewModel.onAction(CommentAction.CancelEdit)
-                },
-                onSubmitButtonClicked = {
-                    viewModel.onAction(CommentAction.SendComment(commentText))
-                },
+                onAction = viewModel::onAction,
+                isButtonEnabled = state is CommentsUiState.Success,
                 showCancelButton = showCancelButton,
-                isCommentTextFieldEnabled = state is CommentsUiState.Success,
             )
         }
     }

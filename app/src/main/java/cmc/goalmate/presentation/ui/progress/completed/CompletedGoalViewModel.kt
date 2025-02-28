@@ -70,7 +70,7 @@ class CompletedGoalViewModel
                     CompletedGoalEvent.NavigateToCommentDetail(
                         roomId = commentRoomId,
                         goalTitle = (state.value as CompletedGoalUiState.Success).goal.title,
-                        startDate = (state.value as CompletedGoalUiState.Success).goal.startDate.toString(),
+                        endDate = (state.value as CompletedGoalUiState.Success).goal.endDate.toString(),
                     ),
                 )
 
@@ -101,6 +101,6 @@ sealed interface CompletedGoalEvent {
     data class NavigateToCommentDetail(
         val roomId: Int,
         val goalTitle: String,
-        val startDate: String,
+        val endDate: String,
     ) : CompletedGoalEvent
 }

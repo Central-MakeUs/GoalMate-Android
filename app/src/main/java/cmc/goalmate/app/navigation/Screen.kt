@@ -49,7 +49,7 @@ sealed interface Screen {
     data class InProgressGoal(val menteeGoalId: Int, val goalId: Int, val goalTitle: String, val roomId: Int) : Screen
 
     @Serializable
-    data class CommentsDetail(val roomId: Int, val goalTitle: String, val startDate: String) : Screen
+    data class CommentsDetail(val roomId: Int, val goalTitle: String, val endDate: String) : Screen
 
     @Serializable
     data class WebScreen(val targetUrl: WebScreenUrl) : Screen

@@ -3,7 +3,7 @@ package cmc.goalmate.presentation.ui.util
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-fun calculateDaysFromStart(
+fun calculateDaysBetween(
     endDate: LocalDate,
     startDate: LocalDate = LocalDate.now(),
 ): Int = ChronoUnit.DAYS.between(startDate, endDate).toInt().coerceAtLeast(0)

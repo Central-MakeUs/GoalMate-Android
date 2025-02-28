@@ -5,7 +5,7 @@ import cmc.goalmate.domain.model.Comments
 import cmc.goalmate.domain.model.Writer
 import cmc.goalmate.presentation.ui.comments.detail.model.MessageUiModel.Companion.DUMMY_MENTEE
 import cmc.goalmate.presentation.ui.comments.detail.model.MessageUiModel.Companion.DUMMY_MENTOR
-import cmc.goalmate.presentation.ui.util.calculateDaysFromStart
+import cmc.goalmate.presentation.ui.util.calculateDaysBetween
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -35,7 +35,7 @@ data class CommentUiModel(val date: String, val daysFromStart: Int, val messages
 val commentDateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
 
 fun Comments.toUi(
-    goalStartDate: LocalDate,
+    goalEndDate: LocalDate,
     dateFormatter: DateTimeFormatter = commentDateFormatter,
 ): List<CommentUiModel> {
     val groupedComments = mutableMapOf<LocalDate, MutableList<MessageUiModel>>()
@@ -46,13 +46,13 @@ fun Comments.toUi(
     }
 
     return groupedComments.map { (date, messages) ->
-        val daysFromStart = calculateDaysFromStart(
-            endDate = date,
-            startDate = goalStartDate,
+        val remainingDays = calculateDaysBetween(
+            endDate = goalEndDate,
+            startDate = date,
         )
         CommentUiModel(
             date = date.format(dateFormatter),
-            daysFromStart = daysFromStart,
+            daysFromStart = remainingDays,
             messages = messages,
         )
     }

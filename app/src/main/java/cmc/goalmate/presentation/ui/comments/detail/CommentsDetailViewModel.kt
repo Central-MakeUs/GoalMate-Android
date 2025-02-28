@@ -9,9 +9,11 @@ import cmc.goalmate.domain.model.Writer
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.CommentRepository
-import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
+import cmc.goalmate.presentation.ui.comments.detail.model.CommentsUiState
 import cmc.goalmate.presentation.ui.comments.detail.model.MessageUiModel
 import cmc.goalmate.presentation.ui.comments.detail.model.SenderUiModel
+import cmc.goalmate.presentation.ui.comments.detail.model.success
+import cmc.goalmate.presentation.ui.comments.detail.model.successData
 import cmc.goalmate.presentation.ui.comments.detail.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -26,24 +28,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-sealed interface CommentsUiState {
-    data object Loading : CommentsUiState
-
-    data class Success(
-        val comments: List<CommentUiModel>,
-        val lastMessageSentDate: LocalDate?,
-    ) : CommentsUiState {
-        val canSendMessage: Boolean
-            get() = lastMessageSentDate != LocalDate.now()
-    }
-
-    data object Error : CommentsUiState
-}
-
-fun StateFlow<CommentsUiState>.successData(): CommentsUiState.Success = (this.value as CommentsUiState.Success)
-
-fun CommentsUiState.success(): CommentsUiState.Success = (this as CommentsUiState.Success)
-
 @HiltViewModel
 class CommentsDetailViewModel
     @Inject
@@ -53,7 +37,7 @@ class CommentsDetailViewModel
     ) : ViewModel() {
         private val route = savedStateHandle.toRoute<Screen.CommentsDetail>()
         private val roomId = route.roomId
-        private val startDate = route.startDate
+        private val endDate = route.endDate
 
         private val _state = MutableStateFlow<CommentsUiState>(CommentsUiState.Loading)
         val state: StateFlow<CommentsUiState> = _state
@@ -74,7 +58,7 @@ class CommentsDetailViewModel
             viewModelScope.launch {
                 commentRepository.getComments(id)
                     .onSuccess { comments ->
-                        val commentsUiModel = comments.toUi(LocalDate.parse(startDate))
+                        val commentsUiModel = comments.toUi(LocalDate.parse(endDate))
                         val lastMenteeComment: LocalDate? = comments.comments.lastOrNull {
                             it.writerRole == Writer.MENTEE
                         }?.commentedAt?.toLocalDate()
