@@ -42,7 +42,10 @@ fun GoalMateDropDownMenu(
                     style = MaterialTheme.goalMateTypography.bodySmall,
                 )
             },
-            onClick = onEditClicked,
+            onClick = {
+                onEditClicked()
+                onDismissRequest()
+            },
         )
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.goalMateColors.outline)
         DropdownMenuItem(
@@ -53,7 +56,10 @@ fun GoalMateDropDownMenu(
                     style = MaterialTheme.goalMateTypography.bodySmall,
                 )
             },
-            onClick = onDeleteClicked,
+            onClick = {
+                onDeleteClicked()
+                onDismissRequest()
+            },
         )
     }
 }

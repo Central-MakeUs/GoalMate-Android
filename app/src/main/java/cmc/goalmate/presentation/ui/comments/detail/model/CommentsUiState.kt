@@ -12,7 +12,7 @@ sealed interface CommentsUiState {
         val commentTextState: CommentTextState,
     ) : CommentsUiState {
         val canSendMessage: Boolean
-            get() = lastMessageSentDate != LocalDate.now()
+            get() = (lastMessageSentDate != LocalDate.now()) || commentTextState != CommentTextState.Empty
 
         val canSubmit: Boolean
             get() = commentTextState == CommentTextState.Filled

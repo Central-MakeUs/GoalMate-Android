@@ -2,12 +2,16 @@ package cmc.goalmate.presentation.ui.comments.components
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -19,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,33 +34,48 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.Cancel
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.comments.detail.CommentAction
+import cmc.goalmate.presentation.ui.util.noRippleClickable
 
 @Composable
 fun CommentTextField(
     commentText: String,
     onAction: (CommentAction) -> Unit,
+    enabled: Boolean,
     isButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
     showCancelButton: Boolean = false,
 ) {
-    Row(
-        verticalAlignment = Alignment.Top,
-        modifier = modifier,
+    Box(
+        contentAlignment = Alignment.Center
     ) {
-        MessageTextField(
-            value = commentText,
-            onValueChange = { onAction(CommentAction.WriteComment(it)) },
-            modifier = Modifier.weight(1f),
-        )
-        Spacer(Modifier.size(6.dp))
-        if (showCancelButton) {
-            CancelButton(onClick = { onAction(CommentAction.CancelEdit) })
+        Row(
+            verticalAlignment = Alignment.Top,
+            modifier = modifier,
+        ) {
+            MessageTextField(
+                value = commentText,
+                onValueChange = { onAction(CommentAction.WriteComment(it)) },
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(Modifier.size(6.dp))
+            if (showCancelButton) {
+                CancelButton(onClick = { onAction(CommentAction.CancelEdit) })
+            }
+            Spacer(Modifier.size(6.dp))
+            SubmitButton(
+                onClick = { onAction(CommentAction.SendComment(commentText)) },
+                enabled = commentText.isNotBlank() && isButtonEnabled,
+            )
         }
-        Spacer(Modifier.size(6.dp))
-        SubmitButton(
-            onClick = { onAction(CommentAction.SendComment(commentText)) },
-            enabled = commentText.isNotBlank() && isButtonEnabled,
-        )
+
+        if (!enabled) {
+            Box(
+                modifier = modifier
+                    .height(GoalMateDimens.CommentSubmitButtonSize)
+                    .background(color = Color.Transparent)
+                    .noRippleClickable { onAction(CommentAction.InValidRequest) },
+            )
+        }
     }
 }
 
@@ -131,8 +151,9 @@ private fun SubmitButton(
 private fun CommentTextFieldPreview() {
     GoalMateTheme {
         CommentTextField(
-            commentText = "안녕하세요 안녕하세요 \n안녕하세요 안녕하세요 \n안녕하세요 안녕하세요 \n안녕하세요 안녕하세요 \n안녕하세요 안녕하세요 \n ",
+            commentText = "안녕하세요 안녕하세요",
             onAction = {},
+            enabled = false,
             isButtonEnabled = true,
             showCancelButton = true,
             modifier = Modifier.fillMaxWidth(),

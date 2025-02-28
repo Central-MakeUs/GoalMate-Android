@@ -10,6 +10,8 @@ sealed interface CommentAction {
     data object CancelEdit : CommentAction
 
     data class DeleteComment(val commentId: Int) : CommentAction
+
+    data object InValidRequest : CommentAction
 }
 
 sealed interface CommentEvent {

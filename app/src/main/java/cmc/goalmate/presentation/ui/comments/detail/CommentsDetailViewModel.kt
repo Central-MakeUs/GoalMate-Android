@@ -112,6 +112,8 @@ class CommentsDetailViewModel
                         uploadNewComment(action.content)
                     }
                 }
+
+                CommentAction.InValidRequest -> sendEvent(CommentEvent.ShowSendingError)
             }
         }
 
@@ -175,10 +177,6 @@ class CommentsDetailViewModel
         }
 
         private fun uploadNewComment(newComment: String) {
-            if (!state.successData().canSendMessage) {
-                sendEvent(CommentEvent.ShowSendingError)
-                return
-            }
             val beforeData = state.successData().comments
             val tempId = -1
             val newMessage = MessageUiModel(
