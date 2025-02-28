@@ -11,6 +11,7 @@ val ErrorBackground = Color(0xFFFFEAE9)
 val Green = Color(0xFF34C759)
 val Yellow = Color(0xFFFFCC00)
 val Blue = Color(0xFF007AFF)
+val Cancel = Color(0xFFFF5454)
 
 val Primary10 = Color(0xFFFBFFF5)
 val Primary400 = Color(0xFFAEFF23)

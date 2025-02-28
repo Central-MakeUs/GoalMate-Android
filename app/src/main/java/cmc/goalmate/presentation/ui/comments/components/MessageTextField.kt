@@ -28,12 +28,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
+import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
-import cmc.goalmate.presentation.theme.color.Grey400
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-
-// .heightIn(max = 200.dp).verticalScroll(scrollState)
 
 @Composable
 fun MessageTextField(
@@ -56,7 +54,7 @@ fun MessageTextField(
             Box(
                 contentAlignment = Alignment.CenterStart,
                 modifier = modifier
-                    .heightIn(max = 216.dp)
+                    .heightIn(min = GoalMateDimens.CommentSubmitButtonSize, max = 216.dp)
                     .background(color = Color.White, shape = RoundedCornerShape(30.dp))
                     .border(
                         width = 2.dp,
@@ -64,8 +62,8 @@ fun MessageTextField(
                         shape = RoundedCornerShape(30.dp),
                     )
                     .padding(
-                        horizontal = 16.dp,
-                        vertical = 12.dp,
+                        horizontal = 14.dp,
+                        vertical = 10.dp,
                     ),
             ) {
                 if (value.isEmpty()) {
@@ -84,7 +82,7 @@ fun MessageTextField(
 @Composable
 @Preview
 fun MessageTextFieldPreview() {
-    var inputs by remember { mutableStateOf("안녕하세요\n안녕하세요\n안녕하세요\n안녕하세요\n안녕하세요\n반갑습니다.안녕하세요\n언제까지 내려가는거예요\n아직인것같죠\n한번더!!") }
+    var inputs by remember { mutableStateOf("") }
     GoalMateTheme {
         MessageTextField(
             value = inputs,

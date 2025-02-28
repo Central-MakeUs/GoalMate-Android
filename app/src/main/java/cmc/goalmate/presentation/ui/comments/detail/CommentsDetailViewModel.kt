@@ -12,6 +12,7 @@ import cmc.goalmate.domain.model.Writer
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.CommentRepository
+import cmc.goalmate.presentation.ui.comments.detail.model.CommentTextState
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentsUiState
 import cmc.goalmate.presentation.ui.comments.detail.model.MessageUiModel
 import cmc.goalmate.presentation.ui.comments.detail.model.SenderUiModel
@@ -68,7 +69,12 @@ class CommentsDetailViewModel
                         val lastMenteeComment: LocalDate? = comments.comments.lastOrNull {
                             it.writerRole == Writer.MENTEE
                         }?.commentedAt?.toLocalDate()
-                        _state.value = CommentsUiState.Success(commentsUiModel, lastMenteeComment)
+                        _state.value =
+                            CommentsUiState.Success(
+                                comments = commentsUiModel,
+                                lastMessageSentDate = lastMenteeComment,
+                                commentTextState = CommentTextState.Empty,
+                            )
                     }
                     .onFailure {
                         _state.value = CommentsUiState.Error
@@ -84,6 +90,7 @@ class CommentsDetailViewModel
 
                 CommentAction.CancelEdit -> {
                     editingCommentId = null
+                    setEmptyTextState()
                     sendEvent(CommentEvent.CancelEdit)
                 }
 
@@ -94,7 +101,7 @@ class CommentsDetailViewModel
                 is CommentAction.EditComment -> {
                     editingCommentId = action.commentId
                     val content = state.successData().comments.findMessageContentById(action.commentId)
-                    commentContent = content
+                    setFilledTextState(content, textState = CommentTextState.UnChanged)
                     sendEvent(CommentEvent.StartEditComment(currentContent = content))
                 }
 
@@ -116,6 +123,11 @@ class CommentsDetailViewModel
 
         private fun writeComment(content: String) {
             commentContent = content.take(MAXIMUM_MESSAGE_LENGTH)
+            if (content.isNotEmpty() && state.successData().commentTextState != CommentTextState.Filled) {
+                _state.update { state ->
+                    state.success().copy(commentTextState = CommentTextState.Filled)
+                }
+            }
         }
 
         private fun deleteComment(commentId: Int) {
@@ -152,8 +164,9 @@ class CommentsDetailViewModel
                     content = comment,
                 ).onSuccess {
                     _event.send(CommentEvent.SuccessSending)
-                    commentContent = ""
+                    setEmptyTextState()
                 }.onFailure {
+                    setFilledTextState(comment)
                     _state.update { state ->
                         state.success().copy(comments = beforeData)
                     }
@@ -174,7 +187,7 @@ class CommentsDetailViewModel
                 sender = SenderUiModel.MENTEE,
             )
 
-            commentContent = ""
+            setEmptyTextState()
             _state.update { state ->
                 state.success().copy(comments = state.success().comments.addMessage(newMessage))
             }
@@ -193,11 +206,28 @@ class CommentsDetailViewModel
                     }
                     _event.send(CommentEvent.SuccessSending)
                 }.onFailure {
-                    commentContent = newComment
+                    setFilledTextState(newComment)
                     _state.update { state ->
                         state.success().copy(comments = beforeData)
                     }
                 }
+            }
+        }
+
+        private fun setEmptyTextState() {
+            commentContent = ""
+            _state.update { state ->
+                state.success().copy(commentTextState = CommentTextState.Empty)
+            }
+        }
+
+        private fun setFilledTextState(
+            newContent: String,
+            textState: CommentTextState = CommentTextState.Filled,
+        ) {
+            commentContent = newContent
+            _state.update { state ->
+                state.success().copy(commentTextState = textState)
             }
         }
 

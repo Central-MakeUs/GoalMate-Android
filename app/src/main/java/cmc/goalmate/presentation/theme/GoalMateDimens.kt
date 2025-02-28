@@ -31,4 +31,5 @@ object GoalMateDimens {
     val VerticalSpacerLarge = 44.dp
 
     val CompletedProgressBarHeight = 14.dp
+    val CommentSubmitButtonSize = 44.dp
 }

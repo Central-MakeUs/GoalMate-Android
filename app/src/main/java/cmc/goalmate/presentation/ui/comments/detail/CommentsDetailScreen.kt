@@ -68,7 +68,7 @@ fun CommentsDetailScreen(
             CommentTextField(
                 commentText = viewModel.commentContent,
                 onAction = viewModel::onAction,
-                isButtonEnabled = state is CommentsUiState.Success,
+                isButtonEnabled = (state as? CommentsUiState.Success)?.canSubmit ?: false,
                 showCancelButton = showCancelButton,
             )
         }
