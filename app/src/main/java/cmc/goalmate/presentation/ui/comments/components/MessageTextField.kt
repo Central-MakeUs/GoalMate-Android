@@ -29,22 +29,17 @@ import cmc.goalmate.presentation.theme.color.Grey400
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
-private const val MAXIMUM_MESSAGE_LENGTH = 300
-
 @Composable
 fun MessageTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isError = value.length > MAXIMUM_MESSAGE_LENGTH
-    val textColor = if (isError) MaterialTheme.goalMateColors.onError else MaterialTheme.goalMateColors.onBackground
-
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
         visualTransformation = VisualTransformation.None,
-        textStyle = MaterialTheme.goalMateTypography.body.merge(TextStyle(color = textColor)),
+        textStyle = MaterialTheme.goalMateTypography.body.merge(TextStyle(color = MaterialTheme.goalMateColors.onBackground)),
         modifier = modifier,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
@@ -56,7 +51,7 @@ fun MessageTextField(
                     .background(color = Color.White, shape = RoundedCornerShape(30.dp))
                     .border(
                         width = 2.dp,
-                        color = if (isError) MaterialTheme.goalMateColors.onError else MaterialTheme.goalMateColors.outline,
+                        color = MaterialTheme.goalMateColors.outline,
                         shape = RoundedCornerShape(30.dp),
                     )
                     .padding(
