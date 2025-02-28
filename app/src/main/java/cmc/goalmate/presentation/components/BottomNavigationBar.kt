@@ -13,14 +13,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import cmc.goalmate.R
 import cmc.goalmate.app.navigation.Screen
+import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import kotlin.reflect.KClass
@@ -89,3 +92,11 @@ fun NavBackStackEntry?.matchesRoute(route: KClass<out Any>): Boolean =
     this?.destination?.hierarchy?.any {
         it.hasRoute(route)
     } == true
+
+@Composable
+@Preview
+private fun BottomNavBarPreview() {
+    GoalMateTheme {
+        BottomNavigationBar(navController = rememberNavController())
+    }
+}
