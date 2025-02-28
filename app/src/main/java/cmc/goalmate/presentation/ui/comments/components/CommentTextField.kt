@@ -34,7 +34,7 @@ fun CommentTextField(
     ) {
         MessageTextField(
             value = commentText,
-            onValueChange = {},
+            onValueChange = { onAction(CommentAction.WriteComment(it)) },
             modifier = Modifier.weight(1f),
         )
         Spacer(Modifier.size(6.dp))

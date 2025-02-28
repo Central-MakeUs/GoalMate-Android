@@ -1,5 +1,8 @@
 package cmc.goalmate.presentation.ui.comments.detail
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -54,6 +57,9 @@ class CommentsDetailViewModel
 
         private var editingCommentId: Int? = null
 
+        var commentContent by mutableStateOf("")
+            private set
+
         private fun loadComments(id: Int) {
             viewModelScope.launch {
                 commentRepository.getComments(id)
@@ -72,6 +78,10 @@ class CommentsDetailViewModel
 
         fun onAction(action: CommentAction) {
             when (action) {
+                is CommentAction.WriteComment -> {
+                    writeComment(action.content)
+                }
+
                 CommentAction.CancelEdit -> {
                     editingCommentId = null
                     sendEvent(CommentEvent.CancelEdit)
@@ -101,6 +111,10 @@ class CommentsDetailViewModel
             viewModelScope.launch {
                 _event.send(event)
             }
+        }
+
+        private fun writeComment(content: String) {
+            commentContent = content.take(MAXIMUM_MESSAGE_LENGTH)
         }
 
         private fun deleteComment(commentId: Int) {
@@ -181,5 +195,9 @@ class CommentsDetailViewModel
                     }
                 }
             }
+        }
+
+        companion object {
+            private const val MAXIMUM_MESSAGE_LENGTH = 300
         }
     }

@@ -25,7 +25,6 @@ fun CommentsDetailScreen(
     viewModel: CommentsDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var commentText by rememberSaveable { mutableStateOf("") }
     var showCancelButton by rememberSaveable { mutableStateOf(false) }
     var isDialogVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -33,7 +32,6 @@ fun CommentsDetailScreen(
         when (event) {
             is CommentEvent.StartEditComment -> {
                 showCancelButton = true
-                commentText = event.currentContent
             }
 
             CommentEvent.ShowSendingError -> {
@@ -42,11 +40,9 @@ fun CommentsDetailScreen(
 
             CommentEvent.CancelEdit -> {
                 showCancelButton = false
-                commentText = ""
             }
 
             CommentEvent.SuccessSending -> {
-                commentText = ""
                 showCancelButton = false
             }
         }
@@ -70,7 +66,7 @@ fun CommentsDetailScreen(
                 modifier = Modifier.weight(1f),
             )
             CommentTextField(
-                commentText = commentText,
+                commentText = viewModel.commentContent,
                 onAction = viewModel::onAction,
                 isButtonEnabled = state is CommentsUiState.Success,
                 showCancelButton = showCancelButton,
