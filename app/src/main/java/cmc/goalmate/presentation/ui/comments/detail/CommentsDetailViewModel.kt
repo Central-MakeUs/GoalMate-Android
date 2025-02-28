@@ -41,7 +41,7 @@ class CommentsDetailViewModel
     ) : ViewModel() {
         private val route = savedStateHandle.toRoute<Screen.CommentsDetail>()
         private val roomId = route.roomId
-        private val endDate = route.endDate
+        private val endDate = LocalDate.parse(route.endDate)
 
         private val _state = MutableStateFlow<CommentsUiState>(CommentsUiState.Loading)
         val state: StateFlow<CommentsUiState> = _state
@@ -65,7 +65,7 @@ class CommentsDetailViewModel
             viewModelScope.launch {
                 commentRepository.getComments(id)
                     .onSuccess { comments ->
-                        val commentsUiModel = comments.toUi(LocalDate.parse(endDate))
+                        val commentsUiModel = comments.toUi(goalEndDate = endDate)
                         val lastMenteeComment: LocalDate? = comments.comments.lastOrNull {
                             it.writerRole == Writer.MENTEE
                         }?.commentedAt?.toLocalDate()
@@ -189,7 +189,15 @@ class CommentsDetailViewModel
 
             setEmptyTextState()
             _state.update { state ->
-                state.success().copy(comments = state.success().comments.addMessage(newMessage))
+                val updatedComments = state.success()
+                    .comments.addMessage(
+                        newMessage = newMessage,
+                        endDate = endDate,
+                    )
+
+                state.success().copy(
+                    comments = updatedComments,
+                )
             }
 
             viewModelScope.launch {

@@ -3,6 +3,7 @@ package cmc.goalmate.presentation.ui.comments.detail
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
 import cmc.goalmate.presentation.ui.comments.detail.model.MessageUiModel
 import cmc.goalmate.presentation.ui.comments.detail.model.commentDateFormatter
+import cmc.goalmate.presentation.ui.util.calculateDaysBetween
 import java.time.LocalDate
 
 fun List<CommentUiModel>.findMessageContentById(messageId: Int): String =
@@ -10,7 +11,10 @@ fun List<CommentUiModel>.findMessageContentById(messageId: Int): String =
         .find { it.id == messageId }
         ?.content ?: error("해당 하는 코멘트를 찾을 수 없습니다! -> 코멘트 아이디 :$messageId")
 
-fun List<CommentUiModel>.addMessage(newMessage: MessageUiModel): List<CommentUiModel> {
+fun List<CommentUiModel>.addMessage(
+    newMessage: MessageUiModel,
+    endDate: LocalDate,
+): List<CommentUiModel> {
     val today = LocalDate.now().format(commentDateFormatter)
     val lastComment = this.find { it.date == today }
 
@@ -25,7 +29,7 @@ fun List<CommentUiModel>.addMessage(newMessage: MessageUiModel): List<CommentUiM
     } else {
         this + CommentUiModel(
             date = today,
-            daysFromStart = 0,
+            daysFromStart = calculateDaysBetween(endDate = endDate),
             messages = listOf(newMessage),
         )
     }
