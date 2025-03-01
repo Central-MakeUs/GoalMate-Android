@@ -1,12 +1,13 @@
 package cmc.goalmate.presentation.components
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -15,7 +16,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,45 +42,33 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmc.goalmate.R
-import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.main.BottomNavItem
+import cmc.goalmate.presentation.ui.main.GoalMateUiState.Companion.DEFAULT_NEW_COMMENT_COUNT
 import kotlin.reflect.KClass
 import androidx.compose.ui.window.PopupPositionProvider as PopupPositionProvider1
-
-enum class BottomNavItem(
-    @StringRes val title: Int,
-    @DrawableRes val icon: Int,
-    val route: Screen,
-) {
-    HOME(title = R.string.home, icon = R.drawable.icon_home, Screen.Main.Home),
-    MY_GOALS(title = R.string.my_goals, icon = R.drawable.icon_goal, Screen.Main.MyGoal),
-    COMMENTS(title = R.string.comments, icon = R.drawable.icon_comment, Screen.Main.Comments),
-    MY_PAGE(title = R.string.my_page, icon = R.drawable.icon_my, Screen.Main.MyPage),
-    ;
-
-    companion object {
-        val bottomNavItemScreens = entries.map { it.route::class.qualifiedName }.toSet()
-    }
-}
 
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
     canShowPopup: Boolean,
+    navItems: List<BottomNavItem>,
     modifier: Modifier = Modifier,
+    badgeState: Map<BottomNavItem, Int> = mapOf(),
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var xx by rememberSaveable { mutableStateOf(0f) }
-    var yy by rememberSaveable { mutableStateOf(0f) }
+    var xx by rememberSaveable { mutableFloatStateOf(0f) }
+    var yy by rememberSaveable { mutableFloatStateOf(0f) }
 
     NavigationBar(
         containerColor = MaterialTheme.goalMateColors.background,
         tonalElevation = 0.dp,
         modifier = modifier,
     ) {
-        BottomNavItem.entries.forEach { navItem ->
+        navItems.forEach { navItem ->
+            val badgeCount = badgeState.getOrDefault(navItem, DEFAULT_NEW_COMMENT_COUNT)
             NavigationBarItem(
                 selected = navBackStackEntry.matchesRoute(navItem.route::class),
                 onClick = {
@@ -96,10 +85,22 @@ fun BottomNavigationBar(
                     )
                 },
                 icon = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(navItem.icon),
-                        contentDescription = stringResource(navItem.title),
-                    )
+                    BadgedBox(badge = {
+                        if (badgeCount > 0) {
+                            Badge(
+                                containerColor = MaterialTheme.goalMateColors.onError,
+                                contentColor = MaterialTheme.goalMateColors.background,
+                                modifier = Modifier.offset(x = 2.dp,y = (-3).dp),
+                            ) {
+                                Text(text = "$badgeCount")
+                            }
+                        }
+                    }) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(navItem.icon),
+                            contentDescription = stringResource(navItem.title),
+                        )
+                    }
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.goalMateColors.selected,
@@ -163,7 +164,9 @@ private fun BottomNavBarPreview() {
             BottomNavigationBar(
                 navController = rememberNavController(),
                 canShowPopup = true,
+                navItems = BottomNavItem.entries,
                 modifier = Modifier.height(78.dp).align(Alignment.BottomCenter),
+                badgeState = mapOf(BottomNavItem.COMMENTS to 2),
             )
         }
     }
