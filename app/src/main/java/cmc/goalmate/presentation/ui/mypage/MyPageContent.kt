@@ -29,6 +29,7 @@ import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.mypage.components.GoalCountItem
 import cmc.goalmate.presentation.ui.mypage.components.MenuItem
 import cmc.goalmate.presentation.ui.mypage.components.ProfileHeaderSection
+import cmc.goalmate.presentation.ui.mypage.components.UserInfoSectionSkeleton
 import cmc.goalmate.presentation.ui.mypage.model.MenuItemUiModel
 import cmc.goalmate.presentation.ui.mypage.model.MyPageUiModel
 
@@ -47,7 +48,8 @@ fun MyPageContent(
             state = userState,
             editNickName = { onAction(MyPageAction.MenuAction.EditNickName) },
             onGoalSummaryClicked = { navigateToMyGoals() },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = GoalMateDimens.HorizontalPadding),
         )
 
@@ -73,6 +75,10 @@ private fun UserInfoSection(
     modifier: Modifier = Modifier,
 ) {
     when (state) {
+        MyPageUiState.Loading -> {
+            UserInfoSectionSkeleton(modifier = modifier)
+        }
+
         is MyPageUiState.Success -> {
             val userInfo = state.userInfo
             Column(modifier = modifier) {
@@ -101,7 +107,6 @@ private fun UserInfoSection(
         }
 
         MyPageUiState.Error -> {}
-        MyPageUiState.Loading -> {}
     }
 }
 
@@ -159,6 +164,20 @@ private fun MyPageContentPreview() {
                 userInfo = MyPageUiModel.DEFAULT_INFO,
                 isLoggedIn = false,
             ),
+            menuItems = MenuItemUiModel.entries,
+            navigateToMyGoals = {},
+            onAction = {},
+            modifier = Modifier.background(White),
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun MyPageContentPreview2() {
+    GoalMateTheme {
+        MyPageContent(
+            userState = MyPageUiState.Loading,
             menuItems = MenuItemUiModel.entries,
             navigateToMyGoals = {},
             onAction = {},

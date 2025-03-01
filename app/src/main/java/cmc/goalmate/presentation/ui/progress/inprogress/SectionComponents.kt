@@ -33,6 +33,7 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.progress.components.DailyTodoSectionSkeleton
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
 import cmc.goalmate.presentation.ui.progress.components.GoalMateTimer
 import cmc.goalmate.presentation.ui.progress.components.Subtitle
@@ -73,7 +74,9 @@ fun DailyTodoSection(
 ) {
     when (dailyProgressState) {
         is UiState.Error -> {}
-        UiState.Loading -> {}
+        UiState.Loading -> {
+            DailyTodoSectionSkeleton()
+        }
         is UiState.Success -> {
             val dailyProgress = dailyProgressState.data
             Column(modifier = modifier) {
@@ -277,6 +280,18 @@ private fun MyGoalProgressContentPreview() {
         )
     }
 }
+
+@Composable
+@Preview(showBackground = true)
+private fun MyGoalProgressContentLoadingPreview() {
+    GoalMateTheme {
+        DailyTodoSection(
+            dailyProgressState = UiState.Loading,
+            onAction = {},
+        )
+    }
+}
+
 
 @Composable
 @Preview(showBackground = true)
