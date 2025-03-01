@@ -5,26 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import cmc.goalmate.app.navigation.GoalMateNavHost
-import cmc.goalmate.presentation.components.BottomNavItem.Companion.bottomNavItemScreens
-import cmc.goalmate.presentation.components.BottomNavigationBar
 import cmc.goalmate.presentation.theme.GoalMateTheme
-import cmc.goalmate.presentation.theme.goalMateColors
+import cmc.goalmate.presentation.ui.main.GoalMateScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,34 +28,6 @@ class MainActivity : ComponentActivity() {
             GoalMateTheme {
                 GoalMateScreen()
             }
-        }
-    }
-}
-
-@Composable
-private fun GoalMateScreen(navController: NavHostController = rememberNavController()) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val isBottomBarVisible by remember {
-        derivedStateOf {
-            navBackStackEntry?.destination?.route in bottomNavItemScreens
-        }
-    }
-
-    Scaffold(
-        containerColor = MaterialTheme.goalMateColors.background,
-        modifier = Modifier.imePadding(),
-        bottomBar = {
-            if (isBottomBarVisible) {
-                BottomNavigationBar(navController)
-            }
-        },
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-        ) {
-            GoalMateNavHost(navController = navController)
         }
     }
 }
