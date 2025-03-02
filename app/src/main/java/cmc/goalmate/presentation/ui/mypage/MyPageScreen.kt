@@ -3,6 +3,8 @@ package cmc.goalmate.presentation.ui.mypage
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -50,6 +52,7 @@ fun MyPageScreen(
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         snapshotFlow { sheetState.isVisible }
@@ -107,7 +110,7 @@ fun MyPageScreen(
             menuItems = MenuItemUiModel.getMenuItems(state.isLoggedIn()),
             navigateToMyGoals = navigateToMyGoal,
             onAction = viewModel::onAction,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).verticalScroll(scrollState),
         )
     }
 
