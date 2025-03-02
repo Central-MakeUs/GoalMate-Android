@@ -1,7 +1,6 @@
 package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +23,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
-import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
@@ -44,8 +42,6 @@ fun GoalMateCheckBox(
 
     Box(
         modifier = modifier
-            .size(GoalMateDimens.CheckBoxSize)
-            .padding(3.dp)
             .clip(RoundedCornerShape(4.dp))
             .background(color = contentColor),
     ) {
@@ -57,54 +53,9 @@ fun GoalMateCheckBox(
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.icon_checkbox_check),
                     contentDescription = null,
-                    modifier = Modifier.size(width = 10.dp, height = 7.dp),
+                    modifier = Modifier,
                 )
             }
         }
-    }
-}
-
-@Composable
-fun GoalMateCheckBoxWithText(
-    content: String,
-    isChecked: Boolean,
-    onCheckedChange: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        GoalMateCheckBox(
-            isChecked = isChecked,
-            modifier = Modifier
-                .noRippleClickable {
-                    onCheckedChange()
-                },
-        )
-        Text(
-            text = content,
-            style = MaterialTheme.goalMateTypography.body,
-            color = MaterialTheme.goalMateColors.onBackground,
-            modifier = Modifier.weight(1f),
-        )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun GoalMateCheckButtonPreview() {
-    var checked by remember { mutableStateOf(true) }
-    GoalMateTheme {
-//        GoalMateCheckBox(
-//            isChecked = checked,
-//            onCheckedChange = { checked = !checked },
-//        )
-        GoalMateCheckBoxWithText(
-            content = "잠자기",
-            isChecked = checked,
-            onCheckedChange = { checked = !checked },
-        )
     }
 }

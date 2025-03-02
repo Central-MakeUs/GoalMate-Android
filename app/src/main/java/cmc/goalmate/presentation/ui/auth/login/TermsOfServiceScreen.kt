@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalMateButton
-import cmc.goalmate.presentation.components.GoalMateCheckBoxWithText
+import cmc.goalmate.presentation.components.GoalMateCheckBox
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
@@ -34,6 +34,7 @@ import cmc.goalmate.presentation.ui.auth.login.model.TermOption
 import cmc.goalmate.presentation.ui.auth.login.model.TermOptionState
 import cmc.goalmate.presentation.ui.auth.login.model.TermOptionState.Companion.isAllChecked
 import cmc.goalmate.presentation.ui.common.WebScreenUrl
+import cmc.goalmate.presentation.ui.util.noRippleClickable
 
 @Composable
 fun TermsOfServiceScreen(
@@ -44,9 +45,7 @@ fun TermsOfServiceScreen(
     val termOptions = remember { TermOptionState.DEFAULT.toMutableStateList() }
     val isButtonEnabled = termOptions.isAllChecked()
 
-    Column(
-        modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
-    ) {
+    Column(modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding)) {
         Text(
             text = stringResource(R.string.login_term_of_service_title),
             style = MaterialTheme.goalMateTypography.subtitle,
@@ -110,7 +109,7 @@ private fun TermCheck(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        GoalMateCheckBoxWithText(
+        TitleCheckBox(
             content = stringResource(R.string.login_term_of_service_options),
             isChecked = allCheckButtonChecked,
             onCheckedChange = onAllCheckChange,
@@ -126,14 +125,50 @@ private fun TermCheck(
                     termOption = termOption.termOption,
                     isChecked = termOption.isChecked,
                     onCheckedChange = { onCheckedChange(index) },
-                    onDetailButtonClicked = {
-                        termOption.termOption.termUrl?.let { url ->
-                            onDetailButtonClicked(url)
-                        }
-                    },
+                    modifier = Modifier.weight(1f),
                 )
+                if (termOption.termOption.termUrl != null) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_forward),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(GoalMateDimens.TermCheckBoxSize)
+                            .noRippleClickable {
+                                termOption.termOption.termUrl.let { url ->
+                                    onDetailButtonClicked(url)
+                                }
+                            },
+                    )
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun TitleCheckBox(
+    content: String,
+    isChecked: Boolean,
+    onCheckedChange: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.noRippleClickable { onCheckedChange() },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(GoalMateDimens.TermCheckBoxTextSpacing),
+    ) {
+        GoalMateCheckBox(
+            isChecked = isChecked,
+            modifier = Modifier
+                .size(GoalMateDimens.TermCheckBoxSize)
+                .padding(4.dp),
+        )
+        Text(
+            text = content,
+            style = MaterialTheme.goalMateTypography.body,
+            color = MaterialTheme.goalMateColors.onBackground,
+            modifier = Modifier.weight(1f),
+        )
     }
 }
 
@@ -142,18 +177,17 @@ private fun LabeledCheckbox(
     termOption: TermOption,
     isChecked: Boolean,
     onCheckedChange: () -> Unit,
-    onDetailButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(GoalMateDimens.TermCheckBoxTextSpacing),
+        modifier = modifier.noRippleClickable { onCheckedChange() },
     ) {
         Box(
             modifier = Modifier
-                .size(GoalMateDimens.CheckBoxSize)
-                .clickable(onClick = onCheckedChange),
+                .size(GoalMateDimens.TermCheckBoxSize)
+                .padding(2.dp),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -165,16 +199,8 @@ private fun LabeledCheckbox(
         Text(
             text = stringResource(termOption.contentResId),
             style = MaterialTheme.goalMateTypography.body,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier,
         )
-
-        if (termOption.termUrl != null) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_forward),
-                contentDescription = null,
-                modifier = Modifier.clickable { onDetailButtonClicked() },
-            )
-        }
     }
 }
 

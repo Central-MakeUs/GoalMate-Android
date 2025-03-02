@@ -84,8 +84,7 @@ fun DailyTodoSection(
                     dailyProgress = dailyProgress,
                     onAction = onAction,
                     modifier = Modifier
-                        .background(MaterialTheme.goalMateColors.thickDivider)
-                        .padding(horizontal = GoalMateDimens.HorizontalPadding),
+                        .background(MaterialTheme.goalMateColors.thickDivider),
                 )
 
                 Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
@@ -111,10 +110,12 @@ private fun GoalTasks(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(vertical = GoalMateDimens.ItemVerticalPaddingLarge),
+        modifier = modifier.padding(
+            vertical = GoalMateDimens.ItemVerticalPaddingLarge
+        ),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = GoalMateDimens.HorizontalPadding,),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -138,9 +139,10 @@ private fun GoalTasks(
                         ),
                     )
                 },
+                modifier =Modifier.padding(start = 8.dp, end = 20.dp)
             )
             if (index != dailyProgress.todos.lastIndex) {
-                Spacer(Modifier.size(16.dp))
+                Spacer(Modifier.size(7.dp))
             }
         }
     }
@@ -291,7 +293,6 @@ private fun MyGoalProgressContentLoadingPreview() {
         )
     }
 }
-
 
 @Composable
 @Preview(showBackground = true)

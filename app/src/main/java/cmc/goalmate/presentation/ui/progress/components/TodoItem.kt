@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.GoalMateCheckBox
 import cmc.goalmate.presentation.theme.GoalMateTheme
@@ -46,29 +48,30 @@ fun ToDoItem(
     val hapticFeedback = LocalHapticFeedback.current
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         GoalMateCheckBox(
             isChecked = todo.isCompleted,
             modifier = Modifier
+                .size(44.dp)
+                .padding(13.dp)
                 .singleClickable(noRipple = true) {
                     onCheckedChange()
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                 },
         )
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).padding(top = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = todo.content,
-                style = MaterialTheme.goalMateTypography.body,
+                style = MaterialTheme.goalMateTypography.body.copy(fontSize = 17.sp),
                 color = MaterialTheme.goalMateColors.onBackground,
             )
 
             TodoDetail(
                 time = todo.time,
-                hasTip = todo.tip != null,
+                hasTip = !todo.tip.isNullOrBlank(),
                 toggleTip = { isTipVisible = !isTipVisible },
             )
 
@@ -178,7 +181,7 @@ private fun ToDoItemPreview() {
                 0,
                 "팝송 부르기팝송 부르기팝송 부르기팝송 부르기팝송 부르기팝송 부르기팝송 부르기 팝송 부르기",
                 "30분",
-                false,
+                true,
                 tip = "영어 단어 보카 암기 할 때는 이렇게 하는 게 좋아요 블라블라",
             ),
             onCheckedChange = {},

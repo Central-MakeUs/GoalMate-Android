@@ -18,7 +18,8 @@ object GoalMateDimens {
     val ContentImageWidth = 320.dp
     val ContentImageHeight = 300.dp
 
-    val CheckBoxSize = 24.dp
+    val TermCheckBoxSize = 28.dp
+    val TermCheckBoxTextSpacing = 8.dp
 
     val InfoRowSpace = 8.dp
 
