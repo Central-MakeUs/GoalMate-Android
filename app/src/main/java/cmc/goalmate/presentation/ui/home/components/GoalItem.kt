@@ -51,7 +51,7 @@ fun GoalItem(
             modifier = Modifier.align(Alignment.Start),
         )
         ParticipationStatusTag(
-            remainingCount = (goal.maxMembers - goal.currentMembers),
+            remainingCount = goal.remainingCount,
             participantsCount = goal.currentMembers,
             tagSize = TagSize.SMALL,
             goalUiStatus = goal.state,

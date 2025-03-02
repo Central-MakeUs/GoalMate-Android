@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cmc.goalmate.app.navigation.NavigateToGoal
+import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.LogoAppBar
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
@@ -31,7 +32,6 @@ fun HomeScreen(
     val state by viewModel.state.collectAsState()
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         LogoAppBar()
         when (val homeState = state) {
@@ -40,8 +40,14 @@ fun HomeScreen(
                 HomeContent(
                     goals = homeState.goals,
                     navigateToDetail = navigateToDetail,
-                    modifier = Modifier.weight(1f).padding(top = GoalMateDimens.TopMargin),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(top = GoalMateDimens.TopMargin),
                 )
+            }
+
+            is HomeUiState.Error -> {
+                ErrorScreen(modifier = Modifier.fillMaxSize())
             }
         }
     }
@@ -81,7 +87,7 @@ fun HomeScreenPreview() {
         HomeContent(
             goals = dummyGoals,
             navigateToDetail = {},
-            modifier = Modifier.fillMaxSize().padding(top = 16.dp),
+            modifier = Modifier.fillMaxSize().padding(top = 4.dp),
         )
     }
 }

@@ -13,6 +13,7 @@ data class GoalUiModel(
     val isClosingSoon: Boolean,
     val currentMembers: Int,
     val maxMembers: Int,
+    val remainingCount: Int,
     val state: GoalUiStatus,
 ) {
     companion object {
@@ -33,6 +34,7 @@ fun Goal.toUi(): GoalUiModel =
         currentMembers = this.currentParticipants,
         maxMembers = this.participantsLimit,
         state = this.goalStatus.toUi(),
+        remainingCount = this.participantsLimit - this.currentParticipants,
         isClosingSoon = if (this.goalStatus == GoalStatus.CLOSED) false else isClosingSoon,
     )
 
@@ -53,6 +55,7 @@ val dummyGoals = listOf(
         currentMembers = 5,
         maxMembers = 20,
         state = GoalUiStatus.AVAILABLE,
+        remainingCount = 15,
         isClosingSoon = true,
     ),
     GoalUiModel(
@@ -66,6 +69,7 @@ val dummyGoals = listOf(
         maxMembers = 30,
         state = GoalUiStatus.AVAILABLE,
         isClosingSoon = false,
+        remainingCount = 20,
     ),
     GoalUiModel(
         id = 2,
@@ -76,6 +80,7 @@ val dummyGoals = listOf(
         totalPrice = "40,000원",
         currentMembers = 8,
         maxMembers = 15,
+        remainingCount = 20,
         state = GoalUiStatus.AVAILABLE,
         isClosingSoon = false,
     ),
@@ -88,6 +93,7 @@ val dummyGoals = listOf(
         totalPrice = "230,000원",
         currentMembers = 15,
         maxMembers = 50,
+        remainingCount = 20,
         state = GoalUiStatus.SOLD_OUT,
         isClosingSoon = false,
     ),

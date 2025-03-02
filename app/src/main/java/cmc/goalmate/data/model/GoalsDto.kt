@@ -49,8 +49,10 @@ fun GoalsResponse.toData(): GoalsDto = GoalsDto(goals = goals.map { it.toData() 
 
 fun GoalsDto.toDomain(): Goals = Goals(this.goals.map { it.toDomain() })
 
-fun GoalDto.toDomain(): Goal =
-    Goal(
+fun GoalDto.toDomain(): Goal {
+    val remainingCount = this.participantsLimit - this.currentParticipants
+    val currentGoalStatus = if (remainingCount == 0) GoalStatus.CLOSED else convertGoalStatus(this.goalStatus)
+    return Goal(
         id = this.id,
         title = this.title,
         topic = this.topic,
@@ -60,12 +62,13 @@ fun GoalDto.toDomain(): Goal =
         participantsLimit = this.participantsLimit,
         currentParticipants = this.currentParticipants,
         isClosingSoon = this.isClosingSoon,
-        goalStatus = convertGoalStatus(this.goalStatus),
+        goalStatus = currentGoalStatus,
         mentorName = this.mentorName,
         createdAt = this.createdAt,
         updatedAt = this.updatedAt,
         mainImage = this.mainImage,
     )
+}
 
 fun convertGoalStatus(status: String): GoalStatus =
     when (status) {
