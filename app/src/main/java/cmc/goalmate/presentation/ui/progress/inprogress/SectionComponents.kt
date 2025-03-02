@@ -1,6 +1,9 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
 import android.util.Log
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -168,9 +173,8 @@ fun GoalInfoSection(
                 ProgressLayout(
                     title = "전체 진척률",
                     progressContent = {
-                        GoalMateProgressBar(
-                            currentProgress = goalInfo.totalProgress,
-                            thickness = 20.dp,
+                        TotalProgressBar(
+                            progressPercent = goalInfo.totalProgress,
                             modifier = Modifier.fillMaxWidth(),
                         )
                     },
@@ -188,6 +192,27 @@ fun GoalInfoSection(
             }
         }
     }
+}
+
+@Composable
+private fun TotalProgressBar(
+    progressPercent: Float,
+    modifier: Modifier = Modifier,
+) {
+    val animatedValue = remember { Animatable(0f) }
+
+    LaunchedEffect(progressPercent) {
+        animatedValue.animateTo(
+            targetValue = progressPercent,
+            animationSpec = tween(durationMillis = 500, easing = LinearEasing),
+        )
+    }
+
+    GoalMateProgressBar(
+        currentProgress = animatedValue.value,
+        thickness = 20.dp,
+        modifier = modifier,
+    )
 }
 
 @Composable
