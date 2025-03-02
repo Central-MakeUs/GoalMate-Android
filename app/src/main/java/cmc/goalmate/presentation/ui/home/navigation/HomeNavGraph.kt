@@ -45,7 +45,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         composable<Screen.Main.MyPage> {
             MyPageScreen(
                 navigateToLogin = { navController.navigateToLogin() },
-                navigateToMyGoal = { navController.navigate(Screen.Main.MyGoal) },
+                navigateToMyGoal = { navController.navigateInBottomNav(Screen.Main.MyGoal) },
                 navigateToHome = { navController.navigateToHome(Screen.Main.MyPage) },
                 navigateToWebScreen = navController::navigateToWebScreen,
             )
@@ -61,6 +61,14 @@ fun NavController.navigateToHome(
         popUpTo(popUpToRoute) {
             this.inclusive = inclusive
         }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
+fun NavController.navigateInBottomNav(screen: Screen) {
+    navigate(screen) {
+        popUpTo(graph.startDestinationId) { saveState = true }
         launchSingleTop = true
         restoreState = true
     }

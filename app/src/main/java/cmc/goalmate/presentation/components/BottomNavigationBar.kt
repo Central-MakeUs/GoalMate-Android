@@ -45,6 +45,7 @@ import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.home.navigation.navigateInBottomNav
 import cmc.goalmate.presentation.ui.main.BottomNavItem
 import cmc.goalmate.presentation.ui.main.GoalMateUiState.Companion.DEFAULT_NEW_COMMENT_COUNT
 import kotlin.reflect.KClass
@@ -71,13 +72,7 @@ fun BottomNavigationBar(
             val badgeCount = badgeState.getOrDefault(navItem, DEFAULT_NEW_COMMENT_COUNT)
             NavigationBarItem(
                 selected = navBackStackEntry.matchesRoute(navItem.route::class),
-                onClick = {
-                    navController.navigate(navItem.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
+                onClick = { navController.navigateInBottomNav(navItem.route) },
                 label = {
                     Text(
                         text = stringResource(navItem.title),
@@ -90,7 +85,7 @@ fun BottomNavigationBar(
                             Badge(
                                 containerColor = MaterialTheme.goalMateColors.onError,
                                 contentColor = MaterialTheme.goalMateColors.background,
-                                modifier = Modifier.offset(x = 2.dp,y = (-3).dp),
+                                modifier = Modifier.offset(x = 2.dp, y = (-3).dp),
                             ) {
                                 Text(text = "$badgeCount")
                             }
