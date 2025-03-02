@@ -26,19 +26,23 @@ data class MessageUiModel(val id: Int, val content: String, val sender: SenderUi
     }
 }
 
-data class CommentUiModel(val date: String, val daysFromStart: Int, val messages: List<MessageUiModel>) {
+data class CommentUiModel(val date: LocalDate, val daysFromStart: Int, val messages: List<MessageUiModel>) {
+    val displayedDate: String
+        get() = date.format(commentDateFormatter)
+
     companion object {
         val DUMMY =
-            CommentUiModel(date = "2024년 11월 25일", daysFromStart = 3, messages = listOf(DUMMY_MENTEE, DUMMY_MENTOR))
+            CommentUiModel(
+                date = LocalDate.of(2024, 11, 25),
+                daysFromStart = 3,
+                messages = listOf(DUMMY_MENTEE, DUMMY_MENTOR),
+            )
     }
 }
 
 val commentDateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
 
-fun Comments.toUi(
-    goalEndDate: LocalDate,
-    dateFormatter: DateTimeFormatter = commentDateFormatter,
-): List<CommentUiModel> {
+fun Comments.toUi(goalEndDate: LocalDate): List<CommentUiModel> {
     val groupedComments = mutableMapOf<LocalDate, MutableList<MessageUiModel>>()
 
     for (comment in this.comments) {
@@ -52,7 +56,7 @@ fun Comments.toUi(
             startDate = date,
         )
         CommentUiModel(
-            date = date.format(dateFormatter),
+            date = date,
             daysFromStart = remainingDays,
             messages = messages,
         )

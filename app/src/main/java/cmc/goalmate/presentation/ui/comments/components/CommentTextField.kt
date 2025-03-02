@@ -23,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -44,6 +46,7 @@ fun CommentTextField(
     isButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
     showCancelButton: Boolean = false,
+    focusRequester: FocusRequester = FocusRequester()
 ) {
     Box(
         contentAlignment = Alignment.Center
@@ -55,7 +58,7 @@ fun CommentTextField(
             MessageTextField(
                 value = commentText,
                 onValueChange = { onAction(CommentAction.WriteComment(it)) },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).focusRequester(focusRequester),
             )
             Spacer(Modifier.size(6.dp))
             if (showCancelButton) {

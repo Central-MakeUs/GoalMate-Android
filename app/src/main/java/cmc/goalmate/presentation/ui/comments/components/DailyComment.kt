@@ -47,7 +47,7 @@ fun DailyComment(
         modifier = modifier,
     ) {
         CommentDateHeader(
-            commentDate = comment.date,
+            commentDate = comment.displayedDate,
             dDayText = "${comment.daysFromStart}",
             modifier = Modifier.fillMaxWidth(),
         )

@@ -2,7 +2,6 @@ package cmc.goalmate.presentation.ui.comments.detail
 
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
 import cmc.goalmate.presentation.ui.comments.detail.model.MessageUiModel
-import cmc.goalmate.presentation.ui.comments.detail.model.commentDateFormatter
 import cmc.goalmate.presentation.ui.util.calculateDaysBetween
 import java.time.LocalDate
 
@@ -15,7 +14,7 @@ fun List<CommentUiModel>.addMessage(
     newMessage: MessageUiModel,
     endDate: LocalDate,
 ): List<CommentUiModel> {
-    val today = LocalDate.now().format(commentDateFormatter)
+    val today = LocalDate.now()
     val lastComment = this.find { it.date == today }
 
     return if (lastComment != null) {

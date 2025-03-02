@@ -8,9 +8,11 @@ sealed interface CommentsUiState {
 
     data class Success(
         val comments: List<CommentUiModel>,
-        val lastMessageSentDate: LocalDate?,
         val commentTextState: CommentTextState,
     ) : CommentsUiState {
+        private val lastMessageSentDate: LocalDate?
+            get() = comments.lastOrNull { it.messages.any { it.sender == SenderUiModel.MENTEE } }?.date
+
         val canSendMessage: Boolean
             get() = (lastMessageSentDate != LocalDate.now()) || commentTextState != CommentTextState.Empty
 

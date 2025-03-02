@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import cmc.goalmate.app.navigation.Screen
-import cmc.goalmate.domain.model.Writer
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.CommentRepository
@@ -66,13 +65,9 @@ class CommentsDetailViewModel
                 commentRepository.getComments(id)
                     .onSuccess { comments ->
                         val commentsUiModel = comments.toUi(goalEndDate = endDate)
-                        val lastMenteeComment: LocalDate? = comments.comments.lastOrNull {
-                            it.writerRole == Writer.MENTEE
-                        }?.commentedAt?.toLocalDate()
                         _state.value =
                             CommentsUiState.Success(
                                 comments = commentsUiModel,
-                                lastMessageSentDate = lastMenteeComment,
                                 commentTextState = CommentTextState.Empty,
                             )
                     }
@@ -88,12 +83,6 @@ class CommentsDetailViewModel
                     writeComment(action.content)
                 }
 
-                CommentAction.CancelEdit -> {
-                    editingCommentId = null
-                    setEmptyTextState()
-                    sendEvent(CommentEvent.CancelEdit)
-                }
-
                 is CommentAction.DeleteComment -> {
                     deleteComment(action.commentId)
                 }
@@ -103,6 +92,12 @@ class CommentsDetailViewModel
                     val content = state.successData().comments.findMessageContentById(action.commentId)
                     setFilledTextState(content, textState = CommentTextState.UnChanged)
                     sendEvent(CommentEvent.StartEditComment(currentContent = content))
+                }
+
+                CommentAction.CancelEdit -> {
+                    editingCommentId = null
+                    setEmptyTextState()
+                    sendEvent(CommentEvent.CancelEdit)
                 }
 
                 is CommentAction.SendComment -> {
@@ -208,7 +203,7 @@ class CommentsDetailViewModel
                             tmpId = tempId,
                             newId = newCommentId,
                         )
-                        state.success().copy(comments = updated, lastMessageSentDate = LocalDate.now())
+                        state.success().copy(comments = updated)
                     }
                     _event.send(CommentEvent.SuccessSending)
                 }.onFailure {
