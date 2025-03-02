@@ -12,9 +12,14 @@ data class DailyProgressDetailUiModel(
     val selectedDate: LocalDate,
     val todos: List<TodoGoalUiModel>,
 ) {
-    val completedTodayTodoCount: Int = todos.count { it.isCompleted }
+    private val completedTodayTodoCount: Int
+        get() = todos.count { it.isCompleted }
 
-    val totalTodayTodoCount: Int = todos.size
+    private val totalTodayTodoCount: Int
+        get() = todos.size
+
+    val remainingTodoCount: Int
+        get() = totalTodayTodoCount - completedTodayTodoCount
 
     val actualProgress: Float = calculateProgress(
         totalTodoCount = totalTodayTodoCount,
@@ -32,6 +37,9 @@ data class DailyProgressDetailUiModel(
         } else {
             TimerStatus.EXPIRED
         }
+
+    val showTimer: Boolean
+        get() = selectedDate <= LocalDate.now()
 
     fun canModifyTodo(comparedDate: LocalDate = LocalDate.now()): Boolean = selectedDate == comparedDate
 

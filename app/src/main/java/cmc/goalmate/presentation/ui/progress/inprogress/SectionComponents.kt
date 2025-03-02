@@ -111,22 +111,24 @@ private fun GoalTasks(
 ) {
     Column(
         modifier = modifier.padding(
-            vertical = GoalMateDimens.ItemVerticalPaddingLarge
+            vertical = GoalMateDimens.ItemVerticalPaddingLarge,
         ),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = GoalMateDimens.HorizontalPadding,),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = GoalMateDimens.HorizontalPadding),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Subtitle(title = "오늘 해야 할 일")
-            GoalMateTimer(
-                timerStatus = dailyProgress.timerStatus,
-                modifier = Modifier.width(136.dp),
-            )
+            if (dailyProgress.showTimer) {
+                GoalMateTimer(
+                    timerStatus = dailyProgress.timerStatus,
+                    modifier = Modifier.width(136.dp),
+                )
+            }
         }
 
-        Spacer(Modifier.size(GoalMateDimens.ItemVerticalPaddingLarge))
+        Spacer(Modifier.size(18.dp))
 
         dailyProgress.todos.forEachIndexed { index, todo ->
             ToDoItem(
@@ -139,7 +141,7 @@ private fun GoalTasks(
                         ),
                     )
                 },
-                modifier =Modifier.padding(start = 8.dp, end = 20.dp)
+                modifier = Modifier.padding(start = 8.dp, end = 20.dp),
             )
             if (index != dailyProgress.todos.lastIndex) {
                 Spacer(Modifier.size(7.dp))
