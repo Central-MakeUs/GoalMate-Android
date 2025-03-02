@@ -56,7 +56,7 @@ fun MyGoalsContent(
                                 ),
                             )
                         },
-                        onRestartButtonClicked = { navigateToGoalDetail(myGoal.menteeGoalId) },
+                        onRestartButtonClicked = { navigateToGoalDetail(myGoal.goalId) },
                         modifier = Modifier,
                     )
                 }
