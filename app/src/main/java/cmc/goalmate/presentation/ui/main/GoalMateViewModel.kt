@@ -31,6 +31,7 @@ class GoalMateViewModel
         val state: StateFlow<GoalMateUiState> = _state.asStateFlow()
 
         init {
+            observeLoginStatus()
             viewModelScope.launch {
                 EventBus.subscribeEvent<GoalMateEvent> { event ->
                     when (event) {
@@ -58,6 +59,13 @@ class GoalMateViewModel
                             }
                         }
 
+                        GoalMateEvent.StartNewGoal -> {
+                            viewModelScope.launch {
+                                val updatedHasRemainingTodos = handleDomainResult(menteeGoalRepository.hasRemainingTodosToday())
+                                _state.update { state.value.copy(hasRemainingTodos = updatedHasRemainingTodos) }
+                            }
+                        }
+
                         else -> {}
                     }
                 }
@@ -66,7 +74,6 @@ class GoalMateViewModel
 
         override fun onLoginStateChanged(isLoggedIn: Boolean) {
             if (!isLoggedIn) return
-
             viewModelScope.launch {
                 val hasRemainingTodos = handleDomainResult(menteeGoalRepository.hasRemainingTodosToday())
                 val newCommentCount = handleDomainResult(commentRepository.getNewCommentCount())

@@ -14,11 +14,7 @@ abstract class LoginStateViewModel(
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
-    init {
-        observeLoginStatus()
-    }
-
-    private fun observeLoginStatus() {
+    protected fun observeLoginStatus() {
         viewModelScope.launch {
             authRepository.isLogin()
                 .collect { isLogIn ->

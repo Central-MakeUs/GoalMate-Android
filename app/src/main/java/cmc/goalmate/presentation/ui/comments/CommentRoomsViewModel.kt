@@ -44,16 +44,35 @@ class GoalCommentsViewModel
         private val _event = Channel<CommentRoomsEvent>()
         val event = _event.receiveAsFlow()
 
+        init {
+            observeLoginStatus()
+            observeGoalMateEvent()
+        }
+
         override fun onLoginStateChanged(isLoggedIn: Boolean) {
             if (isLoggedIn) {
-                viewModelScope.launch {
-                    _state.value = when (val result = commentRepository.getCommentRooms()) {
+                loadComments()
+            } else {
+                _state.value = GoalCommentsUiState.LoggedOut
+            }
+        }
+
+        private fun loadComments() {
+            viewModelScope.launch {
+                _state.update {
+                    when (val result = commentRepository.getCommentRooms()) {
                         is DomainResult.Success -> GoalCommentsUiState.LoggedIn(result.data.toUi())
                         is DomainResult.Error -> GoalCommentsUiState.Error
                     }
                 }
-            } else {
-                _state.value = GoalCommentsUiState.LoggedOut
+            }
+        }
+
+        private fun observeGoalMateEvent() {
+            viewModelScope.launch {
+                EventBus.subscribeEvent<GoalMateEvent.StartNewGoal> {
+                    loadComments()
+                }
             }
         }
 

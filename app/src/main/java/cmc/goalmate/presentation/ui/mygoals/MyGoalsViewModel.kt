@@ -30,6 +30,8 @@ sealed interface MyGoalsUiState {
     data class Error(val error: String) : MyGoalsUiState
 }
 
+fun MyGoalsUiState.currentMyGoals(): List<MyGoalUiModel> = (this as? MyGoalsUiState.LoggedIn)?.myGoals ?: emptyList()
+
 fun List<MyGoalUiModel>.remainingGoalsCount(): Int = this.sumOf { it.remainGoals }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -80,6 +82,11 @@ class MyGoalsViewModel
                     updateTodoCheckCount(menteeGoalId = event.menteeGoalId, updatedCount = event.remainingTodos)
                 }
             }
+            viewModelScope.launch {
+                EventBus.subscribeEvent<GoalMateEvent.StartNewGoal> {
+                    triggerReload()
+                }
+            }
         }
 
         private fun triggerReload() {
@@ -98,10 +105,16 @@ class MyGoalsViewModel
             menteeGoalId: Int,
             updatedCount: Int,
         ) {
-            val updatedMyGoals = (state.value as MyGoalsUiState.LoggedIn).myGoals.map { myGoal ->
+            val currentMyGoals = state.value.currentMyGoals()
+            val goalToUpdate = currentMyGoals.find { it.menteeGoalId == menteeGoalId }
+            if (goalToUpdate == null) {
+                triggerReload()
+                return
+            }
+            val newGoals = currentMyGoals.map { myGoal ->
                 if (myGoal.menteeGoalId == menteeGoalId) myGoal.copy(remainGoals = updatedCount) else myGoal
             }
-            postEvent(updatedMyGoals = updatedMyGoals)
-            _state.update { MyGoalsUiState.LoggedIn(myGoals = updatedMyGoals) }
+            postEvent(updatedMyGoals = newGoals)
+            _state.update { MyGoalsUiState.LoggedIn(myGoals = newGoals) }
         }
     }

@@ -14,6 +14,8 @@ import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import cmc.goalmate.presentation.ui.mypage.model.MyPageUiModel
 import cmc.goalmate.presentation.ui.mypage.model.NicknameState
 import cmc.goalmate.presentation.ui.mypage.model.toUi
+import cmc.goalmate.presentation.ui.util.EventBus
+import cmc.goalmate.presentation.ui.util.GoalMateEvent
 import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -41,12 +43,34 @@ class MyPageViewModel
         var nickName by mutableStateOf("")
             private set
 
+        init {
+            observeLoginStatus()
+            observeGoalMateEvent()
+        }
+
         override fun onLoginStateChanged(isLoggedIn: Boolean) {
             if (isLoggedIn) {
                 loadUserInfo()
             } else {
                 setLogoutState()
             }
+        }
+
+        private fun observeGoalMateEvent() {
+            viewModelScope.launch {
+                EventBus.subscribeEvent<GoalMateEvent.StartNewGoal> {
+                    inCreaseOnGoingGoalCount()
+                }
+            }
+        }
+
+        private fun inCreaseOnGoingGoalCount() {
+            val current = state.value.successData()
+            val updatedUserInfo = current.userInfo.copy(
+                onGoingGoalCount = current.userInfo.onGoingGoalCount + 1,
+            )
+            val updatedState = current.copy(userInfo = updatedUserInfo)
+            _state.update { updatedState }
         }
 
         private fun loadUserInfo() {
