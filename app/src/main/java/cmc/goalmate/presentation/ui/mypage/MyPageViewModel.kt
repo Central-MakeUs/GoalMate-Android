@@ -18,11 +18,9 @@ import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,15 +33,7 @@ class MyPageViewModel
         private val userRepository: UserRepository,
     ) : LoginStateViewModel(authRepository) {
         private val _state = MutableStateFlow<MyPageUiState>(MyPageUiState.Loading)
-        val state: StateFlow<MyPageUiState> =
-            _state
-                .onStart {
-                    checkLoginStatus()
-                }.stateIn(
-                    viewModelScope,
-                    SharingStarted.WhileSubscribed(5000),
-                    MyPageUiState.Loading,
-                )
+        val state: StateFlow<MyPageUiState> = _state.asStateFlow()
 
         private val _event = Channel<MyPageEvent>()
         val event = _event.receiveAsFlow()
@@ -51,13 +41,21 @@ class MyPageViewModel
         var nickName by mutableStateOf("")
             private set
 
-        private suspend fun checkLoginStatus() {
-            if (isLoggedIn.value) {
-                when (val result = userRepository.getUserInfo()) {
+        override fun onLoginStateChanged(isLoggedIn: Boolean) {
+            if (isLoggedIn) {
+                loadUserInfo()
+            } else {
+                setLogoutState()
+            }
+        }
+
+        private fun loadUserInfo() {
+            viewModelScope.launch {
+                val updated = when (val result = userRepository.getUserInfo()) {
                     is DomainResult.Success -> {
                         val userInfoUi = result.data.toUi()
                         nickName = userInfoUi.nickName
-                        _state.value = MyPageUiState.Success(
+                        MyPageUiState.Success(
                             userInfo = userInfoUi,
                             isLoggedIn = true,
                             nicknameState = NicknameState.Unchanged,
@@ -65,11 +63,16 @@ class MyPageViewModel
                     }
 
                     is DomainResult.Error -> {
-                        _state.value = MyPageUiState.Error
+                        MyPageUiState.Error
                     }
                 }
-            } else {
-                _state.value = MyPageUiState.Success(
+                _state.update { updated }
+            }
+        }
+
+        private fun setLogoutState() {
+            _state.update {
+                MyPageUiState.Success(
                     userInfo = MyPageUiModel.DEFAULT_INFO,
                     isLoggedIn = false,
                     nicknameState = NicknameState.Idle,
@@ -91,7 +94,6 @@ class MyPageViewModel
                 MyPageAction.MenuAction.PrivacyPolicy -> sendEvent(MyPageEvent.ShowPrivacyPolicy)
                 MyPageAction.MenuAction.TermsOfService -> sendEvent(MyPageEvent.ShowTermsOfService)
                 MyPageAction.MenuAction.EditNickName -> editNickName()
-
                 is MyPageAction.CheckDuplication -> checkDuplication(menuAction.updated)
                 is MyPageAction.ConfirmNickName -> confirmNewNickName(menuAction.updated)
                 is MyPageAction.SetNickName -> {
@@ -118,7 +120,7 @@ class MyPageViewModel
         }
 
         private fun editNickName() {
-            val event = if (isLoggedIn.value) MyPageEvent.EditNickName else MyPageEvent.NeedLogin
+            val event = if (state.value.isLoggedIn()) MyPageEvent.EditNickName else MyPageEvent.NeedLogin
             sendEvent(event)
         }
 

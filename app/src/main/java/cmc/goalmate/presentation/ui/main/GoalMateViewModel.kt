@@ -1,12 +1,12 @@
 package cmc.goalmate.presentation.ui.main
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.RootError
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.CommentRepository
 import cmc.goalmate.domain.repository.MenteeGoalRepository
+import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import cmc.goalmate.presentation.ui.main.GoalMateUiState.Companion.DEFAULT_NEW_COMMENT_COUNT
 import cmc.goalmate.presentation.ui.main.GoalMateUiState.Companion.DEFAULT_REMAINING_VALUE
 import cmc.goalmate.presentation.ui.util.EventBus
@@ -26,26 +26,9 @@ class GoalMateViewModel
         private val menteeGoalRepository: MenteeGoalRepository,
         private val commentRepository: CommentRepository,
         private val authRepository: AuthRepository,
-    ) : ViewModel() {
+    ) : LoginStateViewModel(authRepository) {
         private val _state: MutableStateFlow<GoalMateUiState> = MutableStateFlow(GoalMateUiState.INITIAL_STATE)
         val state: StateFlow<GoalMateUiState> = _state.asStateFlow()
-
-        init {
-            viewModelScope.launch {
-                authRepository.isLogin().collect {
-                    if (it) {
-                        val hasRemainingTodos = handleDomainResult(menteeGoalRepository.hasRemainingTodosToday())
-                        val newCommentCount = handleDomainResult(commentRepository.getNewCommentCount())
-                        _state.update {
-                            GoalMateUiState(
-                                hasRemainingTodos = hasRemainingTodos,
-                                badgeCounts = mapOf(BottomNavItem.COMMENTS to newCommentCount),
-                            )
-                        }
-                    }
-                }
-            }
-        }
 
         init {
             viewModelScope.launch {
@@ -78,6 +61,20 @@ class GoalMateViewModel
                         else -> {}
                     }
                 }
+            }
+        }
+
+        override fun onLoginStateChanged(isLoggedIn: Boolean) {
+            if (!isLoggedIn) return
+
+            viewModelScope.launch {
+                val hasRemainingTodos = handleDomainResult(menteeGoalRepository.hasRemainingTodosToday())
+                val newCommentCount = handleDomainResult(commentRepository.getNewCommentCount())
+                val updatedState = GoalMateUiState(
+                    hasRemainingTodos = hasRemainingTodos,
+                    badgeCounts = mapOf(BottomNavItem.COMMENTS to newCommentCount),
+                )
+                _state.update { updatedState }
             }
         }
     }

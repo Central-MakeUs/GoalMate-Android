@@ -20,9 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
-import kotlin.coroutines.resume
 
 @HiltViewModel
 class AuthViewModel
@@ -65,7 +63,6 @@ class AuthViewModel
                         if (result.data.isRegistered) {
                             authRepository.saveToken(result.data.token)
                                 .onSuccess {
-                                    _state.value = _state.value.copy(isLoginCompleted = true)
                                     _authEvent.send(AuthEvent.NavigateToHome)
                                 }
                         } else {
@@ -80,10 +77,7 @@ class AuthViewModel
         private fun agreeTermsOfService() {
             viewModelScope.launch {
                 requireNotNull(tempToken) { "저장된 토큰이 없음" }
-                authRepository.saveToken(requireNotNull(tempToken) { "저장된 토큰이 없음" })
-                    .onSuccess {
-                        _authEvent.send(AuthEvent.NavigateToNickNameSetting)
-                    }
+                _authEvent.send(AuthEvent.NavigateToNickNameSetting)
             }
         }
 
@@ -137,33 +131,16 @@ class AuthViewModel
 
         private fun completeNickNameSetting() {
             viewModelScope.launch {
-                userRepository.updateNickName(nickName)
+                authRepository.saveToken(requireNotNull(tempToken) { "저장된 토큰이 없음" })
                     .onSuccess {
-                        _state.value = _state.value.copy(isLoginCompleted = true)
-                        _authEvent.send(AuthEvent.NavigateToCompleted)
-                    }
-                    .onFailure {
-                        Log.d("yenny", "completeNickNameSetting error : ${it.asUiText()}")
+                        userRepository.updateNickName(nickName)
+                            .onSuccess {
+                                _authEvent.send(AuthEvent.NavigateToCompleted)
+                            }
+                            .onFailure {
+                                Log.d("yenny", "completeNickNameSetting error : ${it.asUiText()}")
+                            }
                     }
             }
-        }
-
-        override fun onCleared() {
-            viewModelScope.launch {
-                suspendCancellableCoroutine<Unit> { continuation ->
-                    if (!state.value.isLoginCompleted) {
-                        launch {
-                            authRepository.deleteToken()
-                                .onSuccess {
-                                    Log.d("yenny", "delete token successfully!")
-                                    continuation.resume(Unit)
-                                }
-                        }
-                    } else {
-                        continuation.resume(Unit)
-                    }
-                }
-            }
-            super.onCleared()
         }
     }
