@@ -19,10 +19,14 @@ data class MessageUiModel(val id: Int, val content: String, val sender: SenderUi
     companion object {
         val DUMMY_MENTEE = MessageUiModel(
             id = 0,
-            "선생님 영어 단어 암기 꿀팁좀 주세요ㅠㅠ선생님 영어 단어 암기 꿀팁좀 주세요ㅠㅠ선생님 영어 단어 암기 꿀팁좀 주세요ㅠㅠ",
+            "선생님 영어 단어 암기 꿀팁좀 주세용",
             SenderUiModel.MENTEE,
         )
-        val DUMMY_MENTOR = MessageUiModel(id = 1, "영어 단어 암기는 이렇게 하시면 됩니당", SenderUiModel.MENTOR)
+        val DUMMY_MENTOR = MessageUiModel(
+            id = 1,
+            "영어 단어 암기는 이렇게 하시면 됩니당",
+            SenderUiModel.MENTOR,
+        )
     }
 }
 
@@ -34,6 +38,18 @@ data class CommentUiModel(val date: LocalDate, val daysFromStart: Int, val messa
         val DUMMY =
             CommentUiModel(
                 date = LocalDate.of(2024, 11, 25),
+                daysFromStart = 3,
+                messages = listOf(DUMMY_MENTOR, DUMMY_MENTEE),
+            )
+        val DUMMY2 =
+            CommentUiModel(
+                date = LocalDate.of(2024, 11, 26),
+                daysFromStart = 3,
+                messages = listOf(DUMMY_MENTEE, DUMMY_MENTOR),
+            )
+        val DUMMY3 =
+            CommentUiModel(
+                date = LocalDate.of(2024, 11, 27),
                 daysFromStart = 3,
                 messages = listOf(DUMMY_MENTEE, DUMMY_MENTOR),
             )

@@ -99,10 +99,18 @@ private fun DailyCommentItem(
     modifier: Modifier = Modifier,
 ) {
     var isDropDownMenuExpanded by remember { mutableStateOf(false) }
-    Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
-        if (sender == SenderUiModel.MENTEE) Spacer(Modifier.width(80.dp))
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        if (sender == SenderUiModel.MENTEE) {
+            Spacer(Modifier.width(80.dp))
+        }
 
-        Column {
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = if (sender == SenderUiModel.MENTEE) Alignment.End else Alignment.Start,
+        ) {
             Text(
                 text = content,
                 style = MaterialTheme.goalMateTypography.body,
@@ -131,7 +139,9 @@ private fun DailyCommentItem(
             )
         }
 
-        if (sender == SenderUiModel.MENTOR) Spacer(Modifier.width(80.dp))
+        if (sender == SenderUiModel.MENTOR) {
+            Spacer(Modifier.width(80.dp))
+        }
     }
 }
 
@@ -155,6 +165,9 @@ private fun SenderUiModel.backgroundColor(): Color =
 @Preview
 private fun DailyCommentPreview() {
     GoalMateTheme {
-        DailyComment(comment = CommentUiModel.DUMMY, onAction = {})
+        DailyComment(
+            comment = CommentUiModel.DUMMY,
+            onAction = {},
+        )
     }
 }

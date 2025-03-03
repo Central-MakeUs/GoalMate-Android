@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.presentation.components.AppBarWithBackButton
@@ -80,7 +81,7 @@ fun CommentsDetailScreen(
                 enabled = (state as? CommentsUiState.Success)?.canSendMessage ?: true,
                 isButtonEnabled = (state as? CommentsUiState.Success)?.canSubmit ?: false,
                 showCancelButton = showCancelButton,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 11.dp),
                 focusRequester = focusRequester,
             )
         }

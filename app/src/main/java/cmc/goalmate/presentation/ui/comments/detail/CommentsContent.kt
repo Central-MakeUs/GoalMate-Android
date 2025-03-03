@@ -6,9 +6,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +28,7 @@ import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.comments.components.DailyComment
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
+import java.time.LocalDate
 
 @Composable
 fun CommentsContent(
@@ -29,6 +36,20 @@ fun CommentsContent(
     onAction: (CommentAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val listState = rememberLazyListState()
+    var isFirstLoad by remember { mutableStateOf(true) }
+
+    LaunchedEffect(comments.size) {
+        if (comments.isNotEmpty()) {
+            if (isFirstLoad) {
+                listState.scrollToItem(comments.size - 1)
+                isFirstLoad = false
+            } else {
+                listState.animateScrollToItem(comments.size - 1)
+            }
+        }
+    }
+
     if (comments.isEmpty()) {
         Box(modifier = modifier) {
             Text(
@@ -43,6 +64,7 @@ fun CommentsContent(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(44.dp),
             modifier = modifier,
+            state = listState,
         ) {
             items(items = comments, key = { it.date }) { comment ->
                 DailyComment(
@@ -60,7 +82,13 @@ fun CommentsContent(
 fun CommentsContentPreview() {
     GoalMateTheme {
         CommentsContent(
-            comments = listOf(CommentUiModel.DUMMY, CommentUiModel.DUMMY),
+            comments = listOf(
+                CommentUiModel.DUMMY,
+                CommentUiModel.DUMMY2,
+                CommentUiModel.DUMMY3,
+                CommentUiModel.DUMMY.copy(date = LocalDate.of(2024, 11, 30)),
+                CommentUiModel.DUMMY3.copy(date = LocalDate.of(2024, 12, 2)),
+            ),
             onAction = {},
             modifier = Modifier
                 .fillMaxWidth()
