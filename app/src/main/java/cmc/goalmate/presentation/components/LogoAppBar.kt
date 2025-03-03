@@ -36,7 +36,7 @@ fun LogoAppBar(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.goalMateColors.background)
-            .padding(horizontal = GoalMateDimens.HorizontalPadding, vertical = 14.dp),
+            .padding(horizontal = GoalMateDimens.HorizontalPadding).padding(top = 20.dp, bottom = 14.dp),
     ) {
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.icon_logo_sub),

@@ -22,8 +22,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cmc.goalmate.app.navigation.CommentDetailParams
-import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.presentation.components.GoalMateImage
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
@@ -35,7 +33,7 @@ import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
 @Composable
 fun CommentRoomsContent(
     goalComments: List<CommentRoomsUiModel>,
-    navigateToCommentDetail: NavigateToCommentDetail,
+    onAction: (CommentRoomsAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -49,12 +47,8 @@ fun CommentRoomsContent(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp))
                     .clickable {
-                        navigateToCommentDetail(
-                            CommentDetailParams(
-                                roomId = goalComment.roomId,
-                                goalTitle = goalComment.title,
-                                endDate = goalComment.endDate,
-                            ),
+                        onAction(
+                            CommentRoomsAction.SelectCommentRoom(roomId = goalComment.roomId),
                         )
                     }
                     .padding(horizontal = GoalMateDimens.HorizontalPadding, vertical = 4.dp),
@@ -125,7 +119,7 @@ private fun GoalCommentsContentPreview() {
     GoalMateTheme {
         CommentRoomsContent(
             goalComments = listOf(CommentRoomsUiModel.DUMMY),
-            navigateToCommentDetail = {},
+            onAction = {},
         )
     }
 }

@@ -18,6 +18,7 @@ fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier =
 
 fun Modifier.singleClickable(
     noRipple: Boolean = false,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) = composed {
     singleClickEvent { manager ->
@@ -25,6 +26,7 @@ fun Modifier.singleClickable(
             onClick = { manager.event { onClick() } },
             indication = if (noRipple) null else LocalIndication.current,
             interactionSource = remember { MutableInteractionSource() },
+            enabled = enabled,
         )
     }
 }

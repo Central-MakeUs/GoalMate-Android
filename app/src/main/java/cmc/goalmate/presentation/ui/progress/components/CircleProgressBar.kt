@@ -23,6 +23,7 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.progress.inprogress.model.ProgressUiState
+import cmc.goalmate.presentation.ui.util.singleClickable
 
 private const val START_ANGLE = 270f
 const val CIRCLE_SIZE = 30
@@ -31,7 +32,7 @@ const val CIRCLE_SIZE = 30
 fun CircleProgressBar(
     date: Int,
     status: ProgressUiState,
-    onClick: (Int) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     isEnabled: Boolean = true,
@@ -40,10 +41,7 @@ fun CircleProgressBar(
         modifier = modifier
             .size(CIRCLE_SIZE.dp)
             .clip(CircleShape)
-            .clickable(
-                enabled = isEnabled,
-                onClick = { onClick(date) },
-            )
+            .singleClickable(enabled = isEnabled, onClick = onClick)
             .background(status.backgroundColor(isSelected))
             .then(status.progress(isSelected)),
         contentAlignment = Alignment.Center,

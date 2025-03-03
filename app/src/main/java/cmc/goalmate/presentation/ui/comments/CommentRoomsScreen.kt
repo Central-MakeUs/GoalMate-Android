@@ -9,9 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmc.goalmate.app.navigation.CommentDetailParams
 import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.presentation.components.EmptyGoalContents
+import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.HeaderTitle
+import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
 fun CommentRoomsScreen(
@@ -20,6 +23,14 @@ fun CommentRoomsScreen(
     viewModel: GoalCommentsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvent(viewModel.event) { event ->
+        when (event) {
+            is CommentRoomsEvent.NavigateToCommentDetail -> navigateToCommentDetail(
+                CommentDetailParams(roomId = event.roomId, goalTitle = event.goalTitle, endDate = event.endDate),
+            )
+        }
+    }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         HeaderTitle(
@@ -38,7 +49,7 @@ fun CommentRoomsScreen(
                 }
                 CommentRoomsContent(
                     goalComments = (state as GoalCommentsUiState.LoggedIn).commentRooms,
-                    navigateToCommentDetail = navigateToCommentDetail,
+                    onAction = viewModel::onAction,
                 )
             }
             GoalCommentsUiState.LoggedOut -> {
@@ -48,8 +59,10 @@ fun CommentRoomsScreen(
                 )
             }
 
-            GoalCommentsUiState.Error -> {}
             GoalCommentsUiState.Loading -> {}
+            GoalCommentsUiState.Error -> {
+                ErrorScreen(modifier = Modifier.fillMaxSize())
+            }
         }
     }
 }

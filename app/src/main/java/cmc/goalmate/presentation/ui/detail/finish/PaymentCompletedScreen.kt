@@ -32,13 +32,14 @@ import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
 fun PaymentCompletedScreen(
     goal: GoalSummary,
     navigateToAchievingGoal: () -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
     ) {
         AppBarWithBackButton(
-            onBackButtonClicked = {},
+            onBackButtonClicked = onBackPressed,
         )
 
         PaymentCompletedContent(
@@ -111,8 +112,9 @@ private fun PaymentCompletedContent(
 private fun PaymentCompletedScreenPreview() {
     GoalMateTheme {
         PaymentCompletedScreen(
-            goal = GoalSummary(0,"", "", "", ""),
+            goal = GoalSummary(0, "", "", "", ""),
             navigateToAchievingGoal = {},
+            onBackPressed = {},
             modifier = Modifier.background(Color.White),
         )
     }
