@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
     suspend fun login(idToken: String): DomainResult<Login, DataError.Network>
 
-    suspend fun isLogin(): Flow<Boolean>
+    fun isLogin(): Flow<Boolean>
 
     suspend fun saveToken(token: Token): DomainResult<Unit, DataError.Local>
 

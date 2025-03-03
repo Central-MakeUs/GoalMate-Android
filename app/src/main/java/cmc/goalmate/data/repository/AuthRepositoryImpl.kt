@@ -12,6 +12,7 @@ import cmc.goalmate.domain.model.Token
 import cmc.goalmate.domain.model.toData
 import cmc.goalmate.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -33,10 +34,12 @@ class AuthRepositoryImpl
                 },
             )
 
-        override suspend fun isLogin(): Flow<Boolean> =
-            tokenDataSource.getToken().map { token ->
-                token.accessToken.isNotBlank() && token.refreshToken.isNotBlank()
-            }
+        override fun isLogin(): Flow<Boolean> =
+            tokenDataSource.getToken()
+                .map { token ->
+                    token.accessToken.isNotBlank() && token.refreshToken.isNotBlank()
+                }
+                .distinctUntilChanged()
 
         override suspend fun saveToken(token: Token): DomainResult<Unit, DataError.Local> =
             tokenDataSource.saveToken(
@@ -82,7 +85,10 @@ class AuthRepositoryImpl
 
         override suspend fun logout(): DomainResult<Unit, DataError> =
             authDataSource.logout().fold(
-                onSuccess = { deleteToken() },
+                onSuccess = {
+                    localUserDataSource.deleteNickName()
+                    deleteToken()
+                },
                 onFailure = {
                     DomainResult.Error(it.toDataError())
                 },
