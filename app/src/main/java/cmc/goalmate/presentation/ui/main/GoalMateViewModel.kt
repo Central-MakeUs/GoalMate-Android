@@ -1,19 +1,22 @@
 package cmc.goalmate.presentation.ui.main
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.RootError
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.CommentRepository
 import cmc.goalmate.domain.repository.MenteeGoalRepository
-import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import cmc.goalmate.presentation.ui.main.GoalMateUiState.Companion.DEFAULT_NEW_COMMENT_COUNT
 import cmc.goalmate.presentation.ui.main.GoalMateUiState.Companion.DEFAULT_REMAINING_VALUE
+import cmc.goalmate.presentation.ui.util.EventBus
+import cmc.goalmate.presentation.ui.util.GoalMateEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,27 +25,61 @@ class GoalMateViewModel
     constructor(
         private val menteeGoalRepository: MenteeGoalRepository,
         private val commentRepository: CommentRepository,
-        authRepository: AuthRepository,
-    ) : LoginStateViewModel(authRepository) {
-        val state: StateFlow<GoalMateUiState> = isLoggedIn
-            .map { isLoggedIn ->
-                if (isLoggedIn) {
-                    val hasRemainingTodos = handleDomainResult(menteeGoalRepository.hasRemainingTodosToday())
-                    val newCommentCount = handleDomainResult(commentRepository.getNewCommentCount())
+        private val authRepository: AuthRepository,
+    ) : ViewModel() {
+        private val _state: MutableStateFlow<GoalMateUiState> = MutableStateFlow(GoalMateUiState.INITIAL_STATE)
+        val state: StateFlow<GoalMateUiState> = _state.asStateFlow()
 
-                    GoalMateUiState(
-                        hasRemainingTodos = hasRemainingTodos,
-                        badgeCounts = mapOf(BottomNavItem.COMMENTS to newCommentCount),
-                    )
-                } else {
-                    GoalMateUiState.INITIAL_STATE
+        init {
+            viewModelScope.launch {
+                authRepository.isLogin().collect {
+                    if (it) {
+                        val hasRemainingTodos = handleDomainResult(menteeGoalRepository.hasRemainingTodosToday())
+                        val newCommentCount = handleDomainResult(commentRepository.getNewCommentCount())
+                        _state.update {
+                            GoalMateUiState(
+                                hasRemainingTodos = hasRemainingTodos,
+                                badgeCounts = mapOf(BottomNavItem.COMMENTS to newCommentCount),
+                            )
+                        }
+                    }
                 }
             }
-            .stateIn(
-                viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = GoalMateUiState.INITIAL_STATE,
-            )
+        }
+
+        init {
+            viewModelScope.launch {
+                EventBus.subscribeEvent<GoalMateEvent> { event ->
+                    when (event) {
+                        GoalMateEvent.ReadComment -> {
+                            _state.update { current ->
+                                val updatedBadgeCounts = current.badgeCounts.toMutableMap().apply {
+                                    val updatedCount = (this[BottomNavItem.COMMENTS] ?: 0) - 1
+                                    this[BottomNavItem.COMMENTS] = maxOf(0, updatedCount)
+                                }
+                                current.copy(badgeCounts = updatedBadgeCounts)
+                            }
+                        }
+
+                        is GoalMateEvent.RemainingTodayGoalCount -> {
+                            if (event.count == 0) {
+                                _state.update { current ->
+                                    current.copy(hasRemainingTodos = false)
+                                }
+                            } else {
+                                if (!state.value.hasRemainingTodos) {
+                                    _state.update { current ->
+                                        current.copy(hasRemainingTodos = true)
+                                    }
+                                }
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
 data class GoalMateUiState(

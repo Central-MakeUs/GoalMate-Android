@@ -21,6 +21,8 @@ import cmc.goalmate.presentation.ui.progress.inprogress.model.WeekUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.convertToDomain
 import cmc.goalmate.presentation.ui.progress.inprogress.model.successData
 import cmc.goalmate.presentation.ui.progress.inprogress.model.toUi
+import cmc.goalmate.presentation.ui.util.EventBus
+import cmc.goalmate.presentation.ui.util.GoalMateEvent
 import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -156,25 +158,34 @@ class InProgressViewModel
                 sendEvent(InProgressEvent.TodoModificationNotAllowed)
                 return
             }
-            val updatedState = !currentState
-            updateTodosUi(dailyProgress = dailyProgress, todoId = todoId, updatedState = updatedState)
+            val updatedCheckState = !currentState
+            updateTodosUi(dailyProgress = dailyProgress, todoId = todoId, updatedState = updatedCheckState)
 
             val beforeGoalInfo = goalInfoState.successData()
-            calculateTotalTodoCount(beforeGoalInfo.completedTodoCount, isAdded = updatedState)
+            calculateTotalTodoCount(beforeGoalInfo.completedTodoCount, isAdded = updatedCheckState)
 
             viewModelScope.launch {
                 menteeGoalRepository.updateTodoStatus(
                     menteeGoalId = menteeGoalId,
                     todoId = todoId,
-                    updatedStatus = convertToDomain(updatedState),
-                ).onFailure {
-                    updateTodosUi(
-                        dailyProgress = dailyProgress,
-                        todoId = todoId,
-                        updatedState = currentState,
-                    )
-                    goalInfoState.value = UiState.Success(beforeGoalInfo)
-                }
+                    updatedStatus = convertToDomain(updatedCheckState),
+                )
+                    .onFailure {
+                        updateTodosUi(
+                            dailyProgress = dailyProgress,
+                            todoId = todoId,
+                            updatedState = currentState,
+                        )
+                        goalInfoState.value = UiState.Success(beforeGoalInfo)
+                    }
+                    .onSuccess {
+                        EventBus.postEvent(
+                            GoalMateEvent.TodoCheckChanged(
+                                menteeGoalId = menteeGoalId,
+                                remainingTodos = selectedDateTodoState.successData().remainingTodoCount,
+                            ),
+                        )
+                    }
             }
         }
 
@@ -204,6 +215,7 @@ class InProgressViewModel
 
         private fun updateTodoList(newDate: DailyProgressUiModel) {
             if (newDate.status == ProgressUiState.NotInProgress) return
+            if (newDate.actualDate == selectedDate.value) return
 
             selectedDate.value = newDate.actualDate
             selectedDateTodoState.value = UiState.Loading
