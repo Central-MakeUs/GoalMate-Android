@@ -44,6 +44,7 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
                         launchSingleTop = true
                     }
                 },
+                onBackPressed = { navController.popBackStack() },
             )
         }
     }

@@ -50,12 +50,16 @@ class GoalDetailViewModel
                 loadGoalDetail(goalId)
             }.stateIn(
                 viewModelScope,
-                SharingStarted.WhileSubscribed(5000L),
+                SharingStarted.Eagerly,
                 GoalDetailUiState.Loading,
             )
 
         private val _event = Channel<GoalDetailEvent>()
         val event = _event.receiveAsFlow()
+
+        init {
+            observeLoginStatus()
+        }
 
         private fun loadGoalDetail(id: Int) {
             viewModelScope.launch {

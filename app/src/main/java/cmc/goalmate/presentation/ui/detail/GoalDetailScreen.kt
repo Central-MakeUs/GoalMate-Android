@@ -1,9 +1,8 @@
 package cmc.goalmate.presentation.ui.detail
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.AppBarWithBackButton
+import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.detail.components.GoalStartButton
@@ -50,11 +50,18 @@ fun GoalDetailScreen(
     ObserveAsEvent(viewModel.event) { event ->
         when (event) {
             is GoalDetailEvent.NavigateToGoalStart -> {
-                coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                coroutineScope.launch {
+                    sheetState.hide()
+                }.invokeOnCompletion {
                     if (!sheetState.isVisible) {
                         showBottomSheet = false
                     }
-                    val params = PaymentCompletedParams(goalId = event.newGoalId, commentRoomId = 0, goalSummary = event.goalSummary)
+
+                    val params = PaymentCompletedParams(
+                        goalId = event.newGoalId,
+                        commentRoomId = 0,
+                        goalSummary = event.goalSummary,
+                    )
                     navigateToCompleted(params)
                 }
             }
@@ -86,7 +93,7 @@ fun GoalDetailScreen(
             GoalDetailUiState.Loading -> {}
 
             is GoalDetailUiState.Error -> {
-                Log.d("yenny", "error! -> ${state.error}")
+                ErrorScreen(modifier = Modifier.fillMaxSize())
             }
         }
     }
