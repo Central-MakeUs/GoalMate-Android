@@ -1,6 +1,8 @@
 package cmc.goalmate.presentation.ui.comments.detail
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.presentation.components.AppBarWithBackButton
+import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.GoalMateIconDialog
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.ui.comments.components.CommentTextField
@@ -103,16 +106,20 @@ private fun CommentsDetailContent(
     onAction: (CommentAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (state) {
-        is CommentsUiState.Success -> {
-            CommentsContent(
-                comments = state.comments,
-                onAction = onAction,
-                modifier = modifier,
-            )
-        }
+    Box(modifier = modifier) {
+        when (state) {
+            is CommentsUiState.Success -> {
+                CommentsContent(
+                    comments = state.comments,
+                    onAction = onAction,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
 
-        CommentsUiState.Error -> {}
-        CommentsUiState.Loading -> {}
+            CommentsUiState.Error -> {
+                ErrorScreen(modifier = Modifier.fillMaxSize())
+            }
+            CommentsUiState.Loading -> {}
+        }
     }
 }
