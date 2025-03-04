@@ -19,6 +19,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -51,8 +52,20 @@ class AuthViewModel
             }
         }
 
+        private fun sendEvent(event: AuthEvent) {
+            viewModelScope.launch {
+                _authEvent.send(event)
+            }
+        }
+
         private fun loginWithKakao(idToken: String?) {
             requireNotNull(idToken) { "idToken 이 null" }
+            if (tempToken != null) {
+                sendEvent(AuthEvent.GetAgreeWithTerms)
+                return
+            }
+
+            _state.update { current -> current.copy(isLoading = true) }
             viewModelScope.launch {
                 when (val result = authRepository.login(idToken)) {
                     is DomainResult.Error -> {
@@ -63,12 +76,14 @@ class AuthViewModel
                         if (result.data.isRegistered) {
                             authRepository.saveToken(result.data.token)
                                 .onSuccess {
+                                    _state.update { current -> current.copy(isLoading = false) }
                                     _authEvent.send(AuthEvent.NavigateToHome)
                                 }
-                        } else {
-                            tempToken = result.data.token
-                            _authEvent.send(AuthEvent.GetAgreeWithTerms)
+                            return@launch
                         }
+                        tempToken = result.data.token
+                        _state.update { current -> current.copy(isLoading = false) }
+                        sendEvent(AuthEvent.GetAgreeWithTerms)
                     }
                 }
             }

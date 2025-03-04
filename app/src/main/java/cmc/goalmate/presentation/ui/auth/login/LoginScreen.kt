@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -33,7 +34,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
@@ -61,6 +65,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -68,8 +73,12 @@ fun LoginScreen(
 
     ObserveAsEvent(viewModel.authEvent) { event ->
         when (event) {
-            AuthEvent.NavigateToHome -> navigateToHome()
-            AuthEvent.NavigateToNickNameSetting -> navigateToNickNameSetting()
+            AuthEvent.NavigateToHome -> {
+                navigateToHome()
+            }
+            AuthEvent.NavigateToNickNameSetting -> {
+                navigateToNickNameSetting()
+            }
             AuthEvent.GetAgreeWithTerms -> {
                 showBottomSheet = true
             }
@@ -78,7 +87,10 @@ fun LoginScreen(
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        AppBarWithBackButton(onBackButtonClicked = navigateBack, iconRes = R.drawable.icon_cancel)
+        AppBarWithBackButton(
+            onBackButtonClicked = navigateBack,
+            iconRes = R.drawable.icon_cancel,
+        )
         LoginContent(
             onLoginButtonClicked = {
                 coroutineScope.launch {
@@ -88,6 +100,10 @@ fun LoginScreen(
             },
             modifier = modifier.fillMaxWidth(),
         )
+    }
+
+    if (state.isLoading) {
+        LoadingDialog()
     }
 
     if (showBottomSheet) {
@@ -166,6 +182,19 @@ private fun LoginTermBottomSheet(
             navigateToWebScreen = navigateToWebScreen,
             onCompletedButtonClicked = onCompletedButtonClicked,
         )
+    }
+}
+
+@Composable
+fun LoadingDialog() {
+    Dialog(
+        onDismissRequest = {},
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = false,
+        ),
+    ) {
+        CircularProgressIndicator()
     }
 }
 

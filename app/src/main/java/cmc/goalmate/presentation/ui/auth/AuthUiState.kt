@@ -3,6 +3,7 @@ package cmc.goalmate.presentation.ui.auth
 import cmc.goalmate.presentation.components.InputTextState
 
 data class AuthUiState(
+    val isLoading: Boolean,
     val isLoginCompleted: Boolean,
     val nickNameFormatValidationState: InputTextState,
     val duplicationCheckState: InputTextState,
@@ -24,6 +25,7 @@ data class AuthUiState(
     companion object {
         fun initialLoginUiState(): AuthUiState =
             AuthUiState(
+                isLoading = false,
                 isLoginCompleted = false,
                 nickNameFormatValidationState = InputTextState.None,
                 duplicationCheckState = InputTextState.None,
