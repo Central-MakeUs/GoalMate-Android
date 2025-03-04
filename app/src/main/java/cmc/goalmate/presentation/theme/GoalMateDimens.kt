@@ -33,4 +33,8 @@ object GoalMateDimens {
 
     val CompletedProgressBarHeight = 14.dp
     val CommentSubmitButtonSize = 44.dp
+
+    val PopupMenuWidth = 238.dp
+    val PopupMenuItemHeight = 40.dp
+    val PopupMenuItemPadding = 13.dp
 }
