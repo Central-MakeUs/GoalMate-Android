@@ -1,4 +1,4 @@
-package cmc.goalmate.presentation.ui.comments.components
+package cmc.goalmate.presentation.ui.comments.detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -99,6 +99,7 @@ private fun DailyCommentItem(
     modifier: Modifier = Modifier,
 ) {
     var isDropDownMenuExpanded by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -120,7 +121,10 @@ private fun DailyCommentItem(
                         color = sender.backgroundColor(),
                         shape = RoundedCornerShape(24.dp),
                     )
-                    .padding(GoalMateDimens.HorizontalPadding)
+                    .padding(
+                        horizontal = GoalMateDimens.HorizontalPadding,
+                        vertical = 10.dp,
+                    )
                     .pointerInput(Unit) {
                         detectTapGestures(
                             onLongPress = {

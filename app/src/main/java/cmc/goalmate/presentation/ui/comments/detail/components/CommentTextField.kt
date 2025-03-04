@@ -1,4 +1,4 @@
-package cmc.goalmate.presentation.ui.comments.components
+package cmc.goalmate.presentation.ui.comments.detail.components
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background

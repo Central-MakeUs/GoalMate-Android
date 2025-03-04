@@ -63,14 +63,14 @@ private fun RoomItem(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = modifier,
     ) {
         GoalMateImage(
             image = goal.imageUrl,
             shape = CircleShape,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.size(70.dp),
+            modifier = Modifier.size(64.dp),
         )
 
         Column(

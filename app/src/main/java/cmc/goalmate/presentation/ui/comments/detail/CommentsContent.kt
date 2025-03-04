@@ -26,7 +26,7 @@ import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
-import cmc.goalmate.presentation.ui.comments.components.DailyComment
+import cmc.goalmate.presentation.ui.comments.detail.components.DailyComment
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentUiModel
 import java.time.LocalDate
 

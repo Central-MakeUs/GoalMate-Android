@@ -22,7 +22,7 @@ import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.GoalMateIconDialog
 import cmc.goalmate.presentation.theme.GoalMateDimens
-import cmc.goalmate.presentation.ui.comments.components.CommentTextField
+import cmc.goalmate.presentation.ui.comments.detail.components.CommentTextField
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentsUiState
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
