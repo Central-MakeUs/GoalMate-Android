@@ -29,7 +29,6 @@ import cmc.goalmate.R
 import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.GoalMateTextField
-import cmc.goalmate.presentation.components.InputTextState
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
@@ -52,7 +51,10 @@ fun NickNameSettingScreen(
 
     ObserveAsEvent(viewModel.authEvent) { event ->
         when (event) {
-            AuthEvent.NavigateToCompleted -> navigateNextPage()
+            AuthEvent.NavigateToCompleted -> {
+                navigateNextPage()
+            }
+
             else -> Unit
         }
     }
@@ -83,12 +85,6 @@ fun NickNameSettingContent(
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
         keyboardController?.show()
-    }
-
-    if (state.validationState == InputTextState.Success) {
-        LaunchedEffect(Unit) {
-            focusManager.clearFocus()
-        }
     }
 
     Column(
@@ -124,7 +120,10 @@ fun NickNameSettingContent(
 
         GoalMateButton(
             content = stringResource(R.string.login_nick_name_btn),
-            onClick = onCompletedButtonClicked,
+            onClick = {
+                focusManager.clearFocus()
+                onCompletedButtonClicked()
+            },
             buttonSize = ButtonSize.LARGE,
             modifier = Modifier.fillMaxWidth(),
             enabled = state.isNextStepEnabled,
@@ -145,7 +144,8 @@ private fun NickNameSettingScreenPreview() {
             onCompletedButtonClicked = { },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = GoalMateDimens.HorizontalPadding).navigationBarsPadding(),
+                .padding(horizontal = GoalMateDimens.HorizontalPadding)
+                .navigationBarsPadding(),
         )
     }
 }
