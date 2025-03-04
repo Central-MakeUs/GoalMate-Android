@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -14,7 +13,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.components.GoalMateImage
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
+
+private const val MINIMUM_IMAGE_URLS_SIZE = 1
 
 @Composable
 fun ImageSlider(
@@ -43,16 +43,18 @@ fun ImageSlider(
         ) { page ->
             GoalMateImage(
                 image = imageUrls[page],
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
-        Indicator(
-            pagerState,
-            modifier = Modifier
-                .padding(bottom = 15.dp)
-                .align(Alignment.BottomCenter),
-        )
+        if (imageUrls.size > MINIMUM_IMAGE_URLS_SIZE) {
+            Indicator(
+                pagerState,
+                modifier = Modifier
+                    .padding(bottom = 15.dp)
+                    .align(Alignment.BottomCenter),
+            )
+        }
     }
 }
 
@@ -98,7 +100,7 @@ private fun indicatorColor(isSelected: Boolean): Color =
 private fun ImageSliderPreview() {
     GoalMateTheme {
         ImageSlider(
-            imageUrls = listOf("이미지1","이미지1"),
+            imageUrls = listOf("이미지1", "이미지1"),
             modifier = Modifier,
         )
     }
