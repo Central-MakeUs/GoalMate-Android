@@ -106,7 +106,10 @@ private fun CommentsDetailContent(
     onAction: (CommentAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
         when (state) {
             is CommentsUiState.Success -> {
                 CommentsContent(

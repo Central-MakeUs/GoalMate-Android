@@ -70,7 +70,7 @@ fun GoalMateTextField(
         textStyle = MaterialTheme.goalMateTypography.body.copy(color = inputTextState.getTextColor()),
         modifier = modifier,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
+            keyboardType = KeyboardType.Text,
             imeAction = ImeAction.None,
         ),
         decorationBox = { innerTextField ->
