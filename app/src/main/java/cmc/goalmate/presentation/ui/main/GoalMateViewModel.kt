@@ -30,40 +30,27 @@ class GoalMateViewModel
         private val _state: MutableStateFlow<GoalMateUiState> = MutableStateFlow(GoalMateUiState.INITIAL_STATE)
         val state: StateFlow<GoalMateUiState> = _state.asStateFlow()
 
+        private var isFirstLoad: Boolean = true
+
         init {
             observeLoginStatus()
+            observeGoalMateEvent()
+        }
+
+        private fun observeGoalMateEvent() {
             viewModelScope.launch {
                 EventBus.subscribeEvent<GoalMateEvent> { event ->
                     when (event) {
                         GoalMateEvent.ReadComment -> {
-                            _state.update { current ->
-                                val updatedBadgeCounts = current.badgeCounts.toMutableMap().apply {
-                                    val updatedCount = (this[BottomNavItem.COMMENTS] ?: 0) - 1
-                                    this[BottomNavItem.COMMENTS] = maxOf(0, updatedCount)
-                                }
-                                current.copy(badgeCounts = updatedBadgeCounts)
-                            }
+                            decrementCommentBadgeCount()
                         }
 
                         is GoalMateEvent.RemainingTodayGoalCount -> {
-                            if (event.count == 0) {
-                                _state.update { current ->
-                                    current.copy(hasRemainingTodos = false)
-                                }
-                            } else {
-                                if (!state.value.hasRemainingTodos) {
-                                    _state.update { current ->
-                                        current.copy(hasRemainingTodos = true)
-                                    }
-                                }
-                            }
+                            updateRemainingTodoStatus(event.count)
                         }
 
                         GoalMateEvent.StartNewGoal -> {
-                            viewModelScope.launch {
-                                val updatedHasRemainingTodos = handleDomainResult(menteeGoalRepository.hasRemainingTodosToday())
-                                _state.update { state.value.copy(hasRemainingTodos = updatedHasRemainingTodos) }
-                            }
+                            fetchRemainingTodos()
                         }
 
                         else -> {}
@@ -73,32 +60,85 @@ class GoalMateViewModel
         }
 
         override fun onLoginStateChanged(isLoggedIn: Boolean) {
-            if (!isLoggedIn) return
+            if (isLoggedIn) {
+                fetchGoalMateState()
+            } else {
+                isFirstLoad = true
+                _state.update { GoalMateUiState.INITIAL_STATE }
+            }
+        }
+
+        private fun fetchGoalMateState() {
+            fetchRemainingTodos()
+            fetchNewComments()
+        }
+
+        private fun decrementCommentBadgeCount() {
+            _state.update { current ->
+                val updatedBadgeCounts = current.badgeCounts.toMutableMap().apply {
+                    val updatedCount = (this[BottomNavItem.COMMENTS] ?: 0) - 1
+                    this[BottomNavItem.COMMENTS] = maxOf(0, updatedCount)
+                }
+                current.copy(badgeCounts = updatedBadgeCounts)
+            }
+        }
+
+        private fun updateRemainingTodoStatus(updatedCount: Int) {
+            if (updatedCount == 0) {
+                _state.update { current ->
+                    current.copy(hasRemainingTodos = false)
+                }
+                return
+            }
+            if (!state.value.hasRemainingTodos) {
+                _state.update { current ->
+                    current.copy(hasRemainingTodos = true)
+                }
+            }
+        }
+
+        private fun fetchRemainingTodos() {
             viewModelScope.launch {
                 val hasRemainingTodos = handleDomainResult(menteeGoalRepository.hasRemainingTodosToday())
-                val newCommentCount = handleDomainResult(commentRepository.getNewCommentCount())
-                val updatedState = GoalMateUiState(
-                    hasRemainingTodos = hasRemainingTodos,
-                    badgeCounts = mapOf(BottomNavItem.COMMENTS to newCommentCount),
-                )
-                _state.update { updatedState }
+
+                _state.update { current ->
+                    current.copy(hasRemainingTodos = hasRemainingTodos)
+                }
+            }
+        }
+
+        private fun fetchNewComments() {
+            viewModelScope.launch {
+                val updatedCommentCount = handleDomainResult(commentRepository.getNewCommentCount())
+
+                _state.update { current ->
+                    val updatedBadgeCounts = current.badgeCounts.toMutableMap().apply {
+                        this[BottomNavItem.COMMENTS] = updatedCommentCount
+                    }
+                    current.copy(badgeCounts = updatedBadgeCounts)
+                }
+            }
+        }
+
+        fun updateComments() {
+            if (!isLoggedIn.value || isFirstLoad) {
+                isFirstLoad = false
+                return
+            }
+
+            viewModelScope.launch {
+                val updatedCommentCount = handleDomainResult(commentRepository.getNewCommentCount())
+                if (updatedCommentCount == state.value.currentCommentBadgeCount) return@launch
+
+                _state.update { current ->
+                    val updatedBadgeCounts = current.badgeCounts.toMutableMap().apply {
+                        this[BottomNavItem.COMMENTS] = updatedCommentCount
+                    }
+                    current.copy(badgeCounts = updatedBadgeCounts)
+                }
             }
         }
     }
-
-data class GoalMateUiState(
-    val hasRemainingTodos: Boolean,
-    val badgeCounts: Map<BottomNavItem, Int>,
-) {
-    companion object {
-        const val DEFAULT_REMAINING_VALUE = false
-        const val DEFAULT_NEW_COMMENT_COUNT = 0
-        val INITIAL_STATE = GoalMateUiState(
-            hasRemainingTodos = DEFAULT_REMAINING_VALUE,
-            badgeCounts = BottomNavItem.entries.associateWith { DEFAULT_NEW_COMMENT_COUNT },
-        )
-    }
-}
 
 private inline fun <reified T> handleDomainResult(result: DomainResult<T, RootError>): T =
     when (result) {

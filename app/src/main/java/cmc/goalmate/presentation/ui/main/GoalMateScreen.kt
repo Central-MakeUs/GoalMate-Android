@@ -34,14 +34,14 @@ fun GoalMateScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val isBottomBarVisible by remember {
         derivedStateOf {
-            navBackStackEntry?.destination?.route in bottomNavItemScreens
+            navBackStackEntry?.destination?.route?.let { it in bottomNavItemScreens } ?: true
         }
     }
-
     var showBottomBar by remember { mutableStateOf(true) }
 
     LaunchedEffect(isBottomBarVisible) {
         if (isBottomBarVisible) {
+            viewModel.updateComments()
             delay(150L)
             showBottomBar = true
         } else {
