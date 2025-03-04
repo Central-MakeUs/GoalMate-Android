@@ -119,7 +119,7 @@ private fun DailyCommentItem(
                 modifier = Modifier
                     .background(
                         color = sender.backgroundColor(),
-                        shape = RoundedCornerShape(24.dp),
+                        shape = RoundedCornerShape(20.dp),
                     )
                     .padding(
                         horizontal = GoalMateDimens.HorizontalPadding,
