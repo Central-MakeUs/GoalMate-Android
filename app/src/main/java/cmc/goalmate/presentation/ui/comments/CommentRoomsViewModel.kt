@@ -59,18 +59,22 @@ class GoalCommentsViewModel
 
         private fun loadComments() {
             viewModelScope.launch {
-                _state.update {
-                    when (val result = commentRepository.getCommentRooms()) {
-                        is DomainResult.Success -> GoalCommentsUiState.LoggedIn(result.data.toUi())
-                        is DomainResult.Error -> GoalCommentsUiState.Error
-                    }
+                val updatedComments = when (val result = commentRepository.getCommentRooms()) {
+                    is DomainResult.Success -> GoalCommentsUiState.LoggedIn(result.data.toUi())
+                    is DomainResult.Error -> GoalCommentsUiState.Error
                 }
+                _state.update { updatedComments }
             }
         }
 
         private fun observeGoalMateEvent() {
             viewModelScope.launch {
                 EventBus.subscribeEvent<GoalMateEvent.StartNewGoal> {
+                    loadComments()
+                }
+            }
+            viewModelScope.launch {
+                EventBus.subscribeEvent<GoalMateEvent.HasNewComment> {
                     loadComments()
                 }
             }

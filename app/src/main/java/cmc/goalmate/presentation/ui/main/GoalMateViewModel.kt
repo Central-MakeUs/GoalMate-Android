@@ -37,6 +37,16 @@ class GoalMateViewModel
             observeGoalMateEvent()
         }
 
+        override fun onLoginStateChanged(isLoggedIn: Boolean) {
+            if (isLoggedIn) {
+                fetchRemainingTodos()
+                fetchNewComments()
+            } else {
+                isFirstLoad = true
+                _state.update { GoalMateUiState.INITIAL_STATE }
+            }
+        }
+
         private fun observeGoalMateEvent() {
             viewModelScope.launch {
                 EventBus.subscribeEvent<GoalMateEvent> { event ->
@@ -57,20 +67,6 @@ class GoalMateViewModel
                     }
                 }
             }
-        }
-
-        override fun onLoginStateChanged(isLoggedIn: Boolean) {
-            if (isLoggedIn) {
-                fetchGoalMateState()
-            } else {
-                isFirstLoad = true
-                _state.update { GoalMateUiState.INITIAL_STATE }
-            }
-        }
-
-        private fun fetchGoalMateState() {
-            fetchRemainingTodos()
-            fetchNewComments()
         }
 
         private fun decrementCommentBadgeCount() {
@@ -130,6 +126,7 @@ class GoalMateViewModel
                 val updatedCommentCount = handleDomainResult(commentRepository.getNewCommentCount())
                 if (updatedCommentCount == state.value.currentCommentBadgeCount) return@launch
 
+                EventBus.postEvent(GoalMateEvent.HasNewComment)
                 _state.update { current ->
                     val updatedBadgeCounts = current.badgeCounts.toMutableMap().apply {
                         this[BottomNavItem.COMMENTS] = updatedCommentCount

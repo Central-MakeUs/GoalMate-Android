@@ -32,4 +32,6 @@ sealed class GoalMateEvent() {
     data class RemainingTodayGoalCount(val count: Int) : GoalMateEvent()
 
     data object StartNewGoal : GoalMateEvent()
+
+    data object HasNewComment : GoalMateEvent()
 }
