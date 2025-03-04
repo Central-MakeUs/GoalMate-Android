@@ -111,8 +111,29 @@ class MyGoalsViewModel
                 triggerReload()
                 return
             }
+            val previousRemainGoals = goalToUpdate.remainGoals
+
+            val newCompletedTodoCount = when {
+                updatedCount < previousRemainGoals -> {
+                    goalToUpdate.totalCompletedTodoCount + (previousRemainGoals - updatedCount)
+                }
+                updatedCount > previousRemainGoals -> {
+                    goalToUpdate.totalCompletedTodoCount - (updatedCount - previousRemainGoals)
+                }
+                else -> {
+                    goalToUpdate.totalCompletedTodoCount
+                }
+            }
+
             val newGoals = currentMyGoals.map { myGoal ->
-                if (myGoal.menteeGoalId == menteeGoalId) myGoal.copy(remainGoals = updatedCount) else myGoal
+                if (myGoal.menteeGoalId == menteeGoalId) {
+                    myGoal.copy(
+                        remainGoals = updatedCount,
+                        totalCompletedTodoCount = newCompletedTodoCount,
+                    )
+                } else {
+                    myGoal
+                }
             }
             postEvent(updatedMyGoals = newGoals)
             _state.update { MyGoalsUiState.LoggedIn(myGoals = newGoals) }
