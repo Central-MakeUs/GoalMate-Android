@@ -125,7 +125,6 @@ private fun TermCheck(
                     termOption = termOption.termOption,
                     isChecked = termOption.isChecked,
                     onCheckedChange = { onCheckedChange(index) },
-                    modifier = Modifier.weight(1f),
                 )
                 if (termOption.termOption.termUrl != null) {
                     Icon(
@@ -160,7 +159,7 @@ private fun TitleCheckBox(
         GoalMateCheckBox(
             isChecked = isChecked,
             modifier = Modifier
-                .size(GoalMateDimens.TermCheckBoxSize)
+                .size(28.dp)
                 .padding(4.dp),
         )
         Text(
@@ -182,18 +181,17 @@ private fun LabeledCheckbox(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(GoalMateDimens.TermCheckBoxTextSpacing),
-        modifier = modifier.noRippleClickable { onCheckedChange() },
+        modifier = modifier.clickable { onCheckedChange() },
     ) {
         Box(
-            modifier = Modifier
-                .size(GoalMateDimens.TermCheckBoxSize)
-                .padding(2.dp),
+            modifier = Modifier.size(GoalMateDimens.TermCheckBoxSize),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_checkbox_check),
                 contentDescription = null,
                 tint = if (isChecked) MaterialTheme.goalMateColors.onBackground else MaterialTheme.goalMateColors.disabled,
+                modifier = Modifier.size(24.dp),
             )
         }
         Text(
