@@ -138,7 +138,7 @@ class MyPageViewModel
 
         private fun deleteAccount() {
             viewModelScope.launch {
-                authRepository.deleteToken()
+                authRepository.deleteAccount()
                     .onSuccess {
                         sendEvent(MyPageEvent.SuccessDeleteAccount)
                     }

@@ -41,8 +41,6 @@ class AuthViewModel
         var nickName by mutableStateOf("")
             private set
 
-        private var tempToken: Token? = null
-
         fun onAction(action: AuthAction) {
             when (action) {
                 is AuthAction.KakaoLogin -> loginWithKakao(action.idToken)
@@ -61,10 +59,6 @@ class AuthViewModel
 
         private fun loginWithKakao(idToken: String?) {
             requireNotNull(idToken) { "idToken 이 null" }
-            if (tempToken != null) {
-                sendEvent(AuthEvent.GetAgreeWithTerms)
-                return
-            }
 
             _state.update { current -> current.copy(isLoading = true) }
             viewModelScope.launch {
@@ -94,8 +88,6 @@ class AuthViewModel
         }
 
         private suspend fun handleSignUp(token: Token) {
-            tempToken = token
-
             authRepository.saveToken(token)
                 .onSuccess {
                     userRepository.getUserInfo()
@@ -113,7 +105,6 @@ class AuthViewModel
 
         private fun agreeTermsOfService() {
             viewModelScope.launch {
-                requireNotNull(tempToken) { "저장된 토큰이 없음" }
                 _authEvent.send(AuthEvent.NavigateToNickNameSetting)
             }
         }

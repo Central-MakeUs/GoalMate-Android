@@ -51,6 +51,7 @@ class UserRepositoryImpl
             remoteUserDataSource.getUserInfo().fold(
                 onSuccess = { userInfoDto ->
                     val userInfo = userInfoDto.toDomain()
+                    localUserDataSource.saveNickName(userInfo.nickName)
                     DomainResult.Success(userInfo)
                 },
                 onFailure = { error ->

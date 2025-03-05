@@ -86,7 +86,6 @@ class AuthRepositoryImpl
         override suspend fun logout(): DomainResult<Unit, DataError> =
             authDataSource.logout().fold(
                 onSuccess = {
-                    localUserDataSource.deleteNickName()
                     deleteToken()
                 },
                 onFailure = {
@@ -97,7 +96,6 @@ class AuthRepositoryImpl
         override suspend fun deleteAccount(): DomainResult<Unit, DataError> =
             authDataSource.deleteAccount().fold(
                 onSuccess = {
-                    localUserDataSource.deleteNickName()
                     deleteToken()
                 },
                 onFailure = {
