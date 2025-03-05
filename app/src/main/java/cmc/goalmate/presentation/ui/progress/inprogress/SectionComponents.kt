@@ -49,6 +49,9 @@ import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressDetai
 import cmc.goalmate.presentation.ui.progress.inprogress.model.GoalOverViewUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.UiState
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+private val inProgressFormatter = DateTimeFormatter.ofPattern("M월 d일")
 
 @Composable
 fun CalendarSection(
@@ -85,6 +88,7 @@ fun DailyTodoSection(
         is UiState.Success -> {
             val dailyProgress = dailyProgressState.data
             Column(modifier = modifier) {
+                val titleDateText = if (dailyProgress.canModifyTodo()) "오늘" else dailyProgress.selectedDate.format(inProgressFormatter)
                 GoalTasks(
                     dailyProgress = dailyProgress,
                     onAction = onAction,
@@ -95,7 +99,7 @@ fun DailyTodoSection(
                 Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
 
                 ProgressLayout(
-                    title = "오늘 진척률",
+                    title = "$titleDateText 진척률",
                     progressContent = {
                         TodayProgress(
                             actualPercent = dailyProgress.actualProgress,
@@ -114,6 +118,7 @@ private fun GoalTasks(
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val titleDateText = if (dailyProgress.canModifyTodo()) "오늘" else dailyProgress.selectedDate.format(inProgressFormatter)
     Column(
         modifier = modifier.padding(
             vertical = GoalMateDimens.ItemVerticalPaddingLarge,
@@ -124,7 +129,7 @@ private fun GoalTasks(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Subtitle(title = "오늘 해야 할 일")
+            Subtitle(title = "$titleDateText 해야 할 일")
             if (dailyProgress.showTimer) {
                 GoalMateTimer(
                     timerStatus = dailyProgress.timerStatus,

@@ -40,7 +40,7 @@ fun InProgressScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var isTodoModificationDialogVisible by rememberSaveable { mutableStateOf(false) }
-//    HandleScreenCapture()
+    HandleScreenCapture()
 
     ObserveAsEvent(viewModel.event) { event ->
         when (event) {
