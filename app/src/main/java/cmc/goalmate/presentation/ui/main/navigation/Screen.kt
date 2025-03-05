@@ -15,7 +15,7 @@ sealed interface Screen {
         data object NickNameSetting : Screen
 
         @Serializable
-        data object Welcome : Screen
+        data class Welcome(val nickName: String) : Screen
     }
 
     @Serializable

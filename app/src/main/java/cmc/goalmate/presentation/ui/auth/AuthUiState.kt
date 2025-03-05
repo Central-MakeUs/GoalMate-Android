@@ -8,18 +8,26 @@ data class AuthUiState(
     val nickNameFormatValidationState: InputTextState,
     val duplicationCheckState: InputTextState,
     val helperText: String,
+    val defaultNickName: String,
 ) {
     val isDuplicationCheckEnabled: Boolean
         get() = nickNameFormatValidationState == InputTextState.Success && duplicationCheckState != InputTextState.Success
 
-    val isNextStepEnabled: Boolean
-        get() = (nickNameFormatValidationState == InputTextState.Success) && (duplicationCheckState == InputTextState.Success)
-
     val validationState: InputTextState
         get() = when {
-            nickNameFormatValidationState == InputTextState.Success && duplicationCheckState == InputTextState.Success -> InputTextState.Success
-            nickNameFormatValidationState == InputTextState.Error || duplicationCheckState == InputTextState.Error -> InputTextState.Error
+            nickNameFormatValidationState == InputTextState.Success &&
+                duplicationCheckState == InputTextState.Success -> InputTextState.Success
+            nickNameFormatValidationState == InputTextState.Error ||
+                duplicationCheckState == InputTextState.Error -> InputTextState.Error
             else -> InputTextState.None
+        }
+
+    fun isNextStepButtonEnabled(nickNameText: String): Boolean =
+        when {
+            nickNameText.isEmpty() -> true
+            nickNameFormatValidationState != InputTextState.Success -> false
+            duplicationCheckState != InputTextState.Success -> false
+            else -> true
         }
 
     companion object {
@@ -27,9 +35,12 @@ data class AuthUiState(
             AuthUiState(
                 isLoading = false,
                 isLoginCompleted = false,
-                nickNameFormatValidationState = InputTextState.None,
+                nickNameFormatValidationState = InputTextState.Empty,
                 duplicationCheckState = InputTextState.None,
-                helperText = "",
+                helperText = DEFAULT_HELPER_TEXT,
+                defaultNickName = "",
             )
+
+        const val DEFAULT_HELPER_TEXT = "2~5 글자 닉네임을 입력해주세요"
     }
 }

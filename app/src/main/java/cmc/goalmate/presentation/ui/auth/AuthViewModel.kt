@@ -13,6 +13,7 @@ import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.UserRepository
 import cmc.goalmate.presentation.components.InputTextState
+import cmc.goalmate.presentation.ui.auth.AuthUiState.Companion.DEFAULT_HELPER_TEXT
 import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -46,8 +47,8 @@ class AuthViewModel
             when (action) {
                 is AuthAction.KakaoLogin -> loginWithKakao(action.idToken)
                 AuthAction.AgreeTermsOfService -> agreeTermsOfService()
-                AuthAction.CheckDuplication -> checkNickNameDuplication()
                 is AuthAction.SetNickName -> updateNickName(action.nickName)
+                AuthAction.CheckDuplication -> checkNickNameDuplication()
                 AuthAction.CompleteNicknameSetup -> completeNickNameSetting()
             }
         }
@@ -73,20 +74,41 @@ class AuthViewModel
                         Log.d("yenny", "error : $errorMessage")
                     }
                     is DomainResult.Success -> {
+                        val token = result.data.token
                         if (result.data.isRegistered) {
-                            authRepository.saveToken(result.data.token)
-                                .onSuccess {
-                                    _state.update { current -> current.copy(isLoading = false) }
-                                    _authEvent.send(AuthEvent.NavigateToHome)
-                                }
+                            handleLogin(token)
                             return@launch
                         }
-                        tempToken = result.data.token
-                        _state.update { current -> current.copy(isLoading = false) }
-                        sendEvent(AuthEvent.GetAgreeWithTerms)
+                        handleSignUp(token)
                     }
                 }
             }
+        }
+
+        private suspend fun handleLogin(token: Token) {
+            authRepository.saveToken(token)
+                .onSuccess {
+                    _state.update { current -> current.copy(isLoading = false) }
+                    _authEvent.send(AuthEvent.NavigateToHome)
+                }
+        }
+
+        private suspend fun handleSignUp(token: Token) {
+            tempToken = token
+
+            authRepository.saveToken(token)
+                .onSuccess {
+                    userRepository.getUserInfo()
+                        .onSuccess { userInfo ->
+                            _state.update { current ->
+                                current.copy(
+                                    isLoading = false,
+                                    defaultNickName = userInfo.nickName,
+                                )
+                            }
+                            sendEvent(AuthEvent.GetAgreeWithTerms)
+                        }
+                }
         }
 
         private fun agreeTermsOfService() {
@@ -97,18 +119,19 @@ class AuthViewModel
         }
 
         private fun updateNickName(newNickName: String) {
-            nickName = newNickName
+            nickName = newNickName.trim()
 
-            if (nickName.isBlank()) {
-                _state.value = _state.value.copy(
-                    nickNameFormatValidationState = InputTextState.None,
-                    duplicationCheckState = InputTextState.None,
-                    helperText = "",
-                )
-                return
+            if (nickName.isEmpty()) {
+                _state.update { current ->
+                    current.copy(
+                        nickNameFormatValidationState = InputTextState.None,
+                        duplicationCheckState = InputTextState.None,
+                        helperText = DEFAULT_HELPER_TEXT,
+                    )
+                }
             }
 
-            userRepository.checkNicknameValidity(nickName = newNickName)
+            userRepository.checkNicknameValidity(nickName = nickName)
                 .onSuccess {
                     _state.value = _state.value.copy(
                         nickNameFormatValidationState = InputTextState.Success,
@@ -145,16 +168,17 @@ class AuthViewModel
         }
 
         private fun completeNickNameSetting() {
+            if (nickName.isEmpty()) {
+                sendEvent(AuthEvent.NavigateToCompleted(confirmedNickName = state.value.defaultNickName))
+                return
+            }
             viewModelScope.launch {
-                authRepository.saveToken(requireNotNull(tempToken) { "저장된 토큰이 없음" })
+                userRepository.updateNickName(nickName)
                     .onSuccess {
-                        userRepository.updateNickName(nickName)
-                            .onSuccess {
-                                _authEvent.send(AuthEvent.NavigateToCompleted)
-                            }
-                            .onFailure {
-                                Log.d("yenny", "completeNickNameSetting error : ${it.asUiText()}")
-                            }
+                        sendEvent(AuthEvent.NavigateToCompleted(confirmedNickName = nickName))
+                    }
+                    .onFailure {
+                        Log.d("yenny", "completeNickNameSetting error : ${it.asUiText()}")
                     }
             }
         }

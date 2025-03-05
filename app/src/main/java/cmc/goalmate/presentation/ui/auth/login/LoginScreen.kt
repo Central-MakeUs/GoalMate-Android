@@ -52,6 +52,7 @@ import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.firstStep
 import cmc.goalmate.presentation.ui.common.WebScreenUrl
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
+import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,18 +86,20 @@ fun LoginScreen(
         }
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.background(MaterialTheme.goalMateColors.background),
+    ) {
         AppBarWithBackButton(
             onBackButtonClicked = navigateBack,
             iconRes = R.drawable.icon_cancel,
         )
         LoginContent(
             onLoginButtonClicked = {
-//                coroutineScope.launch {
-//                    val token = UserApiClient.loginWithKakao(context)
-//                    viewModel.onAction(AuthAction.KakaoLogin(token.idToken))
-//                }
-                showBottomSheet = true
+                coroutineScope.launch {
+                    val token = UserApiClient.loginWithKakao(context)
+                    viewModel.onAction(AuthAction.KakaoLogin(token.idToken))
+                }
             },
             modifier = modifier.fillMaxWidth(),
         )

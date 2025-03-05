@@ -38,6 +38,13 @@ import cmc.goalmate.presentation.theme.color.Grey400
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
+enum class InputTextState {
+    None,
+    Empty,
+    Error,
+    Success,
+}
+
 @Composable
 fun GoalMateTextField(
     value: String,
@@ -47,6 +54,7 @@ fun GoalMateTextField(
     modifier: Modifier = Modifier,
     inputTextState: InputTextState = InputTextState.None,
     helperText: String = "",
+    defaultValue: String = "",
 ) {
     var textFieldValue by remember {
         mutableStateOf(
@@ -60,7 +68,8 @@ fun GoalMateTextField(
     BasicTextField(
         value = textFieldValue,
         onValueChange = { newValue ->
-            if (textFieldValue.text != newValue.text) {
+            val filteredText = newValue.text.replace(" ", "")
+            if (textFieldValue.text != filteredText) {
                 textFieldValue = newValue
                 onValueChange(newValue.text)
             }
@@ -77,8 +86,6 @@ fun GoalMateTextField(
             Column(
                 modifier = Modifier,
             ) {
-                val borderColor = inputTextState.getBorderColor()
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -87,7 +94,7 @@ fun GoalMateTextField(
                         .background(color = Color.White, shape = RoundedCornerShape(30.dp))
                         .border(
                             width = 2.dp,
-                            color = borderColor,
+                            color = inputTextState.getBorderColor(),
                             shape = RoundedCornerShape(30.dp),
                         )
                         .padding(
@@ -100,7 +107,7 @@ fun GoalMateTextField(
                     ) {
                         if (value.isEmpty()) {
                             Text(
-                                text = stringResource(R.string.login_nick_name),
+                                text = defaultValue,
                                 color = Grey400,
                                 style = MaterialTheme.goalMateTypography.body,
                             )
@@ -116,7 +123,8 @@ fun GoalMateTextField(
                 Text(
                     text = helperText,
                     style = MaterialTheme.goalMateTypography.bodySmall,
-                    color = borderColor,
+                    color = inputTextState.getHelperTextColor(),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
         },
@@ -128,7 +136,15 @@ fun InputTextState.getTextColor(): Color =
     when (this) {
         InputTextState.Error -> MaterialTheme.goalMateColors.onError
         InputTextState.Success -> MaterialTheme.goalMateColors.success
-        InputTextState.None -> MaterialTheme.goalMateColors.onBackground
+        else -> MaterialTheme.goalMateColors.onBackground
+    }
+
+@Composable
+fun InputTextState.getHelperTextColor(): Color =
+    when (this) {
+        InputTextState.Error -> MaterialTheme.goalMateColors.onError
+        InputTextState.Success -> MaterialTheme.goalMateColors.success
+        else -> MaterialTheme.goalMateColors.onSurfaceVariant
     }
 
 @Composable
@@ -136,7 +152,7 @@ fun InputTextState.getBorderColor(): Color =
     when (this) {
         InputTextState.Error -> MaterialTheme.goalMateColors.onError
         InputTextState.Success -> MaterialTheme.goalMateColors.success
-        InputTextState.None -> MaterialTheme.goalMateColors.outline
+        else -> MaterialTheme.goalMateColors.outline
     }
 
 @Composable
@@ -167,6 +183,7 @@ private fun GoalMateTextFieldPreview() {
     GoalMateTheme {
         GoalMateTextField(
             value = text,
+            defaultValue = "골메이트",
             onValueChange = { text = it },
             canCheckDuplicate = false,
             onDuplicateCheck = {},
@@ -175,10 +192,4 @@ private fun GoalMateTextFieldPreview() {
             helperText = "오류가 발생했습니다.",
         )
     }
-}
-
-enum class InputTextState {
-    None,
-    Error,
-    Success,
 }

@@ -19,5 +19,5 @@ sealed interface AuthEvent {
 
     data object NavigateToNickNameSetting : AuthEvent
 
-    data object NavigateToCompleted : AuthEvent
+    data class NavigateToCompleted(val confirmedNickName: String) : AuthEvent
 }

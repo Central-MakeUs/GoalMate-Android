@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import cmc.goalmate.presentation.ui.auth.AuthViewModel
 import cmc.goalmate.presentation.ui.auth.login.LoginScreen
 import cmc.goalmate.presentation.ui.auth.nickname.NickNameSettingScreen
@@ -36,18 +37,16 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
         composable<Screen.Auth.NickNameSetting> { backStackEntry ->
             val viewModel = backStackEntry.sharedViewModel<AuthViewModel>(navController)
             NickNameSettingScreen(
-                navigateNextPage = {
-                    navController.navigate(Screen.Auth.Welcome)
-                },
+                navigateNextPage = navController::navigateToWelcomePage,
                 modifier = Modifier,
                 viewModel = viewModel,
             )
         }
 
         composable<Screen.Auth.Welcome> { backStackEntry ->
-            val viewModel = backStackEntry.sharedViewModel<AuthViewModel>(navController)
+            val nickName = backStackEntry.toRoute<Screen.Auth.Welcome>().nickName
             WelcomeScreen(
-                nickName = viewModel.nickName,
+                nickName = nickName,
                 navigateToNextPage = { navController.navigateToHome(Screen.Auth.Login) },
                 modifier = Modifier,
             )
@@ -57,6 +56,10 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
 
 fun NavController.navigateToLogin() {
     navigate(Screen.Auth)
+}
+
+fun NavController.navigateToWelcomePage(nickName: String) {
+    navigate(Screen.Auth.Welcome(nickName))
 }
 
 @Composable
