@@ -12,6 +12,7 @@ import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
 import cmc.goalmate.presentation.ui.detail.GoalDetailScreen
 import cmc.goalmate.presentation.ui.detail.finish.PaymentCompletedScreen
 import cmc.goalmate.presentation.ui.main.navigation.InProgressGoalParams
+import cmc.goalmate.presentation.ui.main.navigation.NAVIGATION_DURATION
 import cmc.goalmate.presentation.ui.main.navigation.Screen
 import cmc.goalmate.presentation.ui.main.navigation.navigateToInProgress
 import kotlin.reflect.typeOf
@@ -23,7 +24,7 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
         composable<Screen.GoalDetail.Detail>(
             popExitTransition = {
                 slideOutOfContainer(
-                    animationSpec = tween(200, easing = LinearEasing),
+                    animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
                     towards = AnimatedContentTransitionScope.SlideDirection.End,
                 )
             },
@@ -39,7 +40,7 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
             typeMap = mapOf(typeOf<GoalSummary>() to GoalSummaryType),
             popExitTransition = {
                 slideOutOfContainer(
-                    animationSpec = tween(200, easing = LinearEasing),
+                    animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
                     towards = AnimatedContentTransitionScope.SlideDirection.End,
                 )
             },

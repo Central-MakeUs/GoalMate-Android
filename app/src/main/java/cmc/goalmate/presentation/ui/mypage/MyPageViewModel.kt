@@ -129,17 +129,19 @@ class MyPageViewModel
 
         private fun logout() {
             viewModelScope.launch {
-                authRepository
-                    .logout()
-                    .onSuccess { _event.send(MyPageEvent.SuccessLogout) }
+                authRepository.logout()
+                    .onSuccess {
+                        sendEvent(MyPageEvent.SuccessLogout)
+                    }
             }
         }
 
         private fun deleteAccount() {
             viewModelScope.launch {
-                authRepository
-                    .deleteToken()
-                    .onSuccess { _event.send(MyPageEvent.SuccessDeleteAccount) }
+                authRepository.deleteToken()
+                    .onSuccess {
+                        sendEvent(MyPageEvent.SuccessDeleteAccount)
+                    }
             }
         }
 

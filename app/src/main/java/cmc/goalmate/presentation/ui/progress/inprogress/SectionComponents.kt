@@ -1,9 +1,13 @@
 package cmc.goalmate.presentation.ui.progress.inprogress
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -80,33 +84,42 @@ fun DailyTodoSection(
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (dailyProgressState) {
-        is UiState.Error -> {}
-        UiState.Loading -> {
-            DailyTodoSectionSkeleton()
-        }
-        is UiState.Success -> {
-            val dailyProgress = dailyProgressState.data
-            Column(modifier = modifier) {
-                val titleDateText = if (dailyProgress.canModifyTodo()) "오늘" else dailyProgress.selectedDate.format(inProgressFormatter)
-                GoalTasks(
-                    dailyProgress = dailyProgress,
-                    onAction = onAction,
-                    modifier = Modifier
-                        .background(MaterialTheme.goalMateColors.thickDivider),
-                )
+    AnimatedContent(
+        targetState = dailyProgressState,
+        transitionSpec = {
+            fadeIn(animationSpec = tween(300)) togetherWith
+                fadeOut(animationSpec = tween(300))
+        },
+        label = "DailyTodoSectionTransition",
+    ) { state ->
+        when (state) {
+            is UiState.Error -> {}
+            UiState.Loading -> {
+                DailyTodoSectionSkeleton()
+            }
+            is UiState.Success -> {
+                val dailyProgress = state.data
+                Column(modifier = modifier) {
+                    val titleDateText = if (dailyProgress.canModifyTodo()) "오늘" else dailyProgress.selectedDate.format(inProgressFormatter)
+                    GoalTasks(
+                        dailyProgress = dailyProgress,
+                        onAction = onAction,
+                        modifier = Modifier
+                            .background(MaterialTheme.goalMateColors.thickDivider),
+                    )
 
-                Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
+                    Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
 
-                ProgressLayout(
-                    title = "$titleDateText 진척률",
-                    progressContent = {
-                        TodayProgress(
-                            actualPercent = dailyProgress.actualProgress,
-                        )
-                    },
-                    modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
-                )
+                    ProgressLayout(
+                        title = "$titleDateText 진척률",
+                        progressContent = {
+                            TodayProgress(
+                                actualPercent = dailyProgress.actualProgress,
+                            )
+                        },
+                        modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+                    )
+                }
             }
         }
     }

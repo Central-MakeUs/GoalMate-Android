@@ -18,6 +18,8 @@ import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
 import cmc.goalmate.presentation.ui.progress.completed.CompletedScreen
 import cmc.goalmate.presentation.ui.progress.inprogress.InProgressScreen
 
+const val NAVIGATION_DURATION = 300
+
 @Composable
 fun GoalMateNavHost(navController: NavHostController) {
     NavHost(
@@ -25,13 +27,13 @@ fun GoalMateNavHost(navController: NavHostController) {
         startDestination = Screen.Main,
         enterTransition = {
             slideIntoContainer(
-                animationSpec = tween(200, easing = LinearEasing),
+                animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
                 towards = AnimatedContentTransitionScope.SlideDirection.Start,
             )
         },
         popEnterTransition = {
             slideIntoContainer(
-                animationSpec = tween(200, easing = LinearEasing),
+                animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
                 towards = AnimatedContentTransitionScope.SlideDirection.End,
             )
         },
@@ -43,7 +45,7 @@ fun GoalMateNavHost(navController: NavHostController) {
         composable<Screen.InProgressGoal>(
             popExitTransition = {
                 slideOutOfContainer(
-                    animationSpec = tween(200, easing = LinearEasing),
+                    animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
                     towards = AnimatedContentTransitionScope.SlideDirection.End,
                 )
             },
@@ -60,7 +62,7 @@ fun GoalMateNavHost(navController: NavHostController) {
         composable<Screen.CompletedGoal>(
             popExitTransition = {
                 slideOutOfContainer(
-                    animationSpec = tween(200, easing = LinearEasing),
+                    animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
                     towards = AnimatedContentTransitionScope.SlideDirection.End,
                 )
             },
@@ -76,7 +78,7 @@ fun GoalMateNavHost(navController: NavHostController) {
         composable<Screen.CommentsDetail>(
             popExitTransition = {
                 slideOutOfContainer(
-                    animationSpec = tween(200, easing = LinearEasing),
+                    animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
                     towards = AnimatedContentTransitionScope.SlideDirection.End,
                 )
             },
@@ -91,7 +93,7 @@ fun GoalMateNavHost(navController: NavHostController) {
         composable<Screen.WebScreen>(
             popExitTransition = {
                 slideOutOfContainer(
-                    animationSpec = tween(200, easing = LinearEasing),
+                    animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
                     towards = AnimatedContentTransitionScope.SlideDirection.End,
                 )
             },
