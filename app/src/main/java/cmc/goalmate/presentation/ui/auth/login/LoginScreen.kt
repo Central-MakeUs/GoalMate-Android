@@ -52,7 +52,6 @@ import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.firstStep
 import cmc.goalmate.presentation.ui.common.WebScreenUrl
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
-import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +65,7 @@ fun LoginScreen(
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -93,10 +92,11 @@ fun LoginScreen(
         )
         LoginContent(
             onLoginButtonClicked = {
-                coroutineScope.launch {
-                    val token = UserApiClient.loginWithKakao(context)
-                    viewModel.onAction(AuthAction.KakaoLogin(token.idToken))
-                }
+//                coroutineScope.launch {
+//                    val token = UserApiClient.loginWithKakao(context)
+//                    viewModel.onAction(AuthAction.KakaoLogin(token.idToken))
+//                }
+                showBottomSheet = true
             },
             modifier = modifier.fillMaxWidth(),
         )
