@@ -16,7 +16,10 @@ import retrofit2.http.Query
 
 interface MenteeGoalService {
     @GET("$BASE_URL/goals")
-    suspend fun getMenteeGoals(): ApiResponse<BaseResponse<MenteeGoalsResponse>>
+    suspend fun getMenteeGoals(
+        @Query("page") page: Int = DEFAULT_PAGE,
+        @Query("size") size: Int = DEFAULT_SIZE,
+    ): ApiResponse<BaseResponse<MenteeGoalsResponse>>
 
     @GET("$BASE_URL/goals/{menteeGoalId}/weekly-progress")
     suspend fun getWeeklyProgress(
@@ -42,5 +45,7 @@ interface MenteeGoalService {
 
     companion object {
         private const val BASE_URL = "/mentees/my"
+        private const val DEFAULT_PAGE = 1
+        private const val DEFAULT_SIZE = 20
     }
 }

@@ -8,10 +8,14 @@ import cmc.goalmate.remote.dto.response.GoalsResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface GoalService {
     @GET(BASE_URL)
-    suspend fun getGoals(): ApiResponse<BaseResponse<GoalsResponse>>
+    suspend fun getGoals(
+        @Query("page") page: Int = DEFAULT_PAGE,
+        @Query("size") size: Int = DEFAULT_SIZE,
+    ): ApiResponse<BaseResponse<GoalsResponse>>
 
     @GET("$BASE_URL/{goalId}")
     suspend fun getGoalDetail(
@@ -25,5 +29,7 @@ interface GoalService {
 
     companion object {
         private const val BASE_URL = "/goals"
+        private const val DEFAULT_PAGE = 1
+        private const val DEFAULT_SIZE = 20
     }
 }

@@ -7,21 +7,26 @@ import cmc.goalmate.remote.dto.response.CommentResponse
 import cmc.goalmate.remote.dto.response.CommentRoomsResponse
 import cmc.goalmate.remote.dto.response.CommentsResponse
 import cmc.goalmate.remote.dto.response.NewCommentCountResponse
-import cmc.goalmate.remote.service.CommentService.Companion.COMMENT_URL
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CommentService {
     @GET("$COMMENT_ROOM/my")
-    suspend fun getCommentRooms(): ApiResponse<BaseResponse<CommentRoomsResponse>>
+    suspend fun getCommentRooms(
+        @Query("page") page: Int = DEFAULT_PAGE,
+        @Query("size") size: Int = DEFAULT_SIZE,
+    ): ApiResponse<BaseResponse<CommentRoomsResponse>>
 
     @GET("$COMMENT_ROOM/{roomId}/comments")
     suspend fun getComments(
         @Path("roomId") roomId: Int,
+        @Query("page") page: Int = DEFAULT_PAGE,
+        @Query("size") size: Int = DEFAULT_SIZE,
     ): ApiResponse<BaseResponse<CommentsResponse>>
 
     @POST("$COMMENT_ROOM/{roomId}/comments")
@@ -47,5 +52,7 @@ interface CommentService {
     companion object {
         private const val COMMENT_ROOM = "/comment-rooms"
         private const val COMMENT_URL = "/comments"
+        private const val DEFAULT_PAGE = 1
+        private const val DEFAULT_SIZE = 30
     }
 }
