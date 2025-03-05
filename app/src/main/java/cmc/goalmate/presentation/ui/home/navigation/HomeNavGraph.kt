@@ -19,7 +19,7 @@ import cmc.goalmate.presentation.ui.main.navigation.navigateToWebScreen
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
 import cmc.goalmate.presentation.ui.mypage.MyPageScreen
 
-private const val ANIMATION_DURATION = 300
+private const val ANIMATION_DURATION = 200
 private val enterTransition = {
     fadeIn(animationSpec = tween(ANIMATION_DURATION))
 }
@@ -34,6 +34,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         composable<Screen.Main.Home>(
             enterTransition = { enterTransition() },
             exitTransition = { exitTransition() },
+            popEnterTransition = { null },
         ) {
             HomeScreen(
                 navigateToDetail = { id -> navController.navigateToDetail(id) },
@@ -43,6 +44,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         composable<Screen.Main.MyGoal>(
             enterTransition = { enterTransition() },
             exitTransition = { exitTransition() },
+            popEnterTransition = { null },
         ) {
             MyGoalsScreen(
                 navigateToCompletedGoal = navController::navigateToCompleted,
@@ -55,6 +57,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         composable<Screen.Main.Comments>(
             enterTransition = { enterTransition() },
             exitTransition = { exitTransition() },
+            popEnterTransition = { null },
         ) {
             CommentRoomsScreen(
                 navigateToCommentDetail = navController::navigateToCommentDetail,
@@ -65,6 +68,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         composable<Screen.Main.MyPage>(
             enterTransition = { enterTransition() },
             exitTransition = { exitTransition() },
+            popEnterTransition = { null },
         ) {
             MyPageScreen(
                 navigateToLogin = { navController.navigateToLogin() },

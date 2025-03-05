@@ -1,7 +1,7 @@
 package cmc.goalmate.presentation.ui.main.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -25,13 +25,13 @@ fun GoalMateNavHost(navController: NavHostController) {
         startDestination = Screen.Main,
         enterTransition = {
             slideIntoContainer(
-                animationSpec = tween(300, easing = FastOutLinearInEasing),
+                animationSpec = tween(200, easing = LinearEasing),
                 towards = AnimatedContentTransitionScope.SlideDirection.Start,
             )
         },
-        exitTransition = {
-            slideOutOfContainer(
-                animationSpec = tween(200, easing = FastOutLinearInEasing),
+        popEnterTransition = {
+            slideIntoContainer(
+                animationSpec = tween(200, easing = LinearEasing),
                 towards = AnimatedContentTransitionScope.SlideDirection.End,
             )
         },
@@ -40,7 +40,14 @@ fun GoalMateNavHost(navController: NavHostController) {
         mainNavGraph(navController)
         detailNavGraph(navController)
 
-        composable<Screen.InProgressGoal> { backStackEntry ->
+        composable<Screen.InProgressGoal>(
+            popExitTransition = {
+                slideOutOfContainer(
+                    animationSpec = tween(200, easing = LinearEasing),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                )
+            },
+        ) { backStackEntry ->
             val content = backStackEntry.toRoute<Screen.InProgressGoal>()
             InProgressScreen(
                 goalTitle = content.goalTitle,
@@ -50,7 +57,14 @@ fun GoalMateNavHost(navController: NavHostController) {
             )
         }
 
-        composable<Screen.CompletedGoal> { navBackStackEntry ->
+        composable<Screen.CompletedGoal>(
+            popExitTransition = {
+                slideOutOfContainer(
+                    animationSpec = tween(200, easing = LinearEasing),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                )
+            },
+        ) { navBackStackEntry ->
             CompletedScreen(
                 navigateToGoalDetail = navController::navigateToDetail,
                 navigateToComments = navController::navigateToCommentDetail,
@@ -59,7 +73,14 @@ fun GoalMateNavHost(navController: NavHostController) {
             )
         }
 
-        composable<Screen.CommentsDetail> { backStackEntry ->
+        composable<Screen.CommentsDetail>(
+            popExitTransition = {
+                slideOutOfContainer(
+                    animationSpec = tween(200, easing = LinearEasing),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                )
+            },
+        ) { backStackEntry ->
             val content = backStackEntry.toRoute<Screen.CommentsDetail>()
             CommentsDetailScreen(
                 goalTitle = content.goalTitle,
@@ -67,7 +88,14 @@ fun GoalMateNavHost(navController: NavHostController) {
             )
         }
 
-        composable<Screen.WebScreen> { backStackEntry ->
+        composable<Screen.WebScreen>(
+            popExitTransition = {
+                slideOutOfContainer(
+                    animationSpec = tween(200, easing = LinearEasing),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                )
+            },
+        ) { backStackEntry ->
             val content = backStackEntry.toRoute<Screen.WebScreen>()
             GoalMateWebScreen(
                 targetUrl = content.targetUrl,

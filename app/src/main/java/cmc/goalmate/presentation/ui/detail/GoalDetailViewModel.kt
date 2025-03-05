@@ -10,8 +10,6 @@ import cmc.goalmate.domain.repository.GoalsRepository
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
 import cmc.goalmate.presentation.ui.main.navigation.Screen
-import cmc.goalmate.presentation.ui.util.EventBus
-import cmc.goalmate.presentation.ui.util.GoalMateEvent
 import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -97,18 +95,27 @@ class GoalDetailViewModel
 
         private fun startGoal() {
             viewModelScope.launch {
-                goalsRepository.startGoal(goalId)
-                    .onSuccess { startedGoal ->
-                        EventBus.postEvent(GoalMateEvent.StartNewGoal)
-                        _event.send(
-                            GoalDetailEvent.NavigateToGoalStart(
-                                newGoalId = startedGoal.newGoalId,
-                                goalSummary = state.value.goalSummary(),
-                                newCommentRoomId = startedGoal.newCommentRoomId,
-                            ),
-                        )
-                    }
-                    .onFailure { }
+                _event.send(
+                    GoalDetailEvent.NavigateToGoalStart(
+                        newGoalId = 0,
+                        goalSummary = state.value.goalSummary(),
+                        newCommentRoomId = 0,
+                    ),
+                )
             }
+//            viewModelScope.launch {
+//                goalsRepository.startGoal(goalId)
+//                    .onSuccess { startedGoal ->
+//                        EventBus.postEvent(GoalMateEvent.StartNewGoal)
+//                        _event.send(
+//                            GoalDetailEvent.NavigateToGoalStart(
+//                                newGoalId = startedGoal.newGoalId,
+//                                goalSummary = state.value.goalSummary(),
+//                                newCommentRoomId = startedGoal.newCommentRoomId,
+//                            ),
+//                        )
+//                    }
+//                    .onFailure { }
+//            }
         }
     }

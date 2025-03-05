@@ -1,10 +1,12 @@
 package cmc.goalmate.presentation.ui.comments.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +24,7 @@ import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.GoalMateIconDialog
 import cmc.goalmate.presentation.theme.GoalMateDimens
+import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.comments.detail.components.CommentTextField
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentsUiState
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
@@ -67,10 +70,12 @@ fun CommentsDetailScreen(
             title = goalTitle,
         )
         Column(
-            modifier = Modifier.padding(
-                horizontal = GoalMateDimens.HorizontalPadding,
-                vertical = GoalMateDimens.BottomMargin,
-            ),
+            modifier = Modifier
+                .background(MaterialTheme.goalMateColors.background)
+                .padding(
+                    horizontal = GoalMateDimens.HorizontalPadding,
+                    vertical = GoalMateDimens.BottomMargin,
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             CommentsDetailContent(
@@ -84,7 +89,9 @@ fun CommentsDetailScreen(
                 enabled = (state as? CommentsUiState.Success)?.canSendMessage ?: true,
                 isButtonEnabled = (state as? CommentsUiState.Success)?.canSubmit ?: false,
                 showCancelButton = showCancelButton,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 11.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 11.dp),
                 focusRequester = focusRequester,
             )
         }
@@ -122,6 +129,7 @@ private fun CommentsDetailContent(
             CommentsUiState.Error -> {
                 ErrorScreen(modifier = Modifier.fillMaxSize())
             }
+
             CommentsUiState.Loading -> {}
         }
     }

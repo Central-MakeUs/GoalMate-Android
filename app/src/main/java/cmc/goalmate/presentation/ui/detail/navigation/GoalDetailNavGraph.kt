@@ -1,5 +1,8 @@
 package cmc.goalmate.presentation.ui.detail.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -17,7 +20,14 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
     navigation<Screen.GoalDetail>(
         startDestination = Screen.GoalDetail.Detail::class,
     ) {
-        composable<Screen.GoalDetail.Detail> {
+        composable<Screen.GoalDetail.Detail>(
+            popExitTransition = {
+                slideOutOfContainer(
+                    animationSpec = tween(200, easing = LinearEasing),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                )
+            },
+        ) {
             GoalDetailScreen(
                 navigateBack = { navController.navigateUp() },
                 navigateToLogin = { navController.navigateToLogin() },
@@ -27,6 +37,12 @@ fun NavGraphBuilder.detailNavGraph(navController: NavController) {
 
         composable<Screen.GoalDetail.PaymentCompleted>(
             typeMap = mapOf(typeOf<GoalSummary>() to GoalSummaryType),
+            popExitTransition = {
+                slideOutOfContainer(
+                    animationSpec = tween(200, easing = LinearEasing),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                )
+            },
         ) { backStackEntry ->
             val content = backStackEntry.toRoute<Screen.GoalDetail.PaymentCompleted>()
             PaymentCompletedScreen(
