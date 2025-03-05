@@ -1,4 +1,4 @@
-package cmc.goalmate.app.navigation
+package cmc.goalmate.presentation.ui.main.navigation
 
 typealias NavigateToGoal = (goalId: Int) -> Unit
 

@@ -7,7 +7,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.CommentRepository
@@ -18,6 +17,7 @@ import cmc.goalmate.presentation.ui.comments.detail.model.SenderUiModel
 import cmc.goalmate.presentation.ui.comments.detail.model.success
 import cmc.goalmate.presentation.ui.comments.detail.model.successData
 import cmc.goalmate.presentation.ui.comments.detail.model.toUi
+import cmc.goalmate.presentation.ui.main.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

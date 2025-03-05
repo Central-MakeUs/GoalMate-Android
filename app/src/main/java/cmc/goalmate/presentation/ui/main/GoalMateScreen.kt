@@ -19,10 +19,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cmc.goalmate.app.navigation.GoalMateNavHost
 import cmc.goalmate.presentation.components.BottomNavigationBar
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.main.BottomNavItem.Companion.bottomNavItemScreens
+import cmc.goalmate.presentation.ui.main.navigation.GoalMateNavHost
 import kotlinx.coroutines.delay
 
 @Composable

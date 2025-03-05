@@ -3,7 +3,7 @@ package cmc.goalmate.presentation.ui.main
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import cmc.goalmate.R
-import cmc.goalmate.app.navigation.Screen
+import cmc.goalmate.presentation.ui.main.navigation.Screen
 
 enum class BottomNavItem(
     @StringRes val title: Int,

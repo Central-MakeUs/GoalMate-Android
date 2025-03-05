@@ -1,4 +1,4 @@
-package cmc.goalmate.app.navigation
+package cmc.goalmate.presentation.ui.main.navigation
 
 import cmc.goalmate.presentation.ui.common.WebScreenUrl
 import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
@@ -39,14 +39,16 @@ sealed interface Screen {
         data class Detail(val goalId: Int) : Screen
 
         @Serializable
-        data class PaymentCompleted(val newGoalId: Int, val newCommentRoomId: Int, val goalSummary: GoalSummary) : Screen
+        data class PaymentCompleted(val newGoalId: Int, val newCommentRoomId: Int, val goalSummary: GoalSummary) :
+            Screen
     }
 
     @Serializable
     data class CompletedGoal(val menteeGoalId: Int, val goalId: Int, val roomId: Int) : Screen
 
     @Serializable
-    data class InProgressGoal(val menteeGoalId: Int, val goalId: Int, val goalTitle: String, val roomId: Int) : Screen
+    data class InProgressGoal(val menteeGoalId: Int, val goalId: Int, val goalTitle: String, val roomId: Int) :
+        Screen
 
     @Serializable
     data class CommentsDetail(val roomId: Int, val goalTitle: String, val endDate: String) : Screen

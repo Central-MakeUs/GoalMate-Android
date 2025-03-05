@@ -4,11 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.MenteeGoalRepository
 import cmc.goalmate.domain.repository.UserRepository
+import cmc.goalmate.presentation.ui.main.navigation.Screen
 import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiModel
 import cmc.goalmate.presentation.ui.progress.completed.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel

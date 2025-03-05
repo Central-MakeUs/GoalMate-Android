@@ -5,10 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.MenteeGoalRepository
+import cmc.goalmate.presentation.ui.main.navigation.Screen
 import cmc.goalmate.presentation.ui.progress.inprogress.mapper.toUi
 import cmc.goalmate.presentation.ui.progress.inprogress.model.CalendarUiModel
 import cmc.goalmate.presentation.ui.progress.inprogress.model.DailyProgressDetailUiModel

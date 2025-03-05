@@ -11,12 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cmc.goalmate.app.navigation.CommentDetailParams
-import cmc.goalmate.app.navigation.NavigateToCommentDetail
-import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.ui.main.navigation.CommentDetailParams
+import cmc.goalmate.presentation.ui.main.navigation.NavigateToCommentDetail
+import cmc.goalmate.presentation.ui.main.navigation.NavigateToGoal
 import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiModel
 import cmc.goalmate.presentation.ui.progress.components.ProgressBottomButton
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent

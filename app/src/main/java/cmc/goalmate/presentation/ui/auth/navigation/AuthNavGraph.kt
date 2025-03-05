@@ -10,13 +10,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import cmc.goalmate.app.navigation.Screen
-import cmc.goalmate.app.navigation.navigateToWebScreen
 import cmc.goalmate.presentation.ui.auth.AuthViewModel
 import cmc.goalmate.presentation.ui.auth.login.LoginScreen
 import cmc.goalmate.presentation.ui.auth.nickname.NickNameSettingScreen
 import cmc.goalmate.presentation.ui.auth.welcome.WelcomeScreen
 import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
+import cmc.goalmate.presentation.ui.main.navigation.Screen
+import cmc.goalmate.presentation.ui.main.navigation.navigateToWebScreen
 
 fun NavGraphBuilder.authNavGraph(navController: NavController) {
     navigation<Screen.Auth>(

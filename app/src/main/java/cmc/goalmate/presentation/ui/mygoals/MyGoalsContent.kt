@@ -7,14 +7,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import cmc.goalmate.app.navigation.CompletedGoalParams
-import cmc.goalmate.app.navigation.InProgressGoalParams
-import cmc.goalmate.app.navigation.NavigateToCompleted
-import cmc.goalmate.app.navigation.NavigateToGoal
-import cmc.goalmate.app.navigation.NavigateToInProgress
 import cmc.goalmate.presentation.components.ThickDivider
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.color.White
+import cmc.goalmate.presentation.ui.main.navigation.CompletedGoalParams
+import cmc.goalmate.presentation.ui.main.navigation.InProgressGoalParams
+import cmc.goalmate.presentation.ui.main.navigation.NavigateToCompleted
+import cmc.goalmate.presentation.ui.main.navigation.NavigateToGoal
+import cmc.goalmate.presentation.ui.main.navigation.NavigateToInProgress
 
 @Composable
 fun MyGoalsContent(

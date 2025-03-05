@@ -4,15 +4,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import cmc.goalmate.app.navigation.Screen
-import cmc.goalmate.app.navigation.navigateToCommentDetail
-import cmc.goalmate.app.navigation.navigateToCompleted
-import cmc.goalmate.app.navigation.navigateToInProgress
-import cmc.goalmate.app.navigation.navigateToWebScreen
 import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
 import cmc.goalmate.presentation.ui.comments.CommentRoomsScreen
 import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
 import cmc.goalmate.presentation.ui.home.HomeScreen
+import cmc.goalmate.presentation.ui.main.navigation.Screen
+import cmc.goalmate.presentation.ui.main.navigation.navigateToCommentDetail
+import cmc.goalmate.presentation.ui.main.navigation.navigateToCompleted
+import cmc.goalmate.presentation.ui.main.navigation.navigateToInProgress
+import cmc.goalmate.presentation.ui.main.navigation.navigateToWebScreen
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
 import cmc.goalmate.presentation.ui.mypage.MyPageScreen
 

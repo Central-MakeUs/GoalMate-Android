@@ -1,4 +1,4 @@
-package cmc.goalmate.app.navigation
+package cmc.goalmate.presentation.ui.main.navigation
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn

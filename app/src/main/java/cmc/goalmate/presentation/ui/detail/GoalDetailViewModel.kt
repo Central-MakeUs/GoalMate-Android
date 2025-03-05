@@ -3,13 +3,13 @@ package cmc.goalmate.presentation.ui.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import cmc.goalmate.app.navigation.Screen
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
 import cmc.goalmate.domain.repository.GoalsRepository
 import cmc.goalmate.presentation.ui.common.LoginStateViewModel
 import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
+import cmc.goalmate.presentation.ui.main.navigation.Screen
 import cmc.goalmate.presentation.ui.util.EventBus
 import cmc.goalmate.presentation.ui.util.GoalMateEvent
 import cmc.goalmate.presentation.ui.util.asUiText

@@ -5,12 +5,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import cmc.goalmate.app.navigation.InProgressGoalParams
-import cmc.goalmate.app.navigation.Screen
-import cmc.goalmate.app.navigation.navigateToInProgress
 import cmc.goalmate.presentation.ui.auth.navigation.navigateToLogin
 import cmc.goalmate.presentation.ui.detail.GoalDetailScreen
 import cmc.goalmate.presentation.ui.detail.finish.PaymentCompletedScreen
+import cmc.goalmate.presentation.ui.main.navigation.InProgressGoalParams
+import cmc.goalmate.presentation.ui.main.navigation.Screen
+import cmc.goalmate.presentation.ui.main.navigation.navigateToInProgress
 import kotlin.reflect.typeOf
 
 fun NavGraphBuilder.detailNavGraph(navController: NavController) {

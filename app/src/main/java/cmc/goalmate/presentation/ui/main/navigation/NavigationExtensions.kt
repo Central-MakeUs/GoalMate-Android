@@ -1,4 +1,4 @@
-package cmc.goalmate.app.navigation
+package cmc.goalmate.presentation.ui.main.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder

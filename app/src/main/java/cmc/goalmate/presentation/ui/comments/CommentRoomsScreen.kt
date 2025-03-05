@@ -9,11 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cmc.goalmate.app.navigation.CommentDetailParams
-import cmc.goalmate.app.navigation.NavigateToCommentDetail
 import cmc.goalmate.presentation.components.EmptyGoalContents
 import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.HeaderTitle
+import cmc.goalmate.presentation.ui.main.navigation.CommentDetailParams
+import cmc.goalmate.presentation.ui.main.navigation.NavigateToCommentDetail
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable

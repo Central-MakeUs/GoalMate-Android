@@ -18,14 +18,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.R
-import cmc.goalmate.app.navigation.CommentDetailParams
-import cmc.goalmate.app.navigation.NavigateToCommentDetail
-import cmc.goalmate.app.navigation.NavigateToGoal
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.components.GoalMateDialog
 import cmc.goalmate.presentation.components.GoalMateIconDialog
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.main.navigation.CommentDetailParams
+import cmc.goalmate.presentation.ui.main.navigation.NavigateToCommentDetail
+import cmc.goalmate.presentation.ui.main.navigation.NavigateToGoal
 import cmc.goalmate.presentation.ui.util.ComposableLifeCycle
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
