@@ -10,9 +10,9 @@
         android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/icon_app_logo"
+        android:icon="@mipmap/app_logo_goalmate"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/icon_app_logo_round"
+        android:roundIcon="@mipmap/app_logo_goalmate_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting"
         tools:targetApi="31">
