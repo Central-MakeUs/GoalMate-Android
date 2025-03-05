@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,6 +22,7 @@ import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.LogoAppBar
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.home.components.GoalItem
 import cmc.goalmate.presentation.ui.main.navigation.NavigateToGoal
 
@@ -31,7 +34,9 @@ fun HomeScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(
-        modifier = modifier,
+        modifier = modifier.background(
+            MaterialTheme.goalMateColors.background
+        ),
     ) {
         LogoAppBar()
         when (val homeState = state) {

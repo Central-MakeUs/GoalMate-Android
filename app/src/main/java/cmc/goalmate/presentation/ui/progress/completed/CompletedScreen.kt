@@ -1,9 +1,11 @@
 package cmc.goalmate.presentation.ui.progress.completed
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -14,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.presentation.components.AppBarWithBackButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.main.navigation.CommentDetailParams
 import cmc.goalmate.presentation.ui.main.navigation.NavigateToCommentDetail
 import cmc.goalmate.presentation.ui.main.navigation.NavigateToGoal
@@ -58,7 +61,9 @@ fun CompletedScreen(
             state = state,
             onAction = viewModel::onAction,
             navigateToHome = navigateToHome,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.goalMateColors.background),
         )
     }
 }

@@ -42,7 +42,7 @@ fun GoalMateScreen(
     LaunchedEffect(isBottomBarVisible) {
         if (isBottomBarVisible) {
             viewModel.updateComments()
-            delay(150L)
+            delay(200L)
             showBottomBar = true
         } else {
             showBottomBar = false

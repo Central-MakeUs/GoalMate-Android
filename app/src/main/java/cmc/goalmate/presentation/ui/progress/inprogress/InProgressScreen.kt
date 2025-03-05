@@ -2,6 +2,7 @@ package cmc.goalmate.presentation.ui.progress.inprogress
 
 import android.app.Activity
 import android.view.WindowManager
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -66,7 +67,9 @@ fun InProgressScreen(
         InProgressScreenContent(
             state = state,
             onAction = viewModel::onAction,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .background(MaterialTheme.goalMateColors.background),
         )
     }
 

@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -73,7 +74,7 @@ fun GoalDetailScreen(
         }
     }
 
-    Column {
+    Column(modifier = Modifier.background(MaterialTheme.goalMateColors.background)) {
         AppBarWithBackButton(
             onBackButtonClicked = navigateBack,
             title = stringResource(R.string.goal_detail_title),

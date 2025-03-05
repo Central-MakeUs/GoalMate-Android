@@ -25,6 +25,7 @@ import cmc.goalmate.presentation.components.ButtonSize
 import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.auth.component.StepProgressBar
 import cmc.goalmate.presentation.ui.auth.lastStep
@@ -37,7 +38,9 @@ fun WelcomeScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(horizontal = GoalMateDimens.HorizontalPadding),
+        modifier = modifier
+            .background(MaterialTheme.goalMateColors.background)
+            .padding(horizontal = GoalMateDimens.HorizontalPadding),
     ) {
         StepProgressBar(steps = lastStep)
         Spacer(modifier = Modifier.size(83.dp))
@@ -68,7 +71,7 @@ fun WelcomeScreen(
 }
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 private fun WelcomeScreenPreview() {
     GoalMateTheme {
         WelcomeScreen(

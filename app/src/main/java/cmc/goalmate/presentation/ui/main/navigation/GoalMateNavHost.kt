@@ -1,8 +1,8 @@
 package cmc.goalmate.presentation.ui.main.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,8 +23,18 @@ fun GoalMateNavHost(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = Screen.Main,
-        enterTransition = { fadeIn(animationSpec = tween(500)) },
-        exitTransition = { fadeOut(animationSpec = tween(500)) },
+        enterTransition = {
+            slideIntoContainer(
+                animationSpec = tween(300, easing = FastOutLinearInEasing),
+                towards = AnimatedContentTransitionScope.SlideDirection.Start,
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                animationSpec = tween(200, easing = FastOutLinearInEasing),
+                towards = AnimatedContentTransitionScope.SlideDirection.End,
+            )
+        },
     ) {
         authNavGraph(navController)
         mainNavGraph(navController)

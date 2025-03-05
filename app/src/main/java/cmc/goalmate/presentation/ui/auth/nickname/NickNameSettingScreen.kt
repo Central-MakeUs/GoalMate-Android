@@ -1,5 +1,6 @@
 package cmc.goalmate.presentation.ui.auth.nickname
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -43,7 +44,7 @@ import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
 fun NickNameSettingScreen(
-    navigateNextPage: () -> Unit,
+    navigateNextPage: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
@@ -51,8 +52,8 @@ fun NickNameSettingScreen(
 
     ObserveAsEvent(viewModel.authEvent) { event ->
         when (event) {
-            AuthEvent.NavigateToCompleted -> {
-                navigateNextPage()
+            is AuthEvent.NavigateToCompleted -> {
+                navigateNextPage(event.confirmedNickName)
             }
 
             else -> Unit
@@ -65,6 +66,7 @@ fun NickNameSettingScreen(
         onAction = viewModel::onAction,
         onCompletedButtonClicked = { viewModel.onAction(AuthAction.CompleteNicknameSetup) },
         modifier = modifier
+            .background(MaterialTheme.goalMateColors.background)
             .fillMaxSize()
             .padding(horizontal = GoalMateDimens.HorizontalPadding),
     )
@@ -106,6 +108,7 @@ fun NickNameSettingContent(
 
         GoalMateTextField(
             value = text,
+            defaultValue = state.defaultNickName,
             onValueChange = { onAction(AuthAction.SetNickName(it)) },
             canCheckDuplicate = state.isDuplicationCheckEnabled,
             onDuplicateCheck = { onAction(AuthAction.CheckDuplication) },
@@ -126,7 +129,7 @@ fun NickNameSettingContent(
             },
             buttonSize = ButtonSize.LARGE,
             modifier = Modifier.fillMaxWidth(),
-            enabled = state.isNextStepEnabled,
+            enabled = state.isNextStepButtonEnabled(text),
         )
 
         Spacer(modifier = Modifier.size(GoalMateDimens.BottomMargin))

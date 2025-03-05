@@ -24,6 +24,7 @@ import cmc.goalmate.presentation.components.GoalMateButton
 import cmc.goalmate.presentation.components.GoalMateImage
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.detail.components.GoalOverviewCard
 import cmc.goalmate.presentation.ui.detail.navigation.GoalSummary
@@ -36,7 +37,7 @@ fun PaymentCompletedScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.background(MaterialTheme.goalMateColors.background),
     ) {
         AppBarWithBackButton(
             onBackButtonClicked = onBackPressed,

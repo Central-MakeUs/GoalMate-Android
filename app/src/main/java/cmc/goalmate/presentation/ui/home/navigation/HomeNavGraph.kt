@@ -1,5 +1,8 @@
 package cmc.goalmate.presentation.ui.home.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -16,17 +19,31 @@ import cmc.goalmate.presentation.ui.main.navigation.navigateToWebScreen
 import cmc.goalmate.presentation.ui.mygoals.MyGoalsScreen
 import cmc.goalmate.presentation.ui.mypage.MyPageScreen
 
+private const val ANIMATION_DURATION = 300
+private val enterTransition = {
+    fadeIn(animationSpec = tween(ANIMATION_DURATION))
+}
+private val exitTransition = {
+    fadeOut(animationSpec = tween(ANIMATION_DURATION))
+}
+
 fun NavGraphBuilder.mainNavGraph(navController: NavController) {
     navigation<Screen.Main>(
         startDestination = Screen.Main.Home,
     ) {
-        composable<Screen.Main.Home> {
+        composable<Screen.Main.Home>(
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
+        ) {
             HomeScreen(
                 navigateToDetail = { id -> navController.navigateToDetail(id) },
             )
         }
 
-        composable<Screen.Main.MyGoal> {
+        composable<Screen.Main.MyGoal>(
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
+        ) {
             MyGoalsScreen(
                 navigateToCompletedGoal = navController::navigateToCompleted,
                 navigateToProgressGoal = navController::navigateToInProgress,
@@ -35,14 +52,20 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
             )
         }
 
-        composable<Screen.Main.Comments> {
+        composable<Screen.Main.Comments>(
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
+        ) {
             CommentRoomsScreen(
                 navigateToCommentDetail = navController::navigateToCommentDetail,
                 navigateToHome = { navController.navigateToHome(Screen.Main.Comments) },
             )
         }
 
-        composable<Screen.Main.MyPage> {
+        composable<Screen.Main.MyPage>(
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
+        ) {
             MyPageScreen(
                 navigateToLogin = { navController.navigateToLogin() },
                 navigateToMyGoal = { navController.navigateInBottomNav(Screen.Main.MyGoal) },
