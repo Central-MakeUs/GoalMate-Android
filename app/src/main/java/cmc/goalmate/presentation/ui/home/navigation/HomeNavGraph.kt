@@ -71,7 +71,13 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
             popEnterTransition = { null },
         ) {
             MyPageScreen(
-                navigateToLogin = { navController.navigateToLogin() },
+                navigateToLogin = {
+                    navController.navigateToLogin {
+                        popUpTo<Screen.Main.MyPage> {
+                            this.inclusive = true
+                        }
+                    }
+                },
                 navigateToMyGoal = { navController.navigateInBottomNav(Screen.Main.MyGoal) },
                 navigateToHome = { navController.navigateToHome(Screen.Main.MyPage) },
                 navigateToWebScreen = navController::navigateToWebScreen,

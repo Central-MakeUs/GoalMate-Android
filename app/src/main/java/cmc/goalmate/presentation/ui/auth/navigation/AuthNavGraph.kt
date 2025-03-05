@@ -1,5 +1,8 @@
 package cmc.goalmate.presentation.ui.auth.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -8,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
@@ -16,6 +20,7 @@ import cmc.goalmate.presentation.ui.auth.login.LoginScreen
 import cmc.goalmate.presentation.ui.auth.nickname.NickNameSettingScreen
 import cmc.goalmate.presentation.ui.auth.welcome.WelcomeScreen
 import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
+import cmc.goalmate.presentation.ui.main.navigation.NAVIGATION_DURATION
 import cmc.goalmate.presentation.ui.main.navigation.Screen
 import cmc.goalmate.presentation.ui.main.navigation.navigateToWebScreen
 
@@ -23,7 +28,14 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
     navigation<Screen.Auth>(
         startDestination = Screen.Auth.Login::class,
     ) {
-        composable<Screen.Auth.Login> { backStackEntry ->
+        composable<Screen.Auth.Login>(
+            popExitTransition = {
+                slideOutOfContainer(
+                    animationSpec = tween(NAVIGATION_DURATION, easing = LinearEasing),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                )
+            },
+        ) { backStackEntry ->
             val viewModel = backStackEntry.sharedViewModel<AuthViewModel>(navController)
             LoginScreen(
                 navigateBack = { navController.popBackStack() },
@@ -54,8 +66,8 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
     }
 }
 
-fun NavController.navigateToLogin() {
-    navigate(Screen.Auth)
+fun NavController.navigateToLogin(navOptions: NavOptionsBuilder.() -> Unit = {}) {
+    navigate(Screen.Auth, navOptions)
 }
 
 fun NavController.navigateToWelcomePage(nickName: String) {
