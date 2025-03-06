@@ -79,7 +79,7 @@ data class MilestoneUiModel(val label: String, val content: String)
 
 fun GoalDetail.toUi(dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): GoalDetailUiModel {
     val today = LocalDate.now()
-    val endDate = today.plusDays(this.period.toLong())
+    val endDate = today.plusDays(this.period.toLong() - 1L)
 
     return GoalDetailUiModel(
         id = id,
