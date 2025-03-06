@@ -8,7 +8,7 @@ object GoalMateDimens {
     val BottomMargin = 16.dp
     val GoalItemWidth = 156.dp
     val GoalItemImageHeight = 117.dp
-    val TopBarHeight = 64.dp
+    val TopBarHeight = 52.dp
 
     val TitleContentPadding = 16.dp
     val ItemVerticalPaddingLarge = 30.dp
