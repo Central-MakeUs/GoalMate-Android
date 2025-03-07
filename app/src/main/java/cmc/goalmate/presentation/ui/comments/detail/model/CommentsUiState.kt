@@ -27,6 +27,8 @@ fun StateFlow<CommentsUiState>.successData(): CommentsUiState.Success = (this.va
 
 fun CommentsUiState.success(): CommentsUiState.Success = (this as CommentsUiState.Success)
 
+fun CommentsUiState.hasNoComments(): Boolean = this.success().comments.isEmpty()
+
 sealed interface CommentTextState {
     data object UnChanged : CommentTextState
 
