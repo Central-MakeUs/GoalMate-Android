@@ -21,15 +21,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface GoalDetailUiState {
     data object Loading : GoalDetailUiState
 
-    data class Success(val isLoggedIn: Boolean, val goal: GoalDetailUiModel) : GoalDetailUiState
+    data class Success(
+        val isLoggedIn: Boolean,
+        val goal: GoalDetailUiModel,
+    ) : GoalDetailUiState
 
-    data class Error(val error: String) : GoalDetailUiState
+    data class Error(
+        val error: String,
+    ) : GoalDetailUiState
 }
 
 fun GoalDetailUiState.goalSummary(): GoalSummary = (this as GoalDetailUiState.Success).goal.toSummary()
@@ -45,14 +51,15 @@ class GoalDetailViewModel
         private val goalId = savedStateHandle.toRoute<Screen.GoalDetail.Detail>().goalId
 
         private val _state = MutableStateFlow<GoalDetailUiState>(GoalDetailUiState.Loading)
-        val state: StateFlow<GoalDetailUiState> = _state
-            .onStart {
-                loadGoalDetail(goalId)
-            }.stateIn(
-                viewModelScope,
-                SharingStarted.Eagerly,
-                GoalDetailUiState.Loading,
-            )
+        val state: StateFlow<GoalDetailUiState> =
+            _state
+                .onStart {
+                    loadGoalDetail(goalId)
+                }.stateIn(
+                    viewModelScope,
+                    SharingStarted.Eagerly,
+                    GoalDetailUiState.Loading,
+                )
 
         private val _event = Channel<GoalDetailEvent>()
         val event = _event.receiveAsFlow()
@@ -61,17 +68,27 @@ class GoalDetailViewModel
             observeLoginStatus()
         }
 
+        override fun onLoginStateChanged(isLoggedIn: Boolean) {
+            _state.update { current ->
+                if (current is GoalDetailUiState.Success) {
+                    current.copy(isLoggedIn = isLoggedIn)
+                } else {
+                    current
+                }
+            }
+        }
+
         private fun loadGoalDetail(id: Int) {
             viewModelScope.launch {
-                goalsRepository.getGoalDetail(goalId = id)
+                goalsRepository
+                    .getGoalDetail(goalId = id)
                     .onSuccess { goalDetail ->
                         _state.value =
                             GoalDetailUiState.Success(
                                 isLoggedIn = isLoggedIn.value,
                                 goal = goalDetail.toUi(),
                             )
-                    }
-                    .onFailure {
+                    }.onFailure {
                         _state.value = GoalDetailUiState.Error(it.asUiText())
                     }
             }
@@ -97,7 +114,8 @@ class GoalDetailViewModel
 
         private fun startGoal() {
             viewModelScope.launch {
-                goalsRepository.startGoal(goalId)
+                goalsRepository
+                    .startGoal(goalId)
                     .onSuccess { startedGoal ->
                         EventBus.postEvent(GoalMateEvent.StartNewGoal)
                         _event.send(
@@ -107,8 +125,7 @@ class GoalDetailViewModel
                                 newCommentRoomId = startedGoal.newCommentRoomId,
                             ),
                         )
-                    }
-                    .onFailure { }
+                    }.onFailure { }
             }
         }
     }
