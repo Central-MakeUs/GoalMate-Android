@@ -66,11 +66,14 @@ fun GoalMateNavHost(navController: NavHostController) {
                     towards = AnimatedContentTransitionScope.SlideDirection.End,
                 )
             },
-        ) { navBackStackEntry ->
+        ) {
             CompletedScreen(
                 navigateToGoalDetail = navController::navigateToDetail,
                 navigateToComments = navController::navigateToCommentDetail,
-                navigateToHome = { navController.navigateToHome(navBackStackEntry.toRoute<Screen.CompletedGoal>()) },
+                navigateToHome = {
+                    navController.popBackStack(route = Screen.Main, inclusive = true)
+                    navController.navigate(Screen.Main)
+                },
                 navigateBack = { navController.popBackStack() },
             )
         }
