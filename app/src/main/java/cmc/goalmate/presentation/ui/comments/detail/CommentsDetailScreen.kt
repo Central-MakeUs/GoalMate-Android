@@ -91,7 +91,7 @@ fun CommentsDetailScreen(
             CommentTextField(
                 commentText = viewModel.commentContent,
                 onAction = viewModel::onAction,
-                enabled = (state as? CommentsUiState.Success)?.canSendMessage ?: true,
+                enabled = (state as? CommentsUiState.Success)?.canSendMessage ?: false,
                 isButtonEnabled = (state as? CommentsUiState.Success)?.canSubmit ?: false,
                 showCancelButton = showCancelButton,
                 modifier =
@@ -132,15 +132,21 @@ private fun CommentsDetailContent(
                     )
                     return@Box
                 }
-                CommentsContent(
+                CommentsList(
                     comments = state.comments,
+                    isNewMessageAdded = state.isNewMessageAdded,
                     onAction = onAction,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
 
             CommentsUiState.Error -> {
-                ErrorScreen(modifier = Modifier.fillMaxSize())
+                ErrorScreen(
+                    onRetryButtonClicked = {
+                        onAction(CommentAction.Retry)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
             CommentsUiState.Loading -> {}

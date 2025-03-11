@@ -8,19 +8,26 @@ import cmc.goalmate.data.model.toData
 import cmc.goalmate.data.util.getOrThrow
 import cmc.goalmate.remote.dto.request.CommentRequest
 import cmc.goalmate.remote.service.CommentService
+import cmc.goalmate.remote.service.CommentService.Companion.DEFAULT_PAGE
 import javax.inject.Inject
 
 class CommentDataSource
     @Inject
-    constructor(private val commentService: CommentService) {
+    constructor(
+        private val commentService: CommentService,
+    ) {
         suspend fun getCommentRooms(): Result<CommentRoomsDto> =
             runCatching {
                 commentService.getCommentRooms().getOrThrow().toData()
             }
 
-        suspend fun getComments(roomId: Int): Result<CommentsDto> =
+        suspend fun getComments(
+            roomId: Int,
+            targetPage: Int? = null,
+        ): Result<CommentsDto> =
             runCatching {
-                commentService.getComments(roomId).getOrThrow().toData()
+                val page = targetPage ?: DEFAULT_PAGE
+                commentService.getComments(roomId = roomId, page = page).getOrThrow().toData()
             }
 
         suspend fun postComment(

@@ -52,7 +52,7 @@ interface CommentService {
     companion object {
         private const val COMMENT_ROOM = "/comment-rooms"
         private const val COMMENT_URL = "/comments"
-        private const val DEFAULT_PAGE = 1
-        private const val DEFAULT_SIZE = 30
+        const val DEFAULT_PAGE = 1
+        private const val DEFAULT_SIZE = 20
     }
 }

@@ -13,7 +13,15 @@ import javax.inject.Inject
 
 class CommentRepositoryImpl
     @Inject
-    constructor(private val commentDataSource: CommentDataSource) : CommentRepository {
+    constructor(
+        private val commentDataSource: CommentDataSource,
+    ) : CommentRepository {
+        private var commentsPageState =
+            PagingState<Comments>(
+                currentPage = 1,
+                nextPage = null,
+            )
+
         override suspend fun getCommentRooms(): DomainResult<CommentRooms, DataError.Network> =
             commentDataSource.getCommentRooms().fold(
                 onSuccess = {
@@ -22,14 +30,29 @@ class CommentRepositoryImpl
                 onFailure = { DomainResult.Error(it.toDataError()) },
             )
 
-        override suspend fun getComments(roomId: Int): DomainResult<Comments, DataError.Network> =
-            commentDataSource.getComments(roomId = roomId).fold(
-                onSuccess = { commentsDto ->
-                    val result = commentsDto.comments.map { it.toDomain() }.sortedBy { it.commentedAt }
-                    DomainResult.Success(Comments(result))
-                },
-                onFailure = { DomainResult.Error(it.toDataError()) },
-            )
+        override suspend fun getComments(
+            roomId: Int,
+            targetPage: Int?,
+        ): DomainResult<Comments, DataError.Network> {
+            if (targetPage == commentsPageState.currentPage || !commentsPageState.hasNextPage) {
+                Comments(comments = listOf(), nextPage = commentsPageState.nextPage)
+            }
+            return commentDataSource
+                .getComments(
+                    roomId = roomId,
+                    targetPage = commentsPageState.nextPage,
+                ).fold(
+                    onSuccess = { commentsDto ->
+                        val newComments = commentsDto.comments.map { it.toDomain() }.sortedByDescending { it.commentedAt }
+
+                        commentsPageState = commentsPageState.copy(currentPage = commentsDto.currentPage, nextPage = commentsDto.nextPage)
+
+                        val result = Comments(comments = newComments, nextPage = commentsPageState.nextPage)
+                        DomainResult.Success(result)
+                    },
+                    onFailure = { DomainResult.Error(it.toDataError()) },
+                )
+        }
 
         override suspend fun postComment(
             roomId: Int,
@@ -77,3 +100,11 @@ class CommentRepositoryImpl
                 },
             )
     }
+
+data class PagingState<T>(
+    val currentPage: Int = 1,
+    val nextPage: Int? = null,
+) {
+    val hasNextPage: Boolean
+        get() = nextPage != null
+}
