@@ -6,6 +6,7 @@ import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +26,8 @@ class MainViewModel
         fun checkLoginStatus() {
             viewModelScope.launch {
                 val hasToken = authRepository.isLogin().first()
+
+                delay(1000L)
 
                 if (!hasToken) {
                     _isReady.value = true
