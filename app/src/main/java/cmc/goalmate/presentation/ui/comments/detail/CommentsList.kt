@@ -44,12 +44,12 @@ fun CommentsList(
     LaunchedEffect(comments.size) {
         if (comments.isEmpty()) return@LaunchedEffect
         if (isFirstLoad) {
-            listState.scrollToItem(comments.size - 1)
+            listState.scrollToItem(0)
             isFirstLoad = false
             return@LaunchedEffect
         }
         if (!isNewMessageAdded) return@LaunchedEffect
-        listState.animateScrollToItem(comments.size - 1)
+        listState.animateScrollToItem(0)
     }
 
     OnScrollToTop(listState) {
@@ -95,8 +95,8 @@ fun LazyListState.shouldLoadMore(): Boolean {
             if (layoutInfo.totalItemsCount == 0) {
                 false
             } else {
-                val firstVisibleItem = layoutInfo.visibleItemsInfo.firstOrNull() ?: return@derivedStateOf false
-                firstVisibleItem.index <= 1
+                val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@derivedStateOf false
+                lastVisibleItem.index >= layoutInfo.totalItemsCount - 2
             }
         }
     }.value
