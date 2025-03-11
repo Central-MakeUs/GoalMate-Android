@@ -32,6 +32,7 @@ import cmc.goalmate.presentation.ui.mypage.components.ProfileHeaderSection
 import cmc.goalmate.presentation.ui.mypage.components.UserInfoSectionSkeleton
 import cmc.goalmate.presentation.ui.mypage.model.MenuItemUiModel
 import cmc.goalmate.presentation.ui.mypage.model.MyPageUiModel
+import cmc.goalmate.presentation.ui.util.singleClickable
 
 @Composable
 fun MyPageContent(
@@ -130,7 +131,7 @@ private fun GoalStatusSummary(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(20.dp))
-                .clickable { onSectionClicked() }
+                .singleClickable { onSectionClicked() }
                 .background(
                     color = MaterialTheme.goalMateColors.primaryVariant,
                 )

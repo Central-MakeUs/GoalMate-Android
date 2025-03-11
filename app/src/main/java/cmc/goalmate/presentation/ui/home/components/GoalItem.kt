@@ -1,6 +1,5 @@
 package cmc.goalmate.presentation.ui.home.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +29,7 @@ import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.home.GoalUiModel
 import cmc.goalmate.presentation.ui.home.GoalUiStatus
 import cmc.goalmate.presentation.ui.home.dummyGoals
+import cmc.goalmate.presentation.ui.util.singleClickable
 
 @Composable
 fun GoalItem(
@@ -38,7 +38,7 @@ fun GoalItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable { navigateToDetail(goal.id) },
+        modifier = modifier.singleClickable { navigateToDetail(goal.id) },
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
