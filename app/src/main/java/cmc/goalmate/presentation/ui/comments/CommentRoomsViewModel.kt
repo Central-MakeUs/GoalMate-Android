@@ -22,7 +22,9 @@ import javax.inject.Inject
 sealed interface GoalCommentsUiState {
     data object Loading : GoalCommentsUiState
 
-    data class LoggedIn(val commentRooms: List<CommentRoomsUiModel>) : GoalCommentsUiState
+    data class LoggedIn(
+        val commentRooms: List<CommentRoomsUiModel>,
+    ) : GoalCommentsUiState
 
     data object LoggedOut : GoalCommentsUiState
 
@@ -51,18 +53,19 @@ class GoalCommentsViewModel
 
         override fun onLoginStateChanged(isLoggedIn: Boolean) {
             if (isLoggedIn) {
-                loadComments()
+                loadCommentRooms()
             } else {
                 _state.value = GoalCommentsUiState.LoggedOut
             }
         }
 
-        private fun loadComments() {
+        private fun loadCommentRooms() {
             viewModelScope.launch {
-                val updatedComments = when (val result = commentRepository.getCommentRooms()) {
-                    is DomainResult.Success -> GoalCommentsUiState.LoggedIn(result.data.toUi())
-                    is DomainResult.Error -> GoalCommentsUiState.Error
-                }
+                val updatedComments =
+                    when (val result = commentRepository.getCommentRooms()) {
+                        is DomainResult.Success -> GoalCommentsUiState.LoggedIn(result.data.toUi())
+                        is DomainResult.Error -> GoalCommentsUiState.Error
+                    }
                 _state.update { updatedComments }
             }
         }
@@ -70,12 +73,12 @@ class GoalCommentsViewModel
         private fun observeGoalMateEvent() {
             viewModelScope.launch {
                 EventBus.subscribeEvent<GoalMateEvent.StartNewGoal> {
-                    loadComments()
+                    loadCommentRooms()
                 }
             }
             viewModelScope.launch {
                 EventBus.subscribeEvent<GoalMateEvent.HasNewComment> {
-                    loadComments()
+                    loadCommentRooms()
                 }
             }
         }
@@ -84,6 +87,10 @@ class GoalCommentsViewModel
             when (action) {
                 is CommentRoomsAction.SelectCommentRoom -> {
                     selectCommentRoom(action.roomId)
+                }
+
+                CommentRoomsAction.Retry -> {
+                    loadCommentRooms()
                 }
             }
         }
@@ -107,13 +114,14 @@ class GoalCommentsViewModel
 
                 _state.update { current ->
                     (current as GoalCommentsUiState.LoggedIn).copy(
-                        commentRooms = current.commentRooms.map { room ->
-                            if (room.roomId == roomId) {
-                                room.copy(hasNewComment = false)
-                            } else {
-                                room
-                            }
-                        },
+                        commentRooms =
+                            current.commentRooms.map { room ->
+                                if (room.roomId == roomId) {
+                                    room.copy(hasNewComment = false)
+                                } else {
+                                    room
+                                }
+                            },
                     )
                 }
             }
@@ -129,7 +137,11 @@ class GoalCommentsViewModel
     }
 
 sealed interface CommentRoomsAction {
-    data class SelectCommentRoom(val roomId: Int) : CommentRoomsAction
+    data class SelectCommentRoom(
+        val roomId: Int,
+    ) : CommentRoomsAction
+
+    data object Retry : CommentRoomsAction
 }
 
 sealed interface CommentRoomsEvent {

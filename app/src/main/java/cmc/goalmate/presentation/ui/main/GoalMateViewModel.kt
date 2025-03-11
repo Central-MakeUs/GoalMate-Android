@@ -12,9 +12,11 @@ import cmc.goalmate.presentation.ui.main.GoalMateUiState.Companion.DEFAULT_REMAI
 import cmc.goalmate.presentation.ui.util.EventBus
 import cmc.goalmate.presentation.ui.util.GoalMateEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,6 +31,9 @@ class GoalMateViewModel
     ) : LoginStateViewModel(authRepository) {
         private val _state: MutableStateFlow<GoalMateUiState> = MutableStateFlow(GoalMateUiState.INITIAL_STATE)
         val state: StateFlow<GoalMateUiState> = _state.asStateFlow()
+
+        private val _event = Channel<MainEvent>()
+        val event = _event.receiveAsFlow()
 
         private var isFirstLoad: Boolean = true
 
@@ -61,6 +66,12 @@ class GoalMateViewModel
 
                         GoalMateEvent.StartNewGoal -> {
                             fetchRemainingTodos()
+                        }
+
+                        GoalMateEvent.NoInternet -> {
+                            viewModelScope.launch {
+                                _event.send(MainEvent.ShowErrorMessage)
+                            }
                         }
 
                         else -> {}
@@ -148,3 +159,7 @@ private inline fun <reified T> handleDomainResult(result: DomainResult<T, RootEr
             } as T
         }
     }
+
+sealed interface MainEvent {
+    data object ShowErrorMessage : MainEvent
+}

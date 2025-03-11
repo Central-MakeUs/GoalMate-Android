@@ -64,7 +64,7 @@ fun DailyComment(
 }
 
 @Composable
-private fun CommentDateHeader(
+ fun CommentDateHeader(
     commentDate: String,
     dDayText: String,
     modifier: Modifier = Modifier,
@@ -91,7 +91,7 @@ private fun CommentDateHeader(
 }
 
 @Composable
-private fun DailyCommentItem(
+fun DailyCommentItem(
     messageId: Int,
     content: String,
     sender: SenderUiModel,

@@ -109,6 +109,10 @@ class GoalDetailViewModel
                 GoalDetailAction.ConfirmGoalStart -> {
                     startGoal()
                 }
+
+                GoalDetailAction.Retry -> {
+                    loadGoalDetail(goalId)
+                }
             }
         }
 

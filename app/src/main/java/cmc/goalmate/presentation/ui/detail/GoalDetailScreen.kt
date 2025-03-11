@@ -97,7 +97,9 @@ fun GoalDetailScreen(
 
             is GoalDetailUiState.Error -> {
                 ErrorScreen(
-                    onRetryButtonClicked = {}, // TODO
+                    onRetryButtonClicked = {
+                        viewModel.onAction(GoalDetailAction.Retry)
+                    },
                     modifier = Modifier.fillMaxSize(),
                 )
             }

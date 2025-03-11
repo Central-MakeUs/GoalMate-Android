@@ -13,19 +13,23 @@ import cmc.goalmate.presentation.ui.progress.completed.model.CompletedGoalUiMode
 import cmc.goalmate.presentation.ui.progress.completed.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface CompletedGoalUiState {
     data object Loading : CompletedGoalUiState
 
-    data class Success(val goal: CompletedGoalUiModel) : CompletedGoalUiState
+    data class Success(
+        val goal: CompletedGoalUiModel,
+    ) : CompletedGoalUiState
 
     data object Error : CompletedGoalUiState
 }
@@ -46,39 +50,50 @@ class CompletedGoalViewModel
         private val _event = Channel<CompletedGoalEvent>()
         val event = _event.receiveAsFlow()
 
+        private val _state = MutableStateFlow<CompletedGoalUiState>(CompletedGoalUiState.Loading)
         val state: StateFlow<CompletedGoalUiState> =
-            flow {
-                emit(CompletedGoalUiState.Loading)
+            _state
+                .onStart { loadCompletedGoal() }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000L),
+                    initialValue = CompletedGoalUiState.Loading,
+                )
 
-                menteeGoalRepository.getGoalInfo(menteeGoalId)
+        private fun loadCompletedGoal() {
+            viewModelScope.launch {
+                menteeGoalRepository
+                    .getGoalInfo(menteeGoalId)
                     .onSuccess { goal ->
                         val menteeName = userRepository.getNickName().first()
-                        emit(CompletedGoalUiState.Success(goal.toUi(menteeName = menteeName)))
+                        _state.update { CompletedGoalUiState.Success(goal.toUi(menteeName = menteeName)) }
+                    }.onFailure {
+                        _state.update { CompletedGoalUiState.Error }
                     }
-                    .onFailure {
-                        emit(CompletedGoalUiState.Error)
-                    }
-            }.stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000L),
-                CompletedGoalUiState.Loading,
-            )
+            }
+        }
 
         fun onAction(action: CompletedGoalAction) {
             when (action) {
-                CompletedGoalAction.NavigateToCommentDetail -> sendEvent(
-                    CompletedGoalEvent.NavigateToCommentDetail(
-                        roomId = commentRoomId,
-                        goalTitle = (state.value as CompletedGoalUiState.Success).goal.title,
-                        endDate = (state.value as CompletedGoalUiState.Success).goal.endDate.toString(),
-                    ),
-                )
+                CompletedGoalAction.NavigateToCommentDetail ->
+                    sendEvent(
+                        CompletedGoalEvent.NavigateToCommentDetail(
+                            roomId = commentRoomId,
+                            goalTitle = (state.value as CompletedGoalUiState.Success).goal.title,
+                            endDate = (state.value as CompletedGoalUiState.Success).goal.endDate.toString(),
+                        ),
+                    )
 
-                CompletedGoalAction.NavigateToGoalDetail -> sendEvent(
-                    CompletedGoalEvent.NavigateToGoalDetail(
-                        goalId = goalId,
-                    ),
-                )
+                CompletedGoalAction.NavigateToGoalDetail ->
+                    sendEvent(
+                        CompletedGoalEvent.NavigateToGoalDetail(
+                            goalId = goalId,
+                        ),
+                    )
+
+                CompletedGoalAction.Retry -> {
+                    loadCompletedGoal()
+                }
             }
         }
 
@@ -93,10 +108,14 @@ sealed interface CompletedGoalAction {
     data object NavigateToGoalDetail : CompletedGoalAction
 
     data object NavigateToCommentDetail : CompletedGoalAction
+
+    data object Retry : CompletedGoalAction
 }
 
 sealed interface CompletedGoalEvent {
-    data class NavigateToGoalDetail(val goalId: Int) : CompletedGoalEvent
+    data class NavigateToGoalDetail(
+        val goalId: Int,
+    ) : CompletedGoalEvent
 
     data class NavigateToCommentDetail(
         val roomId: Int,

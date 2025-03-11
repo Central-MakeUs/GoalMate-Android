@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmc.goalmate.presentation.components.AppBarWithBackButton
+import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
@@ -76,7 +77,14 @@ private fun CompletedScreenContent(
     modifier: Modifier = Modifier,
 ) {
     when (state) {
-        CompletedGoalUiState.Error -> {}
+        CompletedGoalUiState.Error -> {
+            ErrorScreen(
+                onRetryButtonClicked = {
+                    onAction(CompletedGoalAction.Retry)
+                },
+                modifier = modifier
+            )
+        }
         CompletedGoalUiState.Loading -> {}
         is CompletedGoalUiState.Success -> {
             Box(

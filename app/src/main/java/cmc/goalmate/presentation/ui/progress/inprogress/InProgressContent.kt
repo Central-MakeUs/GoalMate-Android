@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.ui.progress.components.ProgressBottomButton
@@ -26,6 +27,13 @@ fun InProgressScreenContent(
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (state.isError) {
+        ErrorScreen(
+            onRetryButtonClicked = { onAction(InProgressAction.Retry) },
+            modifier = modifier.fillMaxSize(),
+        )
+        return
+    }
     Box(modifier = modifier) {
         InProgressContent(
             state = state,
@@ -51,8 +59,7 @@ fun InProgressContent(
             .padding(
                 top = 6.dp,
                 bottom = GoalMateDimens.ItemVerticalPaddingLarge,
-            )
-            .verticalScroll(rememberScrollState()),
+            ).verticalScroll(rememberScrollState()),
     ) {
         CalendarSection(
             weeklyProgressState = state.weeklyProgressState,

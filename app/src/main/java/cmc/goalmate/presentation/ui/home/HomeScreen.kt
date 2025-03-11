@@ -34,9 +34,10 @@ fun HomeScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(
-        modifier = modifier.background(
-            MaterialTheme.goalMateColors.background
-        ),
+        modifier =
+            modifier.background(
+                MaterialTheme.goalMateColors.background,
+            ),
     ) {
         LogoAppBar()
         when (val homeState = state) {
@@ -45,14 +46,18 @@ fun HomeScreen(
                 HomeContent(
                     goals = homeState.goals,
                     navigateToDetail = navigateToDetail,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(top = GoalMateDimens.TopMargin),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(top = GoalMateDimens.TopMargin),
                 )
             }
 
             is HomeUiState.Error -> {
-                ErrorScreen(modifier = Modifier.fillMaxSize())
+                ErrorScreen(
+                    onRetryButtonClicked = { viewModel.onAction(HomeAction.Retry) },
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
     }
@@ -67,11 +72,12 @@ private fun HomeContent(
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
-        contentPadding = PaddingValues(
-            start = GoalMateDimens.HorizontalPadding,
-            end = GoalMateDimens.HorizontalPadding,
-            bottom = 105.dp,
-        ),
+        contentPadding =
+            PaddingValues(
+                start = GoalMateDimens.HorizontalPadding,
+                end = GoalMateDimens.HorizontalPadding,
+                bottom = 105.dp,
+            ),
         horizontalArrangement = Arrangement.spacedBy(30.dp),
         verticalArrangement = Arrangement.spacedBy(30.dp),
     ) {
