@@ -60,7 +60,7 @@ fun GoalDetailScreen(
 
                     val params = PaymentCompletedParams(
                         goalId = event.newGoalId,
-                        commentRoomId = 0,
+                        commentRoomId = event.newCommentRoomId,
                         goalSummary = event.goalSummary,
                     )
                     navigateToCompleted(params)
