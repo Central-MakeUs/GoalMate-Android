@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ sealed interface HomeUiState {
 
     data class Success(
         val goals: List<GoalUiModel>,
+        val isRefreshing: Boolean,
     ) : HomeUiState
 
     data class Error(
@@ -36,6 +38,7 @@ class HomeViewModel
     constructor(
         private val goalsRepository: GoalsRepository,
     ) : ViewModel() {
+        private val isRefreshing = MutableStateFlow(false)
         private val _state: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
         val state: StateFlow<HomeUiState> =
             _state
@@ -51,7 +54,12 @@ class HomeViewModel
                 goalsRepository
                     .getGoals()
                     .onSuccess { result ->
-                        _state.value = HomeUiState.Success(result.goals.map { it.toUi() })
+                        _state.update {
+                            HomeUiState.Success(
+                                goals = result.goals.map { it.toUi() },
+                                isRefreshing = isRefreshing.value,
+                            )
+                        }
                     }.onFailure {
                         if (it == DataError.Network.NO_INTERNET) {
                             EventBus.postEvent(GoalMateEvent.NoInternet)
@@ -69,10 +77,21 @@ class HomeViewModel
                         loadGoals()
                     }
                 }
+
+                HomeAction.Refresh -> {
+                    onPullToRefreshTrigger()
+                }
             }
+        }
+
+        private fun onPullToRefreshTrigger() {
+            _state.update { (it as HomeUiState.Success).copy(isRefreshing = true) }
+            loadGoals()
         }
     }
 
 sealed interface HomeAction {
     data object Retry : HomeAction
+
+    data object Refresh : HomeAction
 }
