@@ -5,6 +5,7 @@ import cmc.goalmate.domain.model.MenteeGoalStatus
 import cmc.goalmate.domain.model.MenteeGoals
 import cmc.goalmate.presentation.ui.util.calculateDaysBetween
 import cmc.goalmate.presentation.ui.util.calculateProgress
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 data class MyGoalUiModel(
@@ -14,8 +15,8 @@ data class MyGoalUiModel(
     val title: String,
     val thumbnailUrl: String,
     val mentorName: String,
-    val startDate: String,
-    val endDate: String,
+    val startDate: LocalDate,
+    val endDate: LocalDate,
     val remainingDays: Int,
     val totalTodoCount: Int,
     val totalCompletedTodoCount: Int,
@@ -25,6 +26,12 @@ data class MyGoalUiModel(
     val goalProgress: Float
         get() = calculateProgress(totalCompletedCount = totalCompletedTodoCount, totalTodoCount = totalTodoCount)
 
+    val displayedEndDate: String = "${endDate.format(myGoalsDateFormatter)} 까지"
+
+    val disPlayedStartDate: String = "${startDate.format(myGoalsDateFormatter)} 부터"
+
+    fun isFinished(currentDate: LocalDate): Boolean = endDate > currentDate
+
     companion object {
         val DUMMY = MyGoalUiModel(
             menteeGoalId = 0,
@@ -33,8 +40,8 @@ data class MyGoalUiModel(
             title = "다온과 함께하는 영어 완전 정복",
             thumbnailUrl = "",
             mentorName = "다온",
-            startDate = "2025년 01월 01일 부터",
-            endDate = "2025년 01월 30일까지",
+            startDate = LocalDate.now(),
+            endDate = LocalDate.now(),
             remainingDays = 2,
             totalTodoCount = 10,
             totalCompletedTodoCount = 3,
@@ -47,8 +54,8 @@ data class MyGoalUiModel(
             title = "마루와 함께하는 백앤드 서버 찐천재 목표",
             thumbnailUrl = "",
             mentorName = "마루",
-            startDate = "2025년 01월 01일 부터",
-            endDate = "2025년 01월 30일까지",
+            startDate = LocalDate.now(),
+            endDate = LocalDate.now(),
             remainingDays = 2,
             totalTodoCount = 12,
             totalCompletedTodoCount = 3,
@@ -70,15 +77,17 @@ enum class MyGoalUiState(
 
 fun MenteeGoals.toUi(): List<MyGoalUiModel> = this.goals.map { it.toUi() }
 
-fun MenteeGoal.toUi(formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")): MyGoalUiModel =
+val myGoalsDateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+
+fun MenteeGoal.toUi(): MyGoalUiModel =
     MyGoalUiModel(
         menteeGoalId = menteeGoalId,
         goalId = goalId,
         title = title,
         thumbnailUrl = mainImage ?: "",
         mentorName = mentorName,
-        startDate = "${startDate.format(formatter)} 부터",
-        endDate = "${endDate.format(formatter)} 까지",
+        startDate = startDate,
+        endDate = endDate,
         remainingDays = calculateDaysBetween(endDate),
         totalCompletedTodoCount = totalCompletedCount,
         totalTodoCount = totalTodoCount,

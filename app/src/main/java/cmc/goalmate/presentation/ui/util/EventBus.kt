@@ -36,4 +36,6 @@ sealed class GoalMateEvent() {
     data object HasNewComment : GoalMateEvent()
 
     data object NoInternet : GoalMateEvent()
+
+    data object UpdateComments : GoalMateEvent()
 }

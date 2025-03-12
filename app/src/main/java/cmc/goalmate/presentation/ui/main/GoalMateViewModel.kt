@@ -74,6 +74,10 @@ class GoalMateViewModel
                             }
                         }
 
+                        GoalMateEvent.UpdateComments -> {
+                            fetchNewComments()
+                        }
+
                         else -> {}
                     }
                 }

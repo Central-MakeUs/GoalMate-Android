@@ -12,9 +12,11 @@ import cmc.goalmate.presentation.ui.util.GoalMateEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,8 +42,16 @@ class GoalCommentsViewModel
         authRepository: AuthRepository,
         private val commentRepository: CommentRepository,
     ) : LoginStateViewModel(authRepository) {
-        private val _state: MutableStateFlow<GoalCommentsUiState> = MutableStateFlow(GoalCommentsUiState.Loading)
-        val state: StateFlow<GoalCommentsUiState> = _state.asStateFlow()
+        private val _state: MutableStateFlow<GoalCommentsUiState> =
+            MutableStateFlow(GoalCommentsUiState.Loading)
+        val state: StateFlow<GoalCommentsUiState> =
+            _state
+                .onStart { loadCommentRooms() }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(1000L),
+                    initialValue = GoalCommentsUiState.Loading,
+                )
 
         private val _event = Channel<CommentRoomsEvent>()
         val event = _event.receiveAsFlow()
@@ -63,7 +73,14 @@ class GoalCommentsViewModel
             viewModelScope.launch {
                 val updatedComments =
                     when (val result = commentRepository.getCommentRooms()) {
-                        is DomainResult.Success -> GoalCommentsUiState.LoggedIn(result.data.toUi())
+                        is DomainResult.Success -> {
+                            val before = (state.value as? GoalCommentsUiState.LoggedIn)?.commentRooms?.count { it.hasNewComment } ?: 0
+                            val updated = result.data.toUi()
+                            if (before != updated.count { it.hasNewComment }) {
+                                EventBus.postEvent(GoalMateEvent.UpdateComments)
+                            }
+                            GoalCommentsUiState.LoggedIn(updated)
+                        }
                         is DomainResult.Error -> GoalCommentsUiState.Error
                     }
                 _state.update { updatedComments }

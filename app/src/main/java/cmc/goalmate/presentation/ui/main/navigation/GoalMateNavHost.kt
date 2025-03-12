@@ -14,7 +14,6 @@ import cmc.goalmate.presentation.ui.common.GoalMateWebScreen
 import cmc.goalmate.presentation.ui.detail.navigation.detailNavGraph
 import cmc.goalmate.presentation.ui.detail.navigation.navigateToDetail
 import cmc.goalmate.presentation.ui.home.navigation.mainNavGraph
-import cmc.goalmate.presentation.ui.home.navigation.navigateToHome
 import cmc.goalmate.presentation.ui.progress.completed.CompletedScreen
 import cmc.goalmate.presentation.ui.progress.inprogress.InProgressScreen
 
