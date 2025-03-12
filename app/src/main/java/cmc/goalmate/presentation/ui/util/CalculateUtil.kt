@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit
 fun calculateDaysBetween(
     endDate: LocalDate,
     startDate: LocalDate = LocalDate.now(),
-): Int = ChronoUnit.DAYS.between(startDate, endDate).toInt().coerceAtLeast(0)
+): Int = ChronoUnit.DAYS.between(startDate, endDate).toInt()
 
 fun calculateProgress(
     totalCompletedCount: Int,

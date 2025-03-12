@@ -48,7 +48,7 @@ fun DailyComment(
     ) {
         CommentDateHeader(
             commentDate = comment.displayedDate,
-            dDayText = "${comment.daysFromStart}",
+            dDayNumber = comment.daysFromStart,
             modifier = Modifier.fillMaxWidth(),
         )
         comment.messages.forEach { message ->
@@ -64,9 +64,9 @@ fun DailyComment(
 }
 
 @Composable
- fun CommentDateHeader(
+fun CommentDateHeader(
     commentDate: String,
-    dDayText: String,
+    dDayNumber: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -81,12 +81,21 @@ fun DailyComment(
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.size(6.dp))
-        TextTag(
-            text = "D-$dDayText",
-            textColor = MaterialTheme.goalMateColors.onBackground,
-            backgroundColor = MaterialTheme.goalMateColors.secondary02,
-            textStyle = MaterialTheme.goalMateTypography.captionSemiBold,
-        )
+        if (dDayNumber < 0) {
+            TextTag(
+                text = "done",
+                textColor = MaterialTheme.goalMateColors.onSecondary,
+                backgroundColor = MaterialTheme.goalMateColors.secondary01,
+                textStyle = MaterialTheme.goalMateTypography.captionSemiBold,
+            )
+        } else {
+            TextTag(
+                text = "D-$dDayNumber",
+                textColor = MaterialTheme.goalMateColors.onBackground,
+                backgroundColor = MaterialTheme.goalMateColors.secondary02,
+                textStyle = MaterialTheme.goalMateTypography.captionSemiBold,
+            )
+        }
     }
 }
 

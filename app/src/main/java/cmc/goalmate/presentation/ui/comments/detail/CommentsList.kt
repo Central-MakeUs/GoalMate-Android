@@ -81,7 +81,7 @@ fun CommentsList(
 
             CommentDateHeader(
                 commentDate = comment.displayedDate,
-                dDayText = "${comment.daysFromStart}",
+                dDayNumber = comment.daysFromStart,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
