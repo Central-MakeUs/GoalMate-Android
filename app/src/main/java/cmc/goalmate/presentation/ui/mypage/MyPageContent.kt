@@ -2,11 +2,11 @@ package cmc.goalmate.presentation.ui.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.ThickDivider
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
@@ -39,75 +40,81 @@ fun MyPageContent(
     userState: MyPageUiState,
     menuItems: List<MenuItemUiModel>,
     navigateToMyGoals: () -> Unit,
-    onAction: (MyPageAction.MenuAction) -> Unit,
+    onAction: (MyPageAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Spacer(Modifier.size(16.dp))
-
-        UserInfoSection(
-            state = userState,
-            editNickName = { onAction(MyPageAction.MenuAction.EditNickName) },
-            onGoalSummaryClicked = { navigateToMyGoals() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = GoalMateDimens.HorizontalPadding),
-        )
-
-        Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
-        ThickDivider()
-        Spacer(Modifier.size(GoalMateDimens.HorizontalPadding))
-
-        menuItems.forEach { menuItem ->
-            MenuItem(
-                title = menuItem.title,
-                onClick = { onAction(menuItem.menuAction) },
-                modifier = Modifier.fillMaxWidth(),
+    when (userState) {
+        MyPageUiState.Error -> {
+            ErrorScreen(
+                onRetryButtonClicked = { onAction(MyPageAction.Retry) },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = GoalMateDimens.HorizontalPadding),
             )
+        }
+        MyPageUiState.Loading -> {
+            UserInfoSectionSkeleton(modifier = modifier)
+        }
+        is MyPageUiState.Success -> {
+            Column(modifier = modifier) {
+                Spacer(Modifier.size(16.dp))
+
+                UserInfoSection(
+                    userInfo = userState.userInfo,
+                    isLoggedIn = userState.isLoggedIn,
+                    editNickName = { onAction(MyPageAction.MenuAction.EditNickName) },
+                    onGoalSummaryClicked = { navigateToMyGoals() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = GoalMateDimens.HorizontalPadding),
+                )
+
+                Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
+                ThickDivider()
+                Spacer(Modifier.size(GoalMateDimens.HorizontalPadding))
+
+                menuItems.forEach { menuItem ->
+                    MenuItem(
+                        title = menuItem.title,
+                        onClick = { onAction(menuItem.menuAction) },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
 private fun UserInfoSection(
-    state: MyPageUiState,
+    userInfo: MyPageUiModel,
+    isLoggedIn: Boolean,
     editNickName: () -> Unit,
     onGoalSummaryClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (state) {
-        MyPageUiState.Loading -> {
-            UserInfoSectionSkeleton(modifier = modifier)
-        }
+    Column(modifier = modifier) {
+        ProfileHeaderSection(
+            title = userInfo.nickName,
+            subtitle = userInfo.welcomeMessage,
+            targetIcon = userInfo.icon,
+            iconBackground = if (isLoggedIn) {
+                MaterialTheme.goalMateColors.completed
+            } else {
+                MaterialTheme.goalMateColors.primary
+            },
+            onIconClicked = editNickName,
+            modifier = Modifier.fillMaxWidth(),
+        )
 
-        is MyPageUiState.Success -> {
-            val userInfo = state.userInfo
-            Column(modifier = modifier) {
-                ProfileHeaderSection(
-                    title = userInfo.nickName,
-                    subtitle = userInfo.welcomeMessage,
-                    targetIcon = userInfo.icon,
-                    iconBackground = if (state.isLoggedIn) {
-                        MaterialTheme.goalMateColors.completed
-                    } else {
-                        MaterialTheme.goalMateColors.primary
-                    },
-                    onIconClicked = editNickName,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+        Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
 
-                Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
-
-                GoalStatusSummary(
-                    onGoingGoalCount = userInfo.onGoingGoalCount,
-                    completedGoalCount = userInfo.completedGoalCount,
-                    onSectionClicked = onGoalSummaryClicked,
-                    modifier = Modifier,
-                )
-            }
-        }
-
-        MyPageUiState.Error -> {}
+        GoalStatusSummary(
+            onGoingGoalCount = userInfo.onGoingGoalCount,
+            completedGoalCount = userInfo.completedGoalCount,
+            onSectionClicked = onGoalSummaryClicked,
+            modifier = Modifier,
+        )
     }
 }
 

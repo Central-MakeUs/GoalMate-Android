@@ -2,6 +2,7 @@ package cmc.goalmate.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.DomainResult
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.AuthRepository
@@ -34,11 +35,17 @@ class MainViewModel
                     return@launch
                 }
 
-                when (authRepository.validateToken()) {
+                when (val result = authRepository.validateToken()) {
                     is DomainResult.Error -> {
-                        authRepository.deleteToken().onSuccess {
+                        if (result.error == DataError.Network.NO_INTERNET) {
                             _isReady.value = true
+                            return@launch
                         }
+                        authRepository
+                            .deleteToken()
+                            .onSuccess {
+                                _isReady.value = true
+                            }
                     }
                     is DomainResult.Success -> {
                         _isReady.value = true
