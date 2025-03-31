@@ -103,15 +103,14 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.datastore.preferences)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.core.splashscreen)
-
-    implementation("com.kakao.sdk:v2-user:2.20.6")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation(libs.v2.user)
 }
 
 kapt {
