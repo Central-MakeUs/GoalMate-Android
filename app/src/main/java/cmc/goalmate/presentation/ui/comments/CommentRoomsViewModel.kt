@@ -46,8 +46,11 @@ class GoalCommentsViewModel
             MutableStateFlow(GoalCommentsUiState.Loading)
         val state: StateFlow<GoalCommentsUiState> =
             _state
-                .onStart { loadCommentRooms() }
-                .stateIn(
+                .onStart {
+                    if (isLoggedIn.value) {
+                        loadCommentRooms()
+                    }
+                }.stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(1000L),
                     initialValue = GoalCommentsUiState.Loading,
