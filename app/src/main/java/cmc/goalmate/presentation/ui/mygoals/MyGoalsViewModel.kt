@@ -26,11 +26,15 @@ import javax.inject.Inject
 sealed interface MyGoalsUiState {
     data object Loading : MyGoalsUiState
 
-    data class LoggedIn(val myGoals: List<MyGoalUiModel>) : MyGoalsUiState
+    data class LoggedIn(
+        val myGoals: List<MyGoalUiModel>,
+    ) : MyGoalsUiState
 
     data object LoggedOut : MyGoalsUiState
 
-    data class Error(val error: String) : MyGoalsUiState
+    data class Error(
+        val error: String,
+    ) : MyGoalsUiState
 }
 
 fun MyGoalsUiState.currentMyGoals(): List<MyGoalUiModel> = (this as? MyGoalsUiState.LoggedIn)?.myGoals ?: emptyList()
@@ -118,7 +122,7 @@ class MyGoalsViewModel
                 }
                 is MyGoalsAction.SelectMyGoal -> {
                     val target = action.myGoal
-                    if (target.isFinished(LocalDate.now())) {
+                    if (target.isOngoing(LocalDate.now())) {
                         sendEvent(
                             MyGoalsEvent.NavigateToInProgress(
                                 roomId = target.roomId,
@@ -159,28 +163,30 @@ class MyGoalsViewModel
             }
             val previousRemainGoals = goalToUpdate.remainGoals
 
-            val newCompletedTodoCount = when {
-                updatedCount < previousRemainGoals -> {
-                    goalToUpdate.totalCompletedTodoCount + (previousRemainGoals - updatedCount)
+            val newCompletedTodoCount =
+                when {
+                    updatedCount < previousRemainGoals -> {
+                        goalToUpdate.totalCompletedTodoCount + (previousRemainGoals - updatedCount)
+                    }
+                    updatedCount > previousRemainGoals -> {
+                        goalToUpdate.totalCompletedTodoCount - (updatedCount - previousRemainGoals)
+                    }
+                    else -> {
+                        goalToUpdate.totalCompletedTodoCount
+                    }
                 }
-                updatedCount > previousRemainGoals -> {
-                    goalToUpdate.totalCompletedTodoCount - (updatedCount - previousRemainGoals)
-                }
-                else -> {
-                    goalToUpdate.totalCompletedTodoCount
-                }
-            }
 
-            val newGoals = currentMyGoals.map { myGoal ->
-                if (myGoal.menteeGoalId == menteeGoalId) {
-                    myGoal.copy(
-                        remainGoals = updatedCount,
-                        totalCompletedTodoCount = newCompletedTodoCount,
-                    )
-                } else {
-                    myGoal
+            val newGoals =
+                currentMyGoals.map { myGoal ->
+                    if (myGoal.menteeGoalId == menteeGoalId) {
+                        myGoal.copy(
+                            remainGoals = updatedCount,
+                            totalCompletedTodoCount = newCompletedTodoCount,
+                        )
+                    } else {
+                        myGoal
+                    }
                 }
-            }
             postEvent(updatedMyGoals = newGoals)
             _state.update { MyGoalsUiState.LoggedIn(myGoals = newGoals) }
         }
@@ -191,7 +197,9 @@ sealed interface MyGoalsAction {
         val myGoal: MyGoalUiModel,
     ) : MyGoalsAction
 
-    data class RestartGoal(val goalId: Int) : MyGoalsAction
+    data class RestartGoal(
+        val goalId: Int,
+    ) : MyGoalsAction
 
     data object Retry : MyGoalsAction
 }

@@ -30,37 +30,39 @@ data class MyGoalUiModel(
 
     val disPlayedStartDate: String = "${startDate.format(myGoalsDateFormatter)} 부터"
 
-    fun isFinished(currentDate: LocalDate): Boolean = endDate > currentDate
+    fun isOngoing(currentDate: LocalDate): Boolean = endDate >= currentDate
 
     companion object {
-        val DUMMY = MyGoalUiModel(
-            menteeGoalId = 0,
-            goalId = 0,
-            roomId = 0,
-            title = "다온과 함께하는 영어 완전 정복",
-            thumbnailUrl = "",
-            mentorName = "다온",
-            startDate = LocalDate.now(),
-            endDate = LocalDate.now(),
-            remainingDays = 2,
-            totalTodoCount = 10,
-            totalCompletedTodoCount = 3,
-            goalState = MyGoalUiState.IN_PROGRESS,
-        )
-        val DUMMY2 = MyGoalUiModel(
-            menteeGoalId = 0,
-            roomId = 0,
-            goalId = 0,
-            title = "마루와 함께하는 백앤드 서버 찐천재 목표",
-            thumbnailUrl = "",
-            mentorName = "마루",
-            startDate = LocalDate.now(),
-            endDate = LocalDate.now(),
-            remainingDays = 2,
-            totalTodoCount = 12,
-            totalCompletedTodoCount = 3,
-            goalState = MyGoalUiState.COMPLETED,
-        )
+        val DUMMY =
+            MyGoalUiModel(
+                menteeGoalId = 0,
+                goalId = 0,
+                roomId = 0,
+                title = "다온과 함께하는 영어 완전 정복",
+                thumbnailUrl = "",
+                mentorName = "다온",
+                startDate = LocalDate.now(),
+                endDate = LocalDate.now(),
+                remainingDays = 2,
+                totalTodoCount = 10,
+                totalCompletedTodoCount = 3,
+                goalState = MyGoalUiState.IN_PROGRESS,
+            )
+        val DUMMY2 =
+            MyGoalUiModel(
+                menteeGoalId = 0,
+                roomId = 0,
+                goalId = 0,
+                title = "마루와 함께하는 백앤드 서버 찐천재 목표",
+                thumbnailUrl = "",
+                mentorName = "마루",
+                startDate = LocalDate.now(),
+                endDate = LocalDate.now(),
+                remainingDays = 2,
+                totalTodoCount = 12,
+                totalCompletedTodoCount = 3,
+                goalState = MyGoalUiState.COMPLETED,
+            )
     }
 }
 
