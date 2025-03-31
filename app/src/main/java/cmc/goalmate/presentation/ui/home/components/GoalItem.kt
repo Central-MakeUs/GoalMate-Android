@@ -3,6 +3,8 @@ package cmc.goalmate.presentation.ui.home.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,13 +84,14 @@ private fun GoalThumbnail(
     goalImage: String,
     modifier: Modifier = Modifier,
 ) {
-    val imageModifier = Modifier.run {
-        if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
-            this.alpha(0.5f)
-        } else {
-            this
+    val imageModifier =
+        Modifier.run {
+            if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
+                this.alpha(0.5f)
+            } else {
+                this
+            }
         }
-    }
 
     Box(
         modifier = modifier,
@@ -95,19 +99,21 @@ private fun GoalThumbnail(
     ) {
         GoalMateImage(
             image = goalImage,
-            modifier = imageModifier.size(
-                width = GoalMateDimens.GoalItemWidth,
-                height = GoalMateDimens.GoalItemImageHeight,
-            ),
+            modifier =
+                imageModifier
+                    .fillMaxWidth()
+                    .height(GoalMateDimens.GoalItemImageHeight),
             shape = RoundedCornerShape(4.dp),
+            contentScale = ContentScale.Crop,
         )
         if (goalUiStatus == GoalUiStatus.SOLD_OUT) {
             GoalMateImage(
                 image = R.drawable.icon_sold_out,
-                modifier = Modifier.size(
-                    width = GoalMateDimens.GoalItemWidth,
-                    height = GoalMateDimens.GoalItemImageHeight,
-                ),
+                modifier =
+                    Modifier.size(
+                        width = GoalMateDimens.GoalItemWidth,
+                        height = GoalMateDimens.GoalItemImageHeight,
+                    ),
             )
         }
     }

@@ -82,12 +82,13 @@ private fun HomeContent(
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
     Box(
-        modifier = modifier
-            .pullToRefresh(
-                isRefreshing = isRefreshing,
-                state = pullToRefreshState,
-                onRefresh = onRefresh,
-            ),
+        modifier =
+            modifier
+                .pullToRefresh(
+                    isRefreshing = isRefreshing,
+                    state = pullToRefreshState,
+                    onRefresh = onRefresh,
+                ),
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -98,7 +99,7 @@ private fun HomeContent(
                     end = GoalMateDimens.HorizontalPadding,
                     bottom = 105.dp,
                 ),
-            horizontalArrangement = Arrangement.spacedBy(30.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(30.dp),
         ) {
             items(goals) { goal ->
