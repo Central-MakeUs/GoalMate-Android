@@ -1,7 +1,6 @@
 package cmc.goalmate.presentation.ui.mypage.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.util.singleClickable
 
 @Composable
 fun ProfileHeaderSection(
@@ -60,7 +60,7 @@ fun ProfileHeaderSection(
                 modifier = Modifier
                     .clip(CircleShape)
                     .background(color = iconBackground)
-                    .clickable { onIconClicked() }
+                    .singleClickable { onIconClicked() }
                     .padding(5.dp),
                 tint = MaterialTheme.goalMateColors.onBackground,
             )

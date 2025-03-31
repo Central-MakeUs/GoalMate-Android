@@ -38,8 +38,17 @@ fun MenteeGoalResponse.toData(): MenteeGoalDto =
 
 fun MenteeGoalsDto.toDomain(): MenteeGoals = MenteeGoals(goals.map { it.toDomain() })
 
-fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = goalMateDateFormatter): MenteeGoal =
-    MenteeGoal(
+fun MenteeGoalDto.toDomain(
+    dateFormatter: DateTimeFormatter = goalMateDateFormatter,
+    targetDate: LocalDate = LocalDate.now(),
+): MenteeGoal {
+    val parsedEndDate = LocalDate.parse(endDate, dateFormatter)
+    val goalStatus = if (parsedEndDate < targetDate) {
+        MenteeGoalStatus.Completed(finalComment ?: "")
+    } else {
+        convertMenteeGoalStatus()
+    }
+    return MenteeGoal(
         menteeGoalId = menteeGoalId,
         goalId = goalId,
         title = title,
@@ -47,15 +56,16 @@ fun MenteeGoalDto.toDomain(dateFormatter: DateTimeFormatter = goalMateDateFormat
         mentorName = mentorName,
         mainImage = mainImage,
         startDate = LocalDate.parse(startDate, dateFormatter),
-        endDate = LocalDate.parse(endDate, dateFormatter),
+        endDate = parsedEndDate,
         todayTodoCount = todayTodoCount,
         todayCompletedCount = todayCompletedCount,
         todayRemainingCount = todayRemainingCount,
         totalTodoCount = totalTodoCount,
         totalCompletedCount = totalCompletedCount,
-        menteeGoalStatus = convertMenteeGoalStatus(),
+        menteeGoalStatus = goalStatus,
         commentRoomId = commentRoomId,
     )
+}
 
 private fun MenteeGoalDto.convertMenteeGoalStatus(): MenteeGoalStatus =
     when (menteeGoalStatus) {

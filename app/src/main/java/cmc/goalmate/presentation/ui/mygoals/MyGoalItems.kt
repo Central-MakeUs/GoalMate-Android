@@ -93,8 +93,8 @@ private fun GoalOverview(
             )
             Spacer(Modifier.size(5.dp))
             GoalDateRange(
-                startDate = myGoal.startDate,
-                endDate = myGoal.endDate,
+                startDate = myGoal.disPlayedStartDate,
+                endDate = myGoal.displayedEndDate,
                 icon = myGoal.goalState.dateIcon(),
                 textStyle = MaterialTheme.goalMateTypography.labelSmall,
             )

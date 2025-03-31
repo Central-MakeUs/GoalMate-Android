@@ -2,9 +2,12 @@ package cmc.goalmate.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.GoalsRepository
+import cmc.goalmate.presentation.ui.util.EventBus
+import cmc.goalmate.presentation.ui.util.GoalMateEvent
 import cmc.goalmate.presentation.ui.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,39 +15,83 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface HomeUiState {
     data object Loading : HomeUiState
 
-    data class Success(val goals: List<GoalUiModel>) : HomeUiState
+    data class Success(
+        val goals: List<GoalUiModel>,
+        val isRefreshing: Boolean,
+    ) : HomeUiState
 
-    data class Error(val message: String) : HomeUiState
+    data class Error(
+        val message: String,
+    ) : HomeUiState
 }
 
 @HiltViewModel
 class HomeViewModel
     @Inject
-    constructor(private val goalsRepository: GoalsRepository) : ViewModel() {
+    constructor(
+        private val goalsRepository: GoalsRepository,
+    ) : ViewModel() {
+        private val isRefreshing = MutableStateFlow(false)
         private val _state: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
-        val state: StateFlow<HomeUiState> = _state
-            .onStart { loadGoals() }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = HomeUiState.Loading,
-            )
+        val state: StateFlow<HomeUiState> =
+            _state
+                .onStart { loadGoals() }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000L),
+                    initialValue = HomeUiState.Loading,
+                )
 
         private fun loadGoals() {
             viewModelScope.launch {
-                goalsRepository.getGoals()
+                goalsRepository
+                    .getGoals()
                     .onSuccess { result ->
-                        _state.value = HomeUiState.Success(result.goals.map { it.toUi() })
-                    }
-                    .onFailure {
+                        _state.update {
+                            HomeUiState.Success(
+                                goals = result.goals.map { it.toUi() },
+                                isRefreshing = isRefreshing.value,
+                            )
+                        }
+                    }.onFailure {
+                        if (it == DataError.Network.NO_INTERNET) {
+                            EventBus.postEvent(GoalMateEvent.NoInternet)
+                        }
                         _state.value = HomeUiState.Error(it.asUiText())
                     }
             }
         }
+
+        fun onAction(action: HomeAction) {
+            when (action) {
+                HomeAction.Retry -> {
+                    viewModelScope.launch {
+                        _state.emit(HomeUiState.Loading)
+                        loadGoals()
+                    }
+                }
+
+                HomeAction.Refresh -> {
+                    onPullToRefreshTrigger()
+                }
+            }
+        }
+
+        private fun onPullToRefreshTrigger() {
+            _state.update { (it as HomeUiState.Success).copy(isRefreshing = true) }
+            loadGoals()
+        }
     }
+
+sealed interface HomeAction {
+    data object Retry : HomeAction
+
+    data object Refresh : HomeAction
+}

@@ -22,8 +22,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -62,6 +64,7 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     var xx by rememberSaveable { mutableFloatStateOf(0f) }
     var yy by rememberSaveable { mutableFloatStateOf(0f) }
+    val hapticFeedback = LocalHapticFeedback.current
 
     NavigationBar(
         containerColor = MaterialTheme.goalMateColors.background,
@@ -72,7 +75,10 @@ fun BottomNavigationBar(
             val badgeCount = badgeState.getOrDefault(navItem, DEFAULT_NEW_COMMENT_COUNT)
             NavigationBarItem(
                 selected = navBackStackEntry.matchesRoute(navItem.route::class),
-                onClick = { navController.navigateInBottomNav(navItem.route) },
+                onClick = {
+                    navController.navigateInBottomNav(navItem.route)
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                },
                 label = {
                     Text(
                         text = stringResource(navItem.title),
@@ -97,43 +103,46 @@ fun BottomNavigationBar(
                         )
                     }
                 },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.goalMateColors.selected,
-                    selectedTextColor = MaterialTheme.goalMateColors.selected,
-                    unselectedIconColor = MaterialTheme.goalMateColors.unSelected,
-                    unselectedTextColor = MaterialTheme.goalMateColors.unSelected,
-                    indicatorColor = MaterialTheme.goalMateColors.background,
-                ),
-                modifier = Modifier.then(
-                    if (navItem == BottomNavItem.MY_GOALS) {
-                        Modifier
-                            .onGloballyPositioned { coordinates ->
-                                val anchorBounds = coordinates.boundsInWindow()
-                                xx = anchorBounds.center.x
-                                yy = anchorBounds.top - 90
-                            }
-                    } else {
-                        Modifier
-                    },
-                ),
+                colors =
+                    NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.goalMateColors.selected,
+                        selectedTextColor = MaterialTheme.goalMateColors.selected,
+                        unselectedIconColor = MaterialTheme.goalMateColors.unSelected,
+                        unselectedTextColor = MaterialTheme.goalMateColors.unSelected,
+                        indicatorColor = MaterialTheme.goalMateColors.background,
+                    ),
+                modifier =
+                    Modifier.then(
+                        if (navItem == BottomNavItem.MY_GOALS) {
+                            Modifier
+                                .onGloballyPositioned { coordinates ->
+                                    val anchorBounds = coordinates.boundsInWindow()
+                                    xx = anchorBounds.center.x
+                                    yy = anchorBounds.top - 90
+                                }
+                        } else {
+                            Modifier
+                        },
+                    ),
             )
         }
     }
 
     if (canShowPopup && !navBackStackEntry.matchesRoute(BottomNavItem.MY_GOALS.route::class)) {
         Popup(
-            popupPositionProvider = object : PopupPositionProvider1 {
-                override fun calculatePosition(
-                    anchorBounds: IntRect,
-                    windowSize: IntSize,
-                    layoutDirection: LayoutDirection,
-                    popupContentSize: IntSize,
-                ): IntOffset {
-                    val x = xx.toInt() - (popupContentSize.width / 2)
-                    val y = yy.toInt()
-                    return IntOffset(x, y)
-                }
-            },
+            popupPositionProvider =
+                object : PopupPositionProvider1 {
+                    override fun calculatePosition(
+                        anchorBounds: IntRect,
+                        windowSize: IntSize,
+                        layoutDirection: LayoutDirection,
+                        popupContentSize: IntSize,
+                    ): IntOffset {
+                        val x = xx.toInt() - (popupContentSize.width / 2)
+                        val y = yy.toInt()
+                        return IntOffset(x, y)
+                    }
+                },
             onDismissRequest = { },
             properties = PopupProperties(focusable = false),
         ) {

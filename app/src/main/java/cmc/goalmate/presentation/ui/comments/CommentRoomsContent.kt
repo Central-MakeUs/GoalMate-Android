@@ -1,7 +1,6 @@
 package cmc.goalmate.presentation.ui.comments
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +28,7 @@ import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 import cmc.goalmate.presentation.ui.comments.model.CommentRoomsUiModel
 import cmc.goalmate.presentation.ui.mygoals.components.GoalStatusTag
+import cmc.goalmate.presentation.ui.util.singleClickable
 
 @Composable
 fun CommentRoomsContent(
@@ -46,7 +46,7 @@ fun CommentRoomsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp))
-                    .clickable {
+                    .singleClickable {
                         onAction(
                             CommentRoomsAction.SelectCommentRoom(roomId = goalComment.roomId),
                         )

@@ -20,6 +20,8 @@ sealed interface MyPageAction {
     data class ConfirmNickName(val updated: String) : MyPageAction
 
     data class CheckDuplication(val updated: String) : MyPageAction
+
+    data object Retry : MyPageAction
 }
 
 sealed interface MyPageEvent {

@@ -2,6 +2,8 @@ package cmc.goalmate.presentation.ui.progress.inprogress
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -42,6 +44,7 @@ import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
+import cmc.goalmate.presentation.ui.progress.components.CalendarSkeleton
 import cmc.goalmate.presentation.ui.progress.components.DailyTodoSectionSkeleton
 import cmc.goalmate.presentation.ui.progress.components.GoalMateCalendar
 import cmc.goalmate.presentation.ui.progress.components.GoalMateTimer
@@ -64,17 +67,25 @@ fun CalendarSection(
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (weeklyProgressState) {
-        is UiState.Success -> {
-            GoalMateCalendar(
-                calendarData = weeklyProgressState.data,
-                selectedDate = selectedDate,
-                onAction = onAction,
-                modifier = modifier,
-            )
+    AnimatedStateWrapper(targetState = weeklyProgressState) { state ->
+        when (state) {
+            is UiState.Success -> {
+                GoalMateCalendar(
+                    calendarData = state.data,
+                    selectedDate = selectedDate,
+                    onAction = onAction,
+                    modifier = modifier,
+                )
+            }
+            else -> {
+                CalendarSkeleton(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = GoalMateDimens.HorizontalPadding,
+                        ),
+                )
+            }
         }
-        is UiState.Error -> {}
-        UiState.Loading -> {}
     }
 }
 
@@ -84,19 +95,8 @@ fun DailyTodoSection(
     onAction: (InProgressAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AnimatedContent(
-        targetState = dailyProgressState,
-        transitionSpec = {
-            fadeIn(animationSpec = tween(300)) togetherWith
-                fadeOut(animationSpec = tween(300))
-        },
-        label = "DailyTodoSectionTransition",
-    ) { state ->
+    AnimatedStateWrapper(targetState = dailyProgressState) { state ->
         when (state) {
-            is UiState.Error -> {}
-            UiState.Loading -> {
-                DailyTodoSectionSkeleton()
-            }
             is UiState.Success -> {
                 val dailyProgress = state.data
                 Column(modifier = modifier) {
@@ -104,8 +104,9 @@ fun DailyTodoSection(
                     GoalTasks(
                         dailyProgress = dailyProgress,
                         onAction = onAction,
-                        modifier = Modifier
-                            .background(MaterialTheme.goalMateColors.thickDivider),
+                        modifier =
+                            Modifier
+                                .background(MaterialTheme.goalMateColors.thickDivider),
                     )
 
                     Spacer(Modifier.size(GoalMateDimens.VerticalSpacerLarge))
@@ -121,7 +122,36 @@ fun DailyTodoSection(
                     )
                 }
             }
+            else -> {
+                DailyTodoSectionSkeleton(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = GoalMateDimens.HorizontalPadding,
+                            vertical = GoalMateDimens.ItemVerticalPaddingLarge,
+                        ),
+                )
+            }
         }
+    }
+}
+
+@Composable
+fun <T> AnimatedStateWrapper(
+    targetState: T,
+    modifier: Modifier = Modifier,
+    transitionSpec: AnimatedContentTransitionScope<T>.() -> ContentTransform = {
+        fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+    },
+    label: String = "AnimatedStateWrapper",
+    content: @Composable (T) -> Unit,
+) {
+    AnimatedContent(
+        targetState = targetState,
+        transitionSpec = transitionSpec,
+        label = label,
+        modifier = modifier,
+    ) { state ->
+        content(state)
     }
 }
 
@@ -133,9 +163,10 @@ private fun GoalTasks(
 ) {
     val titleDateText = if (dailyProgress.canModifyTodo()) "오늘" else dailyProgress.selectedDate.format(inProgressFormatter)
     Column(
-        modifier = modifier.padding(
-            vertical = GoalMateDimens.ItemVerticalPaddingLarge,
-        ),
+        modifier =
+            modifier.padding(
+                vertical = GoalMateDimens.ItemVerticalPaddingLarge,
+            ),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = GoalMateDimens.HorizontalPadding),
@@ -204,8 +235,10 @@ fun GoalInfoSection(
                 GoalInfoDetail(
                     goalInfo = goalInfo,
                     onDetailButtonClicked = { navigateToDetail(goalInfo.goalId) },
-                    modifier = Modifier.padding(horizontal = GoalMateDimens.HorizontalPadding)
-                        .padding(bottom = GoalMateDimens.VerticalSpacerLarge),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = GoalMateDimens.HorizontalPadding)
+                            .padding(bottom = GoalMateDimens.VerticalSpacerLarge),
                 )
             }
         }
@@ -240,15 +273,17 @@ private fun ProgressLayout(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
     ) {
         Subtitle(
             title = title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         )
         progressContent()
     }
@@ -274,11 +309,12 @@ fun GoalInfoDetail(
         val cellTextStyle = MaterialTheme.goalMateTypography.bodySmallMedium
 
         Column(
-            modifier = Modifier.border(
-                width = 1.dp,
-                color = MaterialTheme.goalMateColors.surface,
-                shape = RoundedCornerShape(6.dp),
-            ),
+            modifier =
+                Modifier.border(
+                    width = 1.dp,
+                    color = MaterialTheme.goalMateColors.surface,
+                    shape = RoundedCornerShape(6.dp),
+                ),
         ) {
             listOf(
                 stringResource(R.string.goal_detail_start_title) to goalInfo.title,

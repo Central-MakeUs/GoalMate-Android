@@ -6,7 +6,11 @@ import cmc.goalmate.domain.model.Writer
 import cmc.goalmate.remote.dto.response.CommentResponse
 import cmc.goalmate.remote.dto.response.CommentsResponse
 
-data class CommentsDto(val comments: List<CommentDto>)
+data class CommentsDto(
+    val comments: List<CommentDto>,
+    val currentPage: Int,
+    val nextPage: Int?,
+)
 
 data class CommentDto(
     val id: Int,
@@ -16,7 +20,12 @@ data class CommentDto(
     val writerRole: String,
 )
 
-fun CommentsResponse.toData(): CommentsDto = CommentsDto(comments = this.comments.map { it.toData() })
+fun CommentsResponse.toData(): CommentsDto =
+    CommentsDto(
+        comments = this.comments.map { it.toData() },
+        currentPage = this.page.currentPage,
+        nextPage = this.page.nextPage,
+    )
 
 fun CommentResponse.toData(): CommentDto =
     CommentDto(

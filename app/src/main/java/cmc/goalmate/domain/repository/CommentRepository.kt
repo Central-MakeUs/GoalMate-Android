@@ -8,7 +8,10 @@ import cmc.goalmate.domain.model.Comments
 interface CommentRepository {
     suspend fun getCommentRooms(): DomainResult<CommentRooms, DataError.Network>
 
-    suspend fun getComments(roomId: Int): DomainResult<Comments, DataError.Network>
+    suspend fun getComments(
+        roomId: Int,
+        targetPage: Int?,
+    ): DomainResult<Comments, DataError.Network>
 
     suspend fun postComment(
         roomId: Int,

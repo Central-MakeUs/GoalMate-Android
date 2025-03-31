@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -24,12 +23,20 @@ import cmc.goalmate.presentation.theme.GoalMateTheme
 import cmc.goalmate.presentation.theme.goalMateColors
 
 @Composable
+fun CalendarSkeleton(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+    ) {
+        RoundedBoxSkeleton(width = 141.dp, height = 30.dp)
+        Spacer(Modifier.size(20.dp))
+        MaxWidthRoundedBoxSkeleton(68.dp)
+    }
+}
+
+@Composable
 fun DailyTodoSectionSkeleton(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.padding(
-            horizontal = GoalMateDimens.HorizontalPadding,
-            vertical = GoalMateDimens.ItemVerticalPaddingLarge,
-        ),
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -59,12 +66,19 @@ fun DailyTodoSectionSkeleton(modifier: Modifier = Modifier) {
 
         Spacer(Modifier.size(12.dp))
 
-        Box(
-            modifier = Modifier.fillMaxWidth().height(
-                45.dp,
-            ).clip(RoundedCornerShape(20.dp)).background(MaterialTheme.goalMateColors.pending),
-        )
+        MaxWidthRoundedBoxSkeleton(45.dp)
     }
+}
+
+@Composable
+private fun MaxWidthRoundedBoxSkeleton(height: Dp) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(height)
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.goalMateColors.pending),
+    )
 }
 
 @Composable
@@ -83,7 +97,7 @@ private fun TodoSkeleton() {
 fun RoundedBoxSkeleton(
     width: Dp,
     height: Dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.size(width = width, height = height)

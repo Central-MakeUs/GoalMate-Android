@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import cmc.goalmate.domain.DataError
 import cmc.goalmate.domain.onFailure
 import cmc.goalmate.domain.onSuccess
 import cmc.goalmate.domain.repository.MenteeGoalRepository
@@ -54,26 +55,28 @@ class InProgressViewModel
 
         private val selectedDate = MutableStateFlow(LocalDate.now())
         private val weeklyProgressState = MutableStateFlow<UiState<CalendarUiModel>>(UiState.Loading)
-        private val selectedDateTodoState = MutableStateFlow<UiState<DailyProgressDetailUiModel>>(UiState.Loading)
+        private val selectedDateTodoState =
+            MutableStateFlow<UiState<DailyProgressDetailUiModel>>(UiState.Loading)
         private val goalInfoState = MutableStateFlow<UiState<GoalOverViewUiModel>>(UiState.Loading)
 
-        val state: StateFlow<InProgressUiState> = combine(
-            weeklyProgressState,
-            selectedDateTodoState,
-            goalInfoState,
-            selectedDate,
-        ) { weekly, daily, goal, date ->
-            InProgressUiState(
-                weeklyProgressState = weekly,
-                selectedDailyState = daily,
-                goalInfoState = goal,
-                selectedDate = date,
+        val state: StateFlow<InProgressUiState> =
+            combine(
+                weeklyProgressState,
+                selectedDateTodoState,
+                goalInfoState,
+                selectedDate,
+            ) { weekly, daily, goal, date ->
+                InProgressUiState(
+                    weeklyProgressState = weekly,
+                    selectedDailyState = daily,
+                    goalInfoState = goal,
+                    selectedDate = date,
+                )
+            }.stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000L),
+                InProgressUiState.initialState,
             )
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            InProgressUiState.initialState,
-        )
 
         init {
             viewModelScope.launch {
@@ -82,23 +85,29 @@ class InProgressViewModel
         }
 
         private suspend fun loadInitialData() {
-            menteeGoalRepository.getDailyTodos(menteeGoalId, LocalDate.now())
+            selectedDateTodoState.update { UiState.Loading }
+            goalInfoState.update { UiState.Loading }
+            weeklyProgressState.update { UiState.Loading }
+
+            menteeGoalRepository
+                .getDailyTodos(menteeGoalId, LocalDate.now())
                 .onSuccess { todo ->
                     loadGoalInfo()
                     selectedDateTodoState.update { UiState.Success(todo.toUi(LocalDate.now())) }
-                }
-                .onFailure { error ->
+                }.onFailure { error ->
                     selectedDateTodoState.update { UiState.Error(error.asUiText()) }
+                    goalInfoState.update { UiState.Error(error.asUiText()) }
+                    weeklyProgressState.update { UiState.Error(error.asUiText()) }
                 }
         }
 
         private suspend fun loadGoalInfo() {
-            menteeGoalRepository.getGoalInfo(menteeGoalId)
+            menteeGoalRepository
+                .getGoalInfo(menteeGoalId)
                 .onSuccess { goalInfo ->
                     loadGoalCalendar(startDate = goalInfo.startDate, endDate = goalInfo.endDate)
                     goalInfoState.update { UiState.Success(goalInfo.toUi()) }
-                }
-                .onFailure { error ->
+                }.onFailure { error ->
                     goalInfoState.update { UiState.Error(error.asUiText()) }
                 }
         }
@@ -107,13 +116,13 @@ class InProgressViewModel
             startDate: LocalDate,
             endDate: LocalDate,
         ) {
-            menteeGoalRepository.loadInitialGoalMateCalendar(
-                menteeGoalId = menteeGoalId,
-                startDate = startDate,
-                endDate = endDate,
-                targetDate = LocalDate.now(),
-            )
-                .onSuccess { goalMateCalendar ->
+            menteeGoalRepository
+                .loadInitialGoalMateCalendar(
+                    menteeGoalId = menteeGoalId,
+                    startDate = startDate,
+                    endDate = endDate,
+                    targetDate = LocalDate.now(),
+                ).onSuccess { goalMateCalendar ->
                     weeklyProgressState.value = UiState.Success(goalMateCalendar.toUi())
                 }.onFailure { error ->
                     weeklyProgressState.value = UiState.Error(error.asUiText())
@@ -133,12 +142,19 @@ class InProgressViewModel
                     )
                 }
 
-                InProgressAction.NavigateToGoalDetail -> sendEvent(
-                    InProgressEvent.NavigateToGoalDetail(goalId = goalId),
-                )
+                InProgressAction.NavigateToGoalDetail ->
+                    sendEvent(
+                        InProgressEvent.NavigateToGoalDetail(goalId = goalId),
+                    )
 
                 is InProgressAction.ViewPreviousWeek -> {
                     loadPreviousWeekData(action.currentPageWeekIndex)
+                }
+
+                InProgressAction.Retry -> {
+                    viewModelScope.launch {
+                        loadInitialData()
+                    }
                 }
             }
         }
@@ -159,26 +175,29 @@ class InProgressViewModel
                 return
             }
             val updatedCheckState = !currentState
-            updateTodosUi(dailyProgress = dailyProgress, todoId = todoId, updatedState = updatedCheckState)
+            updateTodosUi(
+                dailyProgress = dailyProgress,
+                todoId = todoId,
+                updatedState = updatedCheckState,
+            )
 
             val beforeGoalInfo = goalInfoState.successData()
             calculateTotalTodoCount(beforeGoalInfo.completedTodoCount, isAdded = updatedCheckState)
 
             viewModelScope.launch {
-                menteeGoalRepository.updateTodoStatus(
-                    menteeGoalId = menteeGoalId,
-                    todoId = todoId,
-                    updatedStatus = convertToDomain(updatedCheckState),
-                )
-                    .onFailure {
+                menteeGoalRepository
+                    .updateTodoStatus(
+                        menteeGoalId = menteeGoalId,
+                        todoId = todoId,
+                        updatedStatus = convertToDomain(updatedCheckState),
+                    ).onFailure {
                         updateTodosUi(
                             dailyProgress = dailyProgress,
                             todoId = todoId,
                             updatedState = currentState,
                         )
                         goalInfoState.value = UiState.Success(beforeGoalInfo)
-                    }
-                    .onSuccess {
+                    }.onSuccess {
                         EventBus.postEvent(
                             GoalMateEvent.TodoCheckChanged(
                                 menteeGoalId = menteeGoalId,
@@ -203,13 +222,14 @@ class InProgressViewModel
             todoId: Int,
             updatedState: Boolean,
         ) {
-            val updatedTodos = dailyProgress.todos.map { todo ->
-                if (todo.id == todoId) {
-                    todo.copy(isCompleted = updatedState)
-                } else {
-                    todo
+            val updatedTodos =
+                dailyProgress.todos.map { todo ->
+                    if (todo.id == todoId) {
+                        todo.copy(isCompleted = updatedState)
+                    } else {
+                        todo
+                    }
                 }
-            }
             selectedDateTodoState.value = UiState.Success(dailyProgress.copy(todos = updatedTodos))
         }
 
@@ -220,16 +240,21 @@ class InProgressViewModel
             selectedDate.value = newDate.actualDate
             selectedDateTodoState.value = UiState.Loading
             viewModelScope.launch {
-                menteeGoalRepository.getDailyTodos(
-                    menteeGoalId = menteeGoalId,
-                    targetDate = newDate.actualDate,
-                ).onSuccess { dailyTodos ->
-                    selectedDateTodoState.value = UiState.Success(
-                        dailyTodos.toUi(newDate.actualDate),
-                    )
-                }.onFailure {
-                    selectedDateTodoState.value = UiState.Error(it.asUiText())
-                }
+                menteeGoalRepository
+                    .getDailyTodos(
+                        menteeGoalId = menteeGoalId,
+                        targetDate = newDate.actualDate,
+                    ).onSuccess { dailyTodos ->
+                        selectedDateTodoState.value =
+                            UiState.Success(
+                                dailyTodos.toUi(newDate.actualDate),
+                            )
+                    }.onFailure {
+                        if (it == DataError.Network.NO_INTERNET) {
+                            EventBus.postEvent(GoalMateEvent.NoInternet)
+                        }
+                        selectedDateTodoState.value = UiState.Error(it.asUiText())
+                    }
             }
         }
 
@@ -242,17 +267,16 @@ class InProgressViewModel
             if (targetWeekIndex < 0) return
             val targetDate = weeklyData[targetWeekIndex].dailyProgresses.last().actualDate
             viewModelScope.launch {
-                menteeGoalRepository.getWeeklyProgress(
-                    menteeGoalId = menteeGoalId,
-                    targetDate = targetDate,
-                )
-                    .onSuccess { week ->
+                menteeGoalRepository
+                    .getWeeklyProgress(
+                        menteeGoalId = menteeGoalId,
+                        targetDate = targetDate,
+                    ).onSuccess { week ->
                         updateCalendar(
                             targetWeekIndex = targetWeekIndex,
                             updatedWeekData = week.toUi(targetWeekIndex),
                         )
-                    }
-                    .onFailure {
+                    }.onFailure {
                         Log.d("yenny", "loadPreviousWeekData 에러")
                     }
             }
@@ -263,10 +287,12 @@ class InProgressViewModel
             updatedWeekData: WeekUiModel,
         ) {
             weeklyProgressState.update { current ->
-                val updated = current.successData().weeklyData.toMutableList().apply {
-                    this[targetWeekIndex + 1] = this[targetWeekIndex + 1].copy(shouldLoadPrevious = false)
-                    this[targetWeekIndex] = updatedWeekData
-                }
+                val updated =
+                    current.successData().weeklyData.toMutableList().apply {
+                        this[targetWeekIndex + 1] =
+                            this[targetWeekIndex + 1].copy(shouldLoadPrevious = false)
+                        this[targetWeekIndex] = updatedWeekData
+                    }
                 UiState.Success(current.successData().copy(weeklyData = updated))
             }
         }

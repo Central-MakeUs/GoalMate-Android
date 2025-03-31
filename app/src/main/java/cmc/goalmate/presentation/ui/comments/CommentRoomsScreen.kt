@@ -26,9 +26,10 @@ fun CommentRoomsScreen(
 
     ObserveAsEvent(viewModel.event) { event ->
         when (event) {
-            is CommentRoomsEvent.NavigateToCommentDetail -> navigateToCommentDetail(
-                CommentDetailParams(roomId = event.roomId, goalTitle = event.goalTitle, endDate = event.endDate),
-            )
+            is CommentRoomsEvent.NavigateToCommentDetail ->
+                navigateToCommentDetail(
+                    CommentDetailParams(roomId = event.roomId, goalTitle = event.goalTitle, endDate = event.endDate),
+                )
         }
     }
 
@@ -61,7 +62,12 @@ fun CommentRoomsScreen(
 
             GoalCommentsUiState.Loading -> {}
             GoalCommentsUiState.Error -> {
-                ErrorScreen(modifier = Modifier.fillMaxSize())
+                ErrorScreen(
+                    onRetryButtonClicked = {
+                        viewModel.onAction(CommentRoomsAction.Retry)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
     }

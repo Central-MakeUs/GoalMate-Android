@@ -124,6 +124,7 @@ class MyPageViewModel
                     nickName = menuAction.updated
                     checkValidity(nickName)
                 }
+                MyPageAction.Retry -> onLoginStateChanged(isLoggedIn = isLoggedIn.value)
             }
         }
 

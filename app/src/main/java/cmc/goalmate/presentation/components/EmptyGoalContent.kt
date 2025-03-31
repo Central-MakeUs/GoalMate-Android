@@ -1,6 +1,7 @@
 package cmc.goalmate.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cmc.goalmate.R
 import cmc.goalmate.presentation.theme.GoalMateTheme
+import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.theme.goalMateTypography
 
 @Composable
@@ -38,6 +40,22 @@ fun EmptyGoalContents(
             content = stringResource(R.string.my_goals_empty_button),
             onClick = onButtonClicked,
             buttonSize = ButtonSize.LARGE,
+        )
+    }
+}
+
+@Composable
+fun EmptyContent(
+    title: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier) {
+        Text(
+            text = title,
+            style = MaterialTheme.goalMateTypography.body,
+            color = MaterialTheme.goalMateColors.onBackground,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.align(Alignment.Center),
         )
     }
 }

@@ -5,14 +5,10 @@ import cmc.goalmate.domain.NickNameError
 
 fun DataError.asUiText(): String =
     when (this) {
-        DataError.Network.NO_INTERNET -> "No internet connection"
-        DataError.Network.SERVER_ERROR -> "Server error"
-        DataError.Network.NOT_FOUND -> "Not found"
-        DataError.Network.UNAUTHORIZED -> "Unauthorized"
-        DataError.Network.CONFLICT -> "Conflict"
-        DataError.Network.UNKNOWN -> "Unknown error"
-        DataError.Local.IO_ERROR -> "DataStore error"
-        DataError.Local.NOT_FOUND -> "Caching error"
+        DataError.Network.NO_INTERNET -> "네트워크 상태를 확인해주세요!"
+        DataError.Network.SERVER_ERROR -> "서버에 문제가 발생했습니다. 잠시 후 다시 시도해 주세요."
+        DataError.Network.NOT_FOUND -> "요청한 정보를 찾을 수 없습니다. 다시 시도해 주세요."
+        else -> "알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해 주세요"
     }
 
 fun NickNameError.asUiText(): String =

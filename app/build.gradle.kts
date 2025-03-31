@@ -8,9 +8,10 @@ plugins {
     alias(libs.plugins.hilt.android)
 }
 
-val properties = Properties().apply {
-    load(rootProject.file("local.properties").inputStream())
-}
+val properties =
+    Properties().apply {
+        load(rootProject.file("local.properties").inputStream())
+    }
 val kakaoKey = properties.getProperty("KAKAO_NATIVE_APP_KEY")
 
 android {
@@ -23,15 +24,15 @@ android {
         }
     }
     namespace = "cmc.goalmate"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         manifestPlaceholders += mapOf()
         applicationId = "cmc.goalmate"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 5
-        versionName = "1.0.0"
+        targetSdk = 35
+        versionCode = 9
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -103,15 +104,14 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.datastore.preferences)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.core.splashscreen)
-
-    implementation("com.kakao.sdk:v2-user:2.20.6")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation(libs.v2.user)
 }
 
 kapt {

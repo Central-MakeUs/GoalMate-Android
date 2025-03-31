@@ -36,7 +36,6 @@ fun InProgressScreen(
     navigateToComments: NavigateToCommentDetail,
     navigateToGoalDetail: NavigateToGoal,
     navigateBack: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: InProgressViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -57,9 +56,7 @@ fun InProgressScreen(
         }
     }
 
-    Column(
-        modifier = modifier,
-    ) {
+    Column {
         AppBarWithBackButton(
             onBackButtonClicked = navigateBack,
             title = goalTitle,

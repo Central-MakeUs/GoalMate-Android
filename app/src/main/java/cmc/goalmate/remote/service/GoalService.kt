@@ -30,6 +30,6 @@ interface GoalService {
     companion object {
         private const val BASE_URL = "/goals"
         private const val DEFAULT_PAGE = 1
-        private const val DEFAULT_SIZE = 20
+        private const val DEFAULT_SIZE = 30
     }
 }

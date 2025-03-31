@@ -39,7 +39,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
             val viewModel = backStackEntry.sharedViewModel<AuthViewModel>(navController)
             LoginScreen(
                 navigateBack = { navController.popBackStack() },
-                navigateToHome = { navController.navigateToHome(Screen.Auth.Login) },
+                navigateToHome = { navController.navigateUp() },
                 navigateToNickNameSetting = { navController.navigate(Screen.Auth.NickNameSetting) },
                 navigateToWebScreen = navController::navigateToWebScreen,
                 viewModel = viewModel,
@@ -77,8 +77,9 @@ fun NavController.navigateToWelcomePage(nickName: String) {
 @Composable
 inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navController: NavController): T {
     val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
-    val parentEntry = remember(this) {
-        navController.getBackStackEntry(navGraphRoute)
-    }
+    val parentEntry =
+        remember(this) {
+            navController.getBackStackEntry(navGraphRoute)
+        }
     return hiltViewModel(parentEntry)
 }

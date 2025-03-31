@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.1"
+agp = "8.6.1"
 
 # kotlin
 constraintlayoutCompose = "1.0.1"
@@ -15,6 +15,8 @@ hilt-navigation-compose = "1.0.0"
 lifecycle = "2.8.7"
 activity = "1.9.1"
 composeBom = "2024.11.00"
+retrofit2KotlinxSerializationConverter = "1.0.0"
+v2User = "2.20.6"
 viewmodel = "2.7.0"
 datastore = "1.0.0"
 navigation = "2.8.5"
@@ -62,6 +64,9 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
+v2-user = { module = "com.kakao.sdk:v2-user", version.ref = "v2User" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

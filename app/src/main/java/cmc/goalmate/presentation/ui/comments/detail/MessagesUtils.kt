@@ -6,7 +6,8 @@ import cmc.goalmate.presentation.ui.util.calculateDaysBetween
 import java.time.LocalDate
 
 fun List<CommentUiModel>.findMessageContentById(messageId: Int): String =
-    this.flatMap { it.messages }
+    this
+        .flatMap { it.messages }
         .find { it.id == messageId }
         ?.content ?: error("해당 하는 코멘트를 찾을 수 없습니다! -> 코멘트 아이디 :$messageId")
 
@@ -15,22 +16,22 @@ fun List<CommentUiModel>.addMessage(
     endDate: LocalDate,
 ): List<CommentUiModel> {
     val today = LocalDate.now()
-    val lastComment = this.find { it.date == today }
 
-    return if (lastComment != null) {
-        this.map { comment ->
-            if (comment.date == today) {
-                comment.copy(messages = comment.messages + newMessage)
-            } else {
-                comment
-            }
+    return when {
+        isNotEmpty() && first().date == today -> {
+            val updated = first().copy(messages = listOf(newMessage) + first().messages)
+            listOf(updated) + drop(1)
         }
-    } else {
-        this + CommentUiModel(
-            date = today,
-            daysFromStart = calculateDaysBetween(endDate = endDate),
-            messages = listOf(newMessage),
-        )
+
+        else -> {
+            listOf(
+                CommentUiModel(
+                    date = today,
+                    daysFromStart = calculateDaysBetween(endDate = endDate),
+                    messages = listOf(newMessage),
+                ),
+            ) + this
+        }
     }
 }
 
@@ -40,9 +41,10 @@ fun List<CommentUiModel>.replaceTempMessage(
 ): List<CommentUiModel> =
     this.map { comment ->
         comment.copy(
-            messages = comment.messages.map { msg ->
-                if (msg.id == tmpId) msg.copy(id = newId) else msg
-            },
+            messages =
+                comment.messages.map { msg ->
+                    if (msg.id == tmpId) msg.copy(id = newId) else msg
+                },
         )
     }
 
@@ -51,13 +53,15 @@ fun List<CommentUiModel>.replaceContentMessage(
     updatedComment: String,
 ): List<CommentUiModel> =
     this.map { comment ->
-        val updatedMessages = comment.messages.map { msg ->
-            if (msg.id == targetId) msg.copy(content = updatedComment) else msg
-        }
+        val updatedMessages =
+            comment.messages.map { msg ->
+                if (msg.id == targetId) msg.copy(content = updatedComment) else msg
+            }
         comment.copy(messages = updatedMessages)
     }
 
 fun List<CommentUiModel>.removeMessage(targetId: Int): List<CommentUiModel> =
-    this.map { comment ->
-        comment.copy(messages = comment.messages.filterNot { it.id == targetId })
-    }.filter { it.messages.isNotEmpty() }
+    this
+        .map { comment ->
+            comment.copy(messages = comment.messages.filterNot { it.id == targetId })
+        }.filter { it.messages.isNotEmpty() }

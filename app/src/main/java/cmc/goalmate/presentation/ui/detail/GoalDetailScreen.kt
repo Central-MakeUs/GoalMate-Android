@@ -51,20 +51,22 @@ fun GoalDetailScreen(
     ObserveAsEvent(viewModel.event) { event ->
         when (event) {
             is GoalDetailEvent.NavigateToGoalStart -> {
-                coroutineScope.launch {
-                    sheetState.hide()
-                }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        showBottomSheet = false
-                    }
+                coroutineScope
+                    .launch {
+                        sheetState.hide()
+                    }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
 
-                    val params = PaymentCompletedParams(
-                        goalId = event.newGoalId,
-                        commentRoomId = 0,
-                        goalSummary = event.goalSummary,
-                    )
-                    navigateToCompleted(params)
-                }
+                        val params =
+                            PaymentCompletedParams(
+                                goalId = event.newGoalId,
+                                commentRoomId = event.newCommentRoomId,
+                                goalSummary = event.goalSummary,
+                            )
+                        navigateToCompleted(params)
+                    }
             }
 
             GoalDetailEvent.NavigateToLogin -> navigateToLogin()
@@ -94,7 +96,12 @@ fun GoalDetailScreen(
             GoalDetailUiState.Loading -> {}
 
             is GoalDetailUiState.Error -> {
-                ErrorScreen(modifier = Modifier.fillMaxSize())
+                ErrorScreen(
+                    onRetryButtonClicked = {
+                        viewModel.onAction(GoalDetailAction.Retry)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
     }

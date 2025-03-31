@@ -72,11 +72,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         ) {
             MyPageScreen(
                 navigateToLogin = {
-                    navController.navigateToLogin {
-                        popUpTo<Screen.Main.MyPage> {
-                            this.inclusive = true
-                        }
-                    }
+                    navController.navigateToLogin()
                 },
                 navigateToMyGoal = { navController.navigateInBottomNav(Screen.Main.MyGoal) },
                 navigateToHome = { navController.navigateToHome(Screen.Main.MyPage) },

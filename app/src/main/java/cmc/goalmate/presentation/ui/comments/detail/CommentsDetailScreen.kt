@@ -17,16 +17,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmc.goalmate.R
 import cmc.goalmate.presentation.components.AppBarWithBackButton
+import cmc.goalmate.presentation.components.EmptyContent
 import cmc.goalmate.presentation.components.ErrorScreen
 import cmc.goalmate.presentation.components.GoalMateIconDialog
 import cmc.goalmate.presentation.theme.GoalMateDimens
 import cmc.goalmate.presentation.theme.goalMateColors
 import cmc.goalmate.presentation.ui.comments.detail.components.CommentTextField
 import cmc.goalmate.presentation.ui.comments.detail.model.CommentsUiState
+import cmc.goalmate.presentation.ui.comments.detail.model.hasNoComments
 import cmc.goalmate.presentation.ui.util.ObserveAsEvent
 
 @Composable
@@ -70,12 +74,13 @@ fun CommentsDetailScreen(
             title = goalTitle,
         )
         Column(
-            modifier = Modifier
-                .background(MaterialTheme.goalMateColors.background)
-                .padding(
-                    horizontal = GoalMateDimens.HorizontalPadding,
-                    vertical = GoalMateDimens.BottomMargin,
-                ),
+            modifier =
+                Modifier
+                    .background(MaterialTheme.goalMateColors.background)
+                    .padding(
+                        horizontal = GoalMateDimens.HorizontalPadding,
+                        vertical = GoalMateDimens.BottomMargin,
+                    ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             CommentsDetailContent(
@@ -86,12 +91,13 @@ fun CommentsDetailScreen(
             CommentTextField(
                 commentText = viewModel.commentContent,
                 onAction = viewModel::onAction,
-                enabled = (state as? CommentsUiState.Success)?.canSendMessage ?: true,
+                enabled = (state as? CommentsUiState.Success)?.canSendMessage ?: false,
                 isButtonEnabled = (state as? CommentsUiState.Success)?.canSubmit ?: false,
                 showCancelButton = showCancelButton,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 11.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 11.dp),
                 focusRequester = focusRequester,
             )
         }
@@ -119,15 +125,28 @@ private fun CommentsDetailContent(
     ) {
         when (state) {
             is CommentsUiState.Success -> {
-                CommentsContent(
+                if (state.hasNoComments()) {
+                    EmptyContent(
+                        title = stringResource(R.string.comments_detail_empty),
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                    return@Box
+                }
+                CommentsList(
                     comments = state.comments,
+                    isNewMessageAdded = state.isNewMessageAdded,
                     onAction = onAction,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
 
             CommentsUiState.Error -> {
-                ErrorScreen(modifier = Modifier.fillMaxSize())
+                ErrorScreen(
+                    onRetryButtonClicked = {
+                        onAction(CommentAction.Retry)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
             CommentsUiState.Loading -> {}
